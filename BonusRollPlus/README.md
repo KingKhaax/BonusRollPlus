@@ -1,4 +1,4 @@
-# <img src="https://wow.zamimg.com/images/wow/icons/large/inv_scroll_03.jpg" width="36" height="36" align="absmiddle"> BonusRoll Plus 0.1.0
+# <img src="https://wow.zamimg.com/images/wow/icons/large/inv_scroll_03.jpg" width="36" height="36" align="absmiddle"> BonusRoll Plus 0.2.0
 
 Documentación completa del addon: qué hace, cómo funciona por dentro, comandos, historial de cambios, lo que falta y cómo llevarlo a otro ordenador.
 
@@ -8,7 +8,7 @@ Sustituye la ventana de tirada de botín en grupo del juego (Necesidad, Codicia,
 
 - Cliente objetivo: **World of Warcraft Forever** (`_forever_`, interfaz `16001` y `11601`).
 - El `.toc` declara también `120107` y `120105` (Retail), **sin probar** allí.
-- Archivos: `BonusRollPlus.toc` y `Core.lua`. No usa librerías.
+- Archivos: `BonusRollPlus.toc`, `Core.lua` y la carpeta `Media/` con dos tipografías. No usa librerías.
 - Datos guardados: `BonusRollPlusDB` (de la cuenta).
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_01.jpg" width="28" height="28" align="absmiddle"> Funcionalidad
@@ -40,8 +40,10 @@ Sustituye la ventana de tirada de botín en grupo del juego (Necesidad, Codicia,
 | Comando | Qué hace |
 |---|---|
 | `/br` | Muestra la ayuda |
-| `/br test` | Tres pergaminos de prueba con tus objetos equipados (cabeza, hombros, pecho, cintura, piernas, anillo o arma, el primero que tengas). Tiempo de 45 s. Las tiradas de los demás son de ejemplo y aparecen poco a poco |
-| `/br scale 0.5-1.5` | Tamaño. Por defecto 0.85 |
+| `/br test` | Tres ventanas de prueba con tus objetos equipados (cabeza, hombros, pecho, cintura, piernas, anillo o arma, el primero que tengas) y abre el selector de estilos. Tiempo de 90 s. Las tiradas de los demás son de ejemplo y aparecen poco a poco |
+| `/br style` | Abre el selector de estilos |
+| `/br style <id>` | Cambia de estilo: `skeuo`, `vintage`, `pixel`, `oled`, `glass`, `ticket`, `poster`, `specimen`, `darkroom`, `monument` |
+| `/br scale 0.5-1.5` | Tamaño. Por defecto 1 |
 | `/br rolls` | Muestra u oculta la ventanita de tiradas |
 | `/br reset` | Devuelve la pila a su posición por defecto |
 | `/bonusroll` | Mismo comando con otro nombre |
@@ -66,13 +68,26 @@ Mayús + arrastrar sobre un pergamino mueve toda la pila. Se guarda la posición
 
 | Clave | Por defecto | Significado |
 |---|---|---|
-| `scale` | `0.85` | Tamaño de la pila |
+| `scale` | `1` | Tamaño de la pila |
+| `style` | `skeuo` | Estilo elegido |
+| `v` | `2` | Versión de los ajustes (sirve para restablecer el tamaño al actualizar) |
 | `showRolls` | `true` | Mostrar la ventanita de tiradas |
 | `x`, `y` | sin definir | Posición, si la has movido |
 
 Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
+
+### 0.2.0 (12/11/2026)
+
+- **Diez estilos de ventana**, cinco hechos con UI UX Pro Max y cinco con Taste Skill, elegibles desde un selector que aparece arriba con `/br test`.
+- El pergamino se rehízo con arte del juego: pergamino de logros, mármol para la cinta, brillo de calidad del objeto y barra de estado clásica.
+- El nombre admite dos líneas y ya no se corta.
+- La corona de la ventanita de tiradas usa el icono de líder del grupo, porque el carácter de corona salía como un cuadrado.
+- Tipografías incluidas en `Media/`: Anton y Press Start 2P (licencia OFL).
+- Comandos nuevos: `/br style` y `/br style <id>`.
+- El tamaño por defecto pasa a 1, y se restablece al actualizar.
+- Pruebas: la simulación del juego recorre ahora los 10 estilos.
 
 ### 0.1.0 (12/11/2026)
 
@@ -85,7 +100,7 @@ Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_bag_08.jpg" width="28" height="28" align="absmiddle"> Llevarlo a otro ordenador
 
-1. Copia la carpeta **`BonusRollPlus`** entera, con `BonusRollPlus.toc`, `Core.lua` y este `README.md`.
+1. Copia la carpeta **`BonusRollPlus`** entera, con `BonusRollPlus.toc`, `Core.lua`, `Media/` y este `README.md`.
 2. Pégala en la carpeta de addons del otro PC:
    - Forever: `World of Warcraft\_forever_\Interface\AddOns\`
    - Retail (sin probar): `World of Warcraft\_retail_\Interface\AddOns\`

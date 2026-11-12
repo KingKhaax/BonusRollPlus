@@ -36,17 +36,36 @@ Si el juego ya estaba abierto, escribe `/reload` antes.
 
 | Comando | Qué hace |
 |---|---|
-| `/br test` | Muestra tres pergaminos de prueba con tus objetos equipados |
-| `/br scale 0.5-1.5` | Cambia el tamaño (por defecto 0.85) |
+| `/br test` | Muestra tres ventanas de prueba con tus objetos equipados y abre el selector de los 10 estilos |
+| `/br style` | Abre el selector de estilos |
+| `/br style <id>` | Cambia de estilo directamente (`skeuo`, `vintage`, `pixel`, `oled`, `glass`, `ticket`, `poster`, `specimen`, `darkroom`, `monument`) |
+| `/br scale 0.5-1.5` | Cambia el tamaño (por defecto 1) |
 | `/br rolls` | Muestra u oculta la ventanita de tiradas |
 | `/br reset` | Devuelve los pergaminos a su sitio |
 | `/bonusroll` | Es otro nombre para `/br` |
 
 Mayús + arrastrar sobre un pergamino lo mueve. La posición se guarda.
 
+## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_01.jpg" width="28" height="28" align="absmiddle"> Los 10 estilos
+
+Con `/br test` aparece arriba un selector. Cada estilo indica entre paréntesis con qué skill de diseño se hizo.
+
+| Estilo | Skill | Idea |
+|---|---|---|
+| Skeuomorfismo | UI UX Pro Max | Pergamino enrollado con cinta de mármol y sellos de lacre |
+| Vintage Analógico | UI UX Pro Max | Una foto de papel sepia con grano y una tira de película como temporizador |
+| Pixel Art | UI UX Pro Max | Bordes de píxel, botones 8-bit y un temporizador de bloques |
+| Modo Oscuro OLED | UI UX Pro Max | Negro puro, acentos dorados y una línea de tiempo fina |
+| Cristal Esmerilado | UI UX Pro Max | Paneles translúcidos azulados con borde claro |
+| El Billete | Taste Skill | Un billete con talón y perforación |
+| Cartel Plano | Taste Skill | Campos de color planos y tipografía gigante |
+| Ficha de Espécimen | Taste Skill | Una etiqueta de museo con los datos del objeto |
+| Cuarto Oscuro | Taste Skill | El objeto iluminado sobre fondo oscuro, con las opciones en lista |
+| Monumento | Taste Skill | El nombre enorme sobre un bloque negro |
+
 ## Estado
 
-Versión **0.1.0**. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Es posible que alguna textura o fuente haya que ajustarla. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
+Versión **0.2.0**. Trae **10 estilos** para elegir (5 con UI UX Pro Max y 5 con Taste Skill), pendientes de que decidas con cuál te quedas. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Es posible que alguna textura o fuente haya que ajustarla. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
 
 ## Qué hay en este repositorio
 

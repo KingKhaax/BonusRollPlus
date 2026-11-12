@@ -36,6 +36,8 @@ _G.LOOT_ROLL_ROLLED_NEED = "Need Roll - %d for %s by %s"
 _G.LOOT_ROLL_NEED = "%s has selected Need for: %s"
 _G.LOOT_ROLL_WON = "%s won: %s"
 _G.print = print
+_G.ITEM_LEVEL = "Item Level %d"
+_G.GetLocale = function() return "esES" end
 
 local ns = {}
 assert(loadfile("BonusRollPlus/Core.lua"))("BonusRollPlus", ns)
@@ -65,6 +67,18 @@ handler(self, "CANCEL_LOOT_ROLL", 7)
 for _, fn in ipairs(timers) do fn() end
 SlashCmdList.BONUSROLLPLUS("test")
 for _, fn in ipairs(timers) do fn() end
+for _, th in ipairs(ns.Themes) do
+    SlashCmdList.BONUSROLLPLUS("style " .. th.id)
+    for _, fn in ipairs(timers) do fn() end
+    handler(self, "START_LOOT_ROLL", 9, 45000)
+    handler(self, "CHAT_MSG_LOOT", "Brannlor has selected Need for: " .. link)
+    for obj, s in pairs(scripts) do
+        if s.OnClick then s.OnClick(obj) break end
+    end
+    handler(self, "CANCEL_LOOT_ROLL", 9)
+    for _, fn in ipairs(timers) do fn() end
+end
+assert(#ns.Themes == 10, "expected 10 themes")
 SlashCmdList.BONUSROLLPLUS("scale 0.8")
 SlashCmdList.BONUSROLLPLUS("rolls")
 SlashCmdList.BONUSROLLPLUS("reset")
