@@ -1,4 +1,6 @@
-# <img src="https://wow.zamimg.com/images/wow/icons/large/inv_scroll_03.jpg" width="36" height="36" align="absmiddle"> BonusRoll Plus 0.3.0
+<p align="center"><img src="../assets/logo.png" width="360" alt="BonusRoll Plus"></p>
+
+# BonusRoll Plus 0.4.0
 
 Documentación completa del addon: qué hace, cómo funciona por dentro, comandos, historial de cambios, lo que falta y cómo llevarlo a otro ordenador.
 
@@ -8,7 +10,7 @@ Sustituye la ventana de tirada de botín en grupo del juego (Necesidad, Codicia,
 
 - Cliente objetivo: **World of Warcraft Forever** (`_forever_`, interfaz `16001` y `11601`).
 - El `.toc` declara también `120107` y `120105` (Retail), **sin probar** allí.
-- Archivos: `BonusRollPlus.toc` y `Core.lua`. No usa librerías ni archivos de imagen.
+- Archivos: `BonusRollPlus.toc`, `Locales.lua`, `Core.lua` y `Media/icon.tga` (el icono de la lista de AddOns). No usa librerías.
 - Datos guardados: `BonusRollPlusDB` (de la cuenta).
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_01.jpg" width="28" height="28" align="absmiddle"> Funcionalidad
@@ -35,6 +37,20 @@ Sustituye la ventana de tirada de botín en grupo del juego (Necesidad, Codicia,
 - Máximo 12 filas.
 - **Cómo se rellena**: lee los mensajes de tirada del chat (`CHAT_MSG_LOOT`) usando las cadenas del propio juego (`LOOT_ROLL_NEED`, `LOOT_ROLL_ROLLED_NEED`, etc.), por lo que funciona en cualquier idioma, incluso con argumentos reordenados. Si el cliente dejara de mandar esos mensajes, la lista saldría vacía.
 
+### Aviso de actualización
+
+WoW no permite consultar CurseForge desde dentro del juego, así que el aviso funciona entre jugadores que tienen el addon:
+
+- Al entrar en el juego y cada vez que cambia tu grupo, el addon envía su versión por el canal de addons a tu grupo, banda e instancia y a tu hermandad. Es un mensaje oculto, no sale en el chat.
+- Si recibes una versión **más nueva** que la tuya, te sale en el chat: *«BonusRoll Plus: Tienes la versión X y está disponible la versión Y en CurseForge.»* (en tu idioma).
+- Avisa una vez por sesión y por versión. Si luego te cruzas con alguien que tiene una versión todavía más nueva, avisa otra vez.
+- Solo se compara si el mensaje tiene exactamente el formato `V:x.y.z`. Cualquier otro texto se ignora.
+- **Límite**: si nadie con la versión nueva coincide contigo en grupo o hermandad, no hay aviso. El addon no puede mirar CurseForge por su cuenta.
+
+### Idiomas
+
+Los textos del addon están en `Locales.lua`, en los 11 idiomas del cliente: `enUS`, `esES`, `esMX`, `deDE`, `frFR`, `itIT`, `ptBR`, `ruRU`, `koKR`, `zhCN` y `zhTW`. Los nombres de los botones, los motivos por los que no puedes elegir y la línea de ligadura vienen del propio juego, ya traducidos. Si tu idioma no está, usa inglés. En ruso, coreano y chino el addon usa la fuente del cliente, para que se vean los nombres de los objetos.
+
 ### Comandos
 
 | Comando | Qué hace |
@@ -44,6 +60,7 @@ Sustituye la ventana de tirada de botín en grupo del juego (Necesidad, Codicia,
 | `/br scale 0.5-1.5` | Tamaño. Por defecto 1 |
 | `/br rolls` | Muestra u oculta la ventanita de tiradas |
 | `/br reset` | Devuelve la pila a su posición por defecto |
+| `/br version` | Muestra la versión instalada |
 | `/bonusroll` | Mismo comando con otro nombre |
 
 Mayús + arrastrar sobre una ventana mueve toda la pila. Se guarda la posición.
@@ -54,7 +71,7 @@ Mayús + arrastrar sobre una ventana mueve toda la pila. Se guarda la posición.
 
 | Tema | Detalle |
 |---|---|
-| Eventos | `ADDON_LOADED`, `PLAYER_LOGIN`, `START_LOOT_ROLL`, `CANCEL_LOOT_ROLL`, `CHAT_MSG_LOOT` |
+| Eventos | `ADDON_LOADED`, `PLAYER_LOGIN`, `PLAYER_ENTERING_WORLD`, `GROUP_ROSTER_UPDATE`, `START_LOOT_ROLL`, `CANCEL_LOOT_ROLL`, `CHAT_MSG_LOOT`, `CHAT_MSG_ADDON` |
 | Datos de la tirada | `GetLootRollItemInfo`, `GetLootRollItemLink`, `GetLootRollTimeLeft` |
 | Tirar | `RollOnLoot(rollID, 0 pasar / 1 necesidad / 2 codicia / 3 desencantar)` |
 | Datos del objeto | `C_Item.GetItemInfo`, `C_Item.GetDetailedItemLevelInfo` |
@@ -74,6 +91,15 @@ Mayús + arrastrar sobre una ventana mueve toda la pila. Se guarda la posición.
 Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
+
+### 0.4.0 (12/11/2026)
+
+- **Logo e icono**: el engranaje con la galaxia aparece en la lista de AddOns, y el logo grande en el README.
+- **Aviso de actualización** entre jugadores con el addon (ver arriba).
+- **Traducción a los 11 idiomas** del cliente y uso de la fuente del cliente en ruso, coreano y chino.
+- Comando nuevo: `/br version`.
+- El `.toc` incluye la descripción traducida.
+- Pruebas: comprueban que los 11 idiomas tienen todas las claves y los mismos marcadores de texto, y la lógica de comparación de versiones.
 
 ### 0.3.0 (12/11/2026)
 
@@ -98,7 +124,7 @@ Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_bag_08.jpg" width="28" height="28" align="absmiddle"> Llevarlo a otro ordenador
 
-1. Copia la carpeta **`BonusRollPlus`** entera, con `BonusRollPlus.toc`, `Core.lua` y este `README.md`.
+1. Copia la carpeta **`BonusRollPlus`** entera, con `BonusRollPlus.toc`, `Locales.lua`, `Core.lua`, `Media/` y este `README.md`.
 2. Pégala en la carpeta de addons del otro PC:
    - Forever: `World of Warcraft\_forever_\Interface\AddOns\`
    - Retail (sin probar): `World of Warcraft\_retail_\Interface\AddOns\`
@@ -130,7 +156,9 @@ Los dos deben terminar con `passed`.
 | Nivel de objeto entre paréntesis y pieza de armadura junto al nombre | Hecho |
 | Estética de WoW, con fuentes y colores del juego | Hecho: fuentes del juego y estilo Cristal Esmerilado |
 | Que se pueda exportar a otro ordenador | Hecho (ver arriba) |
-| Logo del addon como icono | **Pendiente**: hace falta el archivo de imagen |
+| Logo del addon como icono | Hecho |
+| Aviso cuando hay una versión nueva en CurseForge | Hecho, con la limitación de arriba |
+| Traducido a los 11 idiomas del juego | Hecho |
 
 ### Ideas propuestas y no implementadas
 
@@ -149,6 +177,8 @@ Salieron en la conversación y no se han pedido de forma expresa.
 - El nivel de objeto y la pieza pueden tardar una fracción de segundo si el cliente aún no tiene el objeto en caché. Se reintenta a los 0,6 s.
 - El color de clase solo se conoce para quienes están en tu grupo.
 - La ventana original de Blizzard sigue existiendo, solo oculta.
+- El aviso de versión necesita que te cruces con alguien que tenga la versión nueva. No consulta CurseForge directamente.
+- Las traducciones de los idiomas distintos del español están sin revisar por hablantes nativos.
 - Los iconos de Blizzard de las tiradas se buscan primero como atlas y después como archivo. Si ninguno existe en tu versión, los botones saldrían sin dibujo.
 - El desenfoque real del cristal no existe en WoW: el efecto se consigue con transparencias.
 

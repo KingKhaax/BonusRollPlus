@@ -12,8 +12,8 @@ local GLOW = "Interface\\Buttons\\UI-ActionButton-Border"
 local LEADER = "Interface\\GroupFrame\\UI-Group-LeaderIcon"
 local SPARK = "Interface\\CastingBar\\UI-CastingBar-Spark"
 
-local ES = GetLocale and GetLocale():sub(1, 2) == "es"
-local TITLE = ES and "Tiradas" or "Rolls"
+local L = ns.L
+local LOCALE_FONT = { ruRU = true, koKR = true, zhCN = true, zhTW = true }
 
 local KINDS = {
     { key = "need", roll = 1, label = NEED or "Need", atlas = "lootroll-toast-icon-need-up", file = "Interface\\Buttons\\UI-GroupLoot-Dice-Up", wax = { 0.78, 0.17, 0.13 } },
@@ -195,6 +195,7 @@ local function Fade(t, orientation, from, to)
 end
 
 local function Font(fs, path, size, flags)
+    if LOCALE_FONT[ns.locale] then path = STANDARD_TEXT_FONT end
     if not fs:SetFont(path, size, flags) then
         fs:SetFont(STANDARD_TEXT_FONT, size, flags)
     end
@@ -553,7 +554,7 @@ local function BuildPanel(f, T)
     Font(p.title, F_MORPH, 14)
     p.title:SetPoint("TOPLEFT", p, "TOPLEFT", 12, -10)
     p.title:SetTextColor(Hex(P.title))
-    p.title:SetText(TITLE)
+    p.title:SetText(L.TITLE)
     p.rows = {}
     return p
 end
@@ -900,8 +901,56 @@ local function RunTest()
         end
     end
     if shown == 0 then
-        print("|cffffd100BonusRoll Plus|r: no equipped items were found to preview.")
+        print("|cffffd100BonusRoll Plus|r: " .. L.NO_ITEMS)
     end
+end
+
+local PREFIX = "BRPLUS"
+
+local function ParseVersion(v)
+    local a, b, c = tostring(v or ""):match("^(%d+)%.(%d+)%.(%d+)$")
+    if not a then return end
+    return tonumber(a) * 1000000 + tonumber(b) * 1000 + tonumber(c)
+end
+
+local function MyVersion()
+    local get = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
+    return get and get(ADDON, "Version") or "0.0.0"
+end
+
+local warnedFor = 0
+
+local function CheckVersion(remote)
+    local mine, theirs = ParseVersion(MyVersion()), ParseVersion(remote)
+    if not mine or not theirs or theirs <= mine or theirs <= warnedFor then return end
+    warnedFor = theirs
+    print("|cffffd100BonusRoll Plus|r: " .. string.format(L.VERSION_OUTDATED, MyVersion(), remote))
+end
+
+local lastAnnounce = -100
+
+local function Announce()
+    local send = C_ChatInfo and C_ChatInfo.SendAddonMessage
+    if not send then return end
+    local now = GetTime()
+    if now - lastAnnounce < 20 then return end
+    lastAnnounce = now
+    local msg = "V:" .. MyVersion()
+    if LE_PARTY_CATEGORY_INSTANCE and IsInGroup and IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        send(PREFIX, msg, "INSTANCE_CHAT")
+    elseif IsInRaid and IsInRaid() then
+        send(PREFIX, msg, "RAID")
+    elseif IsInGroup and IsInGroup() then
+        send(PREFIX, msg, "PARTY")
+    end
+    if IsInGuild and IsInGuild() then send(PREFIX, msg, "GUILD") end
+end
+
+local function OnAddonMessage(prefix, text, _, sender)
+    if prefix ~= PREFIX or type(text) ~= "string" then return end
+    if ShortName(sender) == ShortName(UnitName("player")) then return end
+    local remote = text:match("^V:(%d+%.%d+%.%d+)$")
+    if remote then CheckVersion(remote) end
 end
 
 local function Slash(msg)
@@ -915,23 +964,25 @@ local function Slash(msg)
             db.scale = v
             stack:SetScale(v)
         else
-            print("|cffffd100BonusRoll Plus|r: /br scale 0.5 - 1.5")
+            print("|cffffd100BonusRoll Plus|r: " .. L.SCALE_USAGE)
         end
     elseif cmd == "rolls" then
         db.showRolls = not db.showRolls
         for _, f in ipairs(active) do f.panel:SetShown(db.showRolls) end
+    elseif cmd == "version" then
+        print("|cffffd100BonusRoll Plus|r: " .. MyVersion())
     elseif cmd == "reset" then
         db.x, db.y = nil, nil
         anchor:ClearAllPoints()
         anchor:SetPoint("BOTTOM", UIParent, "BOTTOM", -100, 190)
     else
-        print("|cffffd100BonusRoll Plus|r: /br test | scale <0.5-1.5> | rolls | reset. Shift+drag a window to move it.")
+        print("|cffffd100BonusRoll Plus|r: " .. L.HELP)
     end
 end
 
 local ev = CreateFrame("Frame")
 ev:RegisterEvent("ADDON_LOADED")
-ev:SetScript("OnEvent", function(self, event, a, b)
+ev:SetScript("OnEvent", function(self, event, a, b, c, d)
     if event == "ADDON_LOADED" and a == ADDON then
         BonusRollPlusDB = BonusRollPlusDB or {}
         db = BonusRollPlusDB
@@ -961,6 +1012,10 @@ ev:SetScript("OnEvent", function(self, event, a, b)
         self:RegisterEvent("CANCEL_LOOT_ROLL")
         self:RegisterEvent("CHAT_MSG_LOOT")
         self:RegisterEvent("PLAYER_LOGIN")
+        self:RegisterEvent("PLAYER_ENTERING_WORLD")
+        self:RegisterEvent("GROUP_ROSTER_UPDATE")
+        self:RegisterEvent("CHAT_MSG_ADDON")
+        if C_ChatInfo and C_ChatInfo.RegisterAddonMessagePrefix then C_ChatInfo.RegisterAddonMessagePrefix(PREFIX) end
         SLASH_BONUSROLLPLUS1 = "/br"
         SLASH_BONUSROLLPLUS2 = "/bonusroll"
         SlashCmdList.BONUSROLLPLUS = Slash
@@ -972,6 +1027,12 @@ ev:SetScript("OnEvent", function(self, event, a, b)
         OnCancelRoll(a)
     elseif event == "CHAT_MSG_LOOT" then
         OnLootMessage(a)
+    elseif event == "CHAT_MSG_ADDON" then
+        OnAddonMessage(a, b, c, d)
+    elseif event == "PLAYER_ENTERING_WORLD" then
+        C_Timer.After(10, Announce)
+    elseif event == "GROUP_ROSTER_UPDATE" then
+        C_Timer.After(3, Announce)
     end
 end)
 
@@ -979,3 +1040,6 @@ ns.Compile = Compile
 ns.Match = Match
 ns.Parse = Parse
 ns.Themes = THEMES
+ns.ParseVersion = ParseVersion
+ns.CheckVersion = CheckVersion
+ns.MyVersion = MyVersion

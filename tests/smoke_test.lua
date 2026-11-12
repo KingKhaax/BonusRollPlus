@@ -40,6 +40,7 @@ _G.ITEM_LEVEL = "Item Level %d"
 _G.GetLocale = function() return "esES" end
 
 local ns = {}
+assert(loadfile("BonusRollPlus/Locales.lua"))("BonusRollPlus", ns)
 assert(loadfile("BonusRollPlus/Core.lua"))("BonusRollPlus", ns)
 
 local handler
@@ -48,6 +49,17 @@ assert(handler, "no OnEvent handler registered")
 handler({ UnregisterEvent = function() end, RegisterEvent = function() end }, "ADDON_LOADED", "BonusRollPlus")
 local self = { UnregisterEvent = function() end, RegisterEvent = function() end }
 handler(self, "PLAYER_LOGIN")
+_G.GetAddOnMetadata = function() return "0.3.0" end
+_G.IsInGroup = function() return true end
+_G.IsInRaid = function() return false end
+_G.IsInGuild = function() return true end
+local sent = {}
+_G.C_ChatInfo = { RegisterAddonMessagePrefix = function() end, SendAddonMessage = function(prefix, msg, channel) sent[#sent + 1] = prefix .. "|" .. msg .. "|" .. channel end }
+handler(self, "PLAYER_ENTERING_WORLD")
+handler(self, "GROUP_ROSTER_UPDATE")
+handler(self, "CHAT_MSG_ADDON", "BRPLUS", "V:9.9.9", "PARTY", "Otro-Realm")
+handler(self, "CHAT_MSG_ADDON", "BRPLUS", "V:evil", "PARTY", "Otro-Realm")
+handler(self, "CHAT_MSG_ADDON", "OTHER", "V:9.9.9", "PARTY", "Otro-Realm")
 handler(self, "START_LOOT_ROLL", 7, 45000)
 local link = "|cff0070dd|Hitem:2000::::::::|h[Elder Headpiece]|h|r"
 handler(self, "CHAT_MSG_LOOT", "Brannlor has selected Need for: " .. link)
@@ -71,4 +83,7 @@ assert(#ns.Themes == 1, "expected 1 theme")
 SlashCmdList.BONUSROLLPLUS("scale 0.8")
 SlashCmdList.BONUSROLLPLUS("rolls")
 SlashCmdList.BONUSROLLPLUS("reset")
+SlashCmdList.BONUSROLLPLUS("version")
+SlashCmdList.BONUSROLLPLUS("")
+assert(#sent >= 2, "version announce was not sent")
 print("smoke test passed, rolled:", _G.__rolled and (_G.__rolled[1] .. "/" .. _G.__rolled[2]) or "none")

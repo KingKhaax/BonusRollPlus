@@ -36,6 +36,7 @@ _G.LOOT_ROLL_WON = "%s won: %s"
 _G.LOOT_ROLL_ROLLED_GREED = "Tirada de Codicia: %2$s %1$d por %3$s"
 
 local ns = {}
+assert(loadfile("BonusRollPlus/Locales.lua"))("BonusRollPlus", ns)
 local chunk = assert(loadfile("BonusRollPlus/Core.lua"))
 chunk("BonusRollPlus", ns)
 
@@ -59,4 +60,22 @@ eq(ns.Parse("something unrelated"), nil)
 local pat = ns.Compile("%s (50%% off) [x]")
 eq(("a (50% off) [x]"):match(pat), "a")
 
-print("pattern tests passed")
+_G.GetAddOnMetadata = function() return "0.3.0" end
+local printed = {}
+_G.print = function(...) printed[#printed + 1] = table.concat({ ... }, " ") end
+eq(ns.ParseVersion("0.3.0") < ns.ParseVersion("0.10.0"), true, "version order")
+eq(ns.ParseVersion("1.0.0") > ns.ParseVersion("0.99.99"), true, "major beats minor")
+eq(ns.ParseVersion("abc"), nil)
+ns.CheckVersion("0.3.0")
+eq(#printed, 0, "same version must stay silent")
+ns.CheckVersion("0.4.0")
+eq(#printed, 1, "newer version must warn")
+assert(printed[1]:find("0.3.0", 1, true) and printed[1]:find("0.4.0", 1, true) and printed[1]:find("CurseForge", 1, true), printed[1])
+ns.CheckVersion("0.4.0")
+eq(#printed, 1, "same newer version must not warn twice")
+ns.CheckVersion("0.5.0")
+eq(#printed, 2, "an even newer version warns again")
+ns.CheckVersion("0.2.0")
+eq(#printed, 2, "older version must stay silent")
+
+io.write("pattern tests passed\n")
