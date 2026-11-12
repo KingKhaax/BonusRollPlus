@@ -717,7 +717,7 @@ local function Slash(msg)
             db.scale = v
             stack:SetScale(v)
         else
-            print("|cffffd100BonusRoll Plus|r: /brp scale 0.5 - 1.5")
+            print("|cffffd100BonusRoll Plus|r: /br scale 0.5 - 1.5")
         end
     elseif cmd == "rolls" then
         db.showRolls = not db.showRolls
@@ -727,7 +727,7 @@ local function Slash(msg)
         anchor:ClearAllPoints()
         anchor:SetPoint("BOTTOM", UIParent, "BOTTOM", -100, 190)
     else
-        print("|cffffd100BonusRoll Plus|r: /brp test | scale <0.5-1.5> | rolls | reset. Shift+drag a scroll to move it.")
+        print("|cffffd100BonusRoll Plus|r: /br test | scale <0.5-1.5> | rolls | reset. Shift+drag a scroll to move it.")
     end
 end
 
@@ -758,7 +758,7 @@ ev:SetScript("OnEvent", function(self, event, a, b)
         self:RegisterEvent("CANCEL_LOOT_ROLL")
         self:RegisterEvent("CHAT_MSG_LOOT")
         self:RegisterEvent("PLAYER_LOGIN")
-        SLASH_BONUSROLLPLUS1 = "/brp"
+        SLASH_BONUSROLLPLUS1 = "/br"
         SLASH_BONUSROLLPLUS2 = "/bonusroll"
         SlashCmdList.BONUSROLLPLUS = Slash
     elseif event == "PLAYER_LOGIN" then
