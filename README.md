@@ -43,15 +43,16 @@ Si el juego ya estaba abierto, escribe `/reload` antes.
 | `/br test` | Muestra tres ventanas de prueba con tus objetos equipados |
 | `/br scale 0.5-1.5` | Cambia el tamaño (por defecto 1) |
 | `/br rolls` | Muestra u oculta la ventanita de tiradas |
+| `/br lock` | Fija o desbloquea las ventanas (igual que el candado) |
 | `/br reset` | Devuelve las ventanas a su sitio |
 | `/br version` | Muestra la versión instalada |
 | `/bonusroll` | Es otro nombre para `/br` |
 
-Mayús + arrastrar sobre una ventana la mueve. La posición se guarda.
+Arrastra una ventana para moverla. El candado de su esquina la fija; otro clic la desbloquea. La posición se guarda.
 
 ## Estado
 
-Versión **0.4.0**. El estilo es **Cristal Esmerilado**, elegido entre diez propuestas hechas con UI UX Pro Max y Taste Skill. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
+Versión **0.5.0**. El estilo es **Cristal Esmerilado**, elegido entre diez propuestas hechas con UI UX Pro Max y Taste Skill. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
 
 ## Qué hay en este repositorio
 

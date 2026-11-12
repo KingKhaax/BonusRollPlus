@@ -12,7 +12,7 @@
 ## Notes-zhCN: 用磨砂玻璃面板替换队伍战利品掷骰窗口，显示物品等级、护甲部位以及所有人的实时掷骰列表。输入 /br test 预览。
 ## Notes-zhTW: 以霧面玻璃面板取代隊伍戰利品擲骰視窗，顯示物品等級、護甲部位以及所有人的即時擲骰清單。輸入 /br test 預覽。
 ## Author: KingKhaax
-## Version: 0.4.0
+## Version: 0.5.0
 ## SavedVariables: BonusRollPlusDB
 ## IconTexture: Interface\AddOns\BonusRollPlus\Media\icon
 

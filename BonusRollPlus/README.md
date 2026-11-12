@@ -1,6 +1,6 @@
 <p align="center"><img src="../assets/logo.png" width="360" alt="BonusRoll Plus"></p>
 
-# BonusRoll Plus 0.4.0
+# BonusRoll Plus 0.5.0
 
 Documentación completa del addon: qué hace, cómo funciona por dentro, comandos, historial de cambios, lo que falta y cómo llevarlo a otro ordenador.
 
@@ -59,11 +59,12 @@ Los textos del addon están en `Locales.lua`, en los 11 idiomas del cliente: `en
 | `/br test` | Tres ventanas de prueba con tus objetos equipados (cabeza, hombros, pecho, cintura, piernas, anillo o arma, el primero que tengas). Tiempo de 90 s. Las tiradas de los demás son de ejemplo y aparecen poco a poco |
 | `/br scale 0.5-1.5` | Tamaño. Por defecto 1 |
 | `/br rolls` | Muestra u oculta la ventanita de tiradas |
+| `/br lock` | Fija o desbloquea la pila (igual que el candado) |
 | `/br reset` | Devuelve la pila a su posición por defecto |
 | `/br version` | Muestra la versión instalada |
 | `/bonusroll` | Mismo comando con otro nombre |
 
-Mayús + arrastrar sobre una ventana mueve toda la pila. Se guarda la posición.
+Arrastrar una ventana mueve toda la pila mientras esté desbloqueada. El candado de la esquina superior derecha la fija o la desbloquea, y se recuerda entre sesiones. Se guarda la posición.
 
 `/br` lo comprobé en los addons instalados de Forever y Retail: ninguno lo usa.
 
@@ -91,6 +92,11 @@ Mayús + arrastrar sobre una ventana mueve toda la pila. Se guarda la posición.
 Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
+
+### 0.5.0 (12/11/2026)
+
+- **Candado** en cada ventana y comando `/br lock`: desbloqueada se arrastra sin Mayús; fija no se mueve. Se recuerda entre sesiones.
+- Cuando termina la tirada y sale el ganador, el objeto se queda 4 segundos en pantalla y desaparece.
 
 ### 0.4.0 (12/11/2026)
 

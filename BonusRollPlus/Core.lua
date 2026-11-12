@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, v = 3 }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3 }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -446,8 +446,27 @@ local function NewFrame(T)
     f:RegisterForDrag("LeftButton")
     f.theme, f.themeId, f.w, f.h = T, T.id, T.w, T.h
     f:SetScript("OnDragStart", function()
-        if IsShiftKeyDown() then anchor:StartMoving() end
+        if not db.locked then anchor:StartMoving() end
     end)
+    local lock = CreateFrame("Button", nil, f)
+    lock:SetSize(18, 18)
+    lock:SetPoint("TOPRIGHT", f, "TOPRIGHT", -4, -4)
+    lock:SetFrameLevel(f:GetFrameLevel() + 20)
+    lock:SetNormalTexture("Interface\\Buttons\\LockButton-Locked-Up")
+    lock:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+    lock.Refresh = function(self)
+        self:SetNormalTexture(db.locked and "Interface\\Buttons\\LockButton-Locked-Up" or "Interface\\Buttons\\LockButton-Unlocked-Up")
+        self:SetAlpha(db.locked and 0.55 or 1)
+    end
+    lock:SetScript("OnShow", lock.Refresh)
+    lock:SetScript("OnClick", function() ns.SetLocked(not db.locked) end)
+    lock:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:SetText(db.locked and L.LOCKED_TIP or L.UNLOCKED_TIP)
+        GameTooltip:Show()
+    end)
+    lock:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    f.lock = lock
     f:SetScript("OnDragStop", function()
         anchor:StopMovingOrSizing()
         local x = anchor:GetCenter()
@@ -828,7 +847,7 @@ local function OnLootMessage(text)
     elseif r.type == "won" then
         local e = AddEntry(f, name)
         e.won = true
-        C_Timer.After(6, function()
+        C_Timer.After(4, function()
             if f.itemID == ItemID(r.link) and f.entries and f.entries[name] and f.entries[name].won then Release(f) end
         end)
     end
@@ -864,7 +883,7 @@ end
 local function OnCancelRoll(rollID)
     for _, f in ipairs(active) do
         if f.rollID == rollID and not f.fake then
-            C_Timer.After(f.chosen and 6 or 0, function()
+            C_Timer.After((f.chosen or f.entries and next(f.entries)) and 4 or 0, function()
                 if f.rollID == rollID then Release(f) end
             end)
         end
@@ -953,6 +972,11 @@ local function OnAddonMessage(prefix, text, _, sender)
     if remote then CheckVersion(remote) end
 end
 
+function ns.SetLocked(v)
+    db.locked = v and true or false
+    for _, f in ipairs(active) do f.lock:Refresh() end
+end
+
 local function Slash(msg)
     local cmd, arg = (msg or ""):match("^(%S*)%s*(.-)$")
     cmd = cmd:lower()
@@ -971,6 +995,9 @@ local function Slash(msg)
         for _, f in ipairs(active) do f.panel:SetShown(db.showRolls) end
     elseif cmd == "version" then
         print("|cffffd100BonusRoll Plus|r: " .. MyVersion())
+    elseif cmd == "lock" then
+        ns.SetLocked(not db.locked)
+        print("|cffffd100BonusRoll Plus|r: " .. (db.locked and L.LOCKED_TIP or L.UNLOCKED_TIP))
     elseif cmd == "reset" then
         db.x, db.y = nil, nil
         anchor:ClearAllPoints()
