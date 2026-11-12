@@ -53,8 +53,6 @@ Versión **0.3.0**. El estilo es **Cristal Esmerilado**, elegido entre diez prop
 | Ruta | Contenido |
 |---|---|
 | `BonusRollPlus/` | El addon, listo para copiar al juego |
-| `index.html` | Las 16 primeras propuestas de diseño (histórico) |
-| `preview-en-juego.html` | Maqueta del primer diseño sobre una pantalla de juego (histórico) |
 | `tests/` | Pruebas de la lectura de mensajes y un recorrido completo con una simulación del juego |
 
 <sub>Los iconos son de World of Warcraft y pertenecen a Blizzard Entertainment. Este proyecto no está afiliado a Blizzard.</sub>
