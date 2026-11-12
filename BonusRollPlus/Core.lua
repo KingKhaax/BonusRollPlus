@@ -1,21 +1,13 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, style = "skeuo", v = 2 }
+local DEFAULTS = { scale = 1, showRolls = true, v = 3 }
 local db
 
-local MEDIA = "Interface\\AddOns\\BonusRollPlus\\Media\\"
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
 local F_MORPH = "Fonts\\MORPHEUS.TTF"
 local F_ARIAL = "Fonts\\ARIALN.TTF"
-local F_SKURRI = "Fonts\\SKURRI.TTF"
-local F_ANTON = MEDIA .. "Anton-Regular.ttf"
-local F_PIXEL = MEDIA .. "PressStart2P-Regular.ttf"
 local WHITE = "Interface\\Buttons\\WHITE8X8"
 local MASK = "Interface\\CharacterFrame\\TempPortraitAlphaMask"
-local PARCH = "Interface\\AchievementFrame\\UI-Achievement-Parchment-Horizontal"
-local MARBLE = "Interface\\FrameGeneral\\UI-Background-Marble"
-local TOOLEDGE = "Interface\\Tooltips\\UI-Tooltip-Border"
-local BARTEX = "Interface\\TargetingFrame\\UI-StatusBar"
 local GLOW = "Interface\\Buttons\\UI-ActionButton-Border"
 local LEADER = "Interface\\GroupFrame\\UI-Group-LeaderIcon"
 local SPARK = "Interface\\CastingBar\\UI-CastingBar-Spark"
@@ -250,86 +242,11 @@ local function Outline(parent, layer, sub, x, y, w, h, th, hex, a)
     Rect(parent, layer, sub, x + w - th, y + th, th, h - 2 * th, hex, a)
 end
 
-local FRAME_W, FRAME_H, PANEL_W = 340, 250, 214
-local ROLLER_H = 30
-
-local SRC_UI = "UI UX Pro Max"
-local SRC_TASTE = "Taste Skill"
+local FRAME_W, PANEL_W = 300, 214
 
 local THEMES = {
     {
-        id = "skeuo", title = "Skeuomorfismo", src = SRC_UI, w = 340, h = 250,
-        panel = { style = "parch", dx = 6, y = 36, ink = "#2A1708", hi = "#9E140A", title = "#F2D175", flags = nil },
-    },
-    {
-        id = "vintage", title = "Vintage Analógico", src = SRC_UI, w = 250, h = 336,
-        ops = {
-            { op = "rect", x = 6, y = 7, w = 250, h = 336, c = "#000000", a = 0.35 },
-            { op = "rect", x = 0, y = 0, c = "#F5E6C8" },
-            { op = "outline", x = 0, y = 0, w = 250, h = 336, th = 2, c = "#CDB88C" },
-            { op = "rect", x = 14, y = 14, w = 222, h = 196, c = "#D4A574" },
-            { op = "grain", x = 14, y = 14, w = 222, h = 196, n = 90, c = "#5A3A1A", a = 0.2 },
-            { op = "grad", x = 14, y = 14, w = 222, h = 80, dir = "VERTICAL", c1 = "#2A1608", a1 = 0, c2 = "#2A1608", a2 = 0.5 },
-            { op = "grad", x = 14, y = 130, w = 222, h = 80, dir = "VERTICAL", c1 = "#2A1608", a1 = 0.5, c2 = "#2A1608", a2 = 0 },
-            { op = "grad", x = 14, y = 14, w = 90, h = 196, dir = "HORIZONTAL", c1 = "#FFC864", a1 = 0.4, c2 = "#FFC864", a2 = 0 },
-            { op = "rect", x = 14, y = 166, w = 222, h = 44, c = "#3B2A1A", a = 0.9 },
-            { op = "outline", x = 14, y = 14, w = 222, h = 196, th = 2, c = "#3B2A1A" },
-        },
-        icon = { x = 77, y = 44, size = 96, ring = 4, tint = "#EBCB9E", desat = true },
-        name = { x = 20, y = 172, w = 210, font = F_MORPH, size = 15, color = "q", justify = "CENTER", flags = "OUTLINE", lines = 2 },
-        piece = { x = 14, y = 218, w = 222, font = F_FRIZ, size = 12, color = "#5A4630", justify = "CENTER" },
-        bind = { x = 14, y = 234, w = 222, font = F_FRIZ, size = 11, color = "#8A7350", justify = "CENTER" },
-        btn = {
-            shape = "circle", label = "below", iconSize = 24, labelFont = F_FRIZ, labelSize = 10, ink = "#3B2A1A",
-            cells = { { 24, 254, 46, 46 }, { 76, 254, 46, 46 }, { 128, 254, 46, 46 }, { 180, 254, 46, 46 } },
-            fill = { need = "#C0504D", greed = "#D4A574", de = "#4A7B7C", pass = "#8C7B66" },
-            border = "#3B2A1A", th = 2, sel = "#FFFFFF", selA = 0.5,
-        },
-        timer = { kind = "blocks", n = 14, x = 14, y = 322, w = 222, h = 8, gap = 4, fill = "#3B2A1A", dim = "#D8C69E" },
-        panel = { style = "flat", bg = "#F5E6C8", border = "#CDB88C", th = 2, ink = "#3B2A1A", hi = "#B5483E", title = "#3B2A1A", titleBg = "#D4A574", font = F_FRIZ, dx = 14, y = 14, light = true },
-    },
-    {
-        id = "pixel", title = "Pixel Art", src = SRC_UI, w = 420, h = 98,
-        ops = {
-            { op = "rect", x = 5, y = 5, w = 420, h = 98, c = "#000000", a = 0.5 },
-            { op = "rect", x = 0, y = 0, c = "#000000" },
-            { op = "rect", x = 4, y = 4, w = 412, h = 90, c = "#1B1B3A" },
-            { op = "outline", x = 6, y = 6, w = 408, h = 86, th = 2, c = "#4A4A9A" },
-            { op = "rect", x = 0, y = 0, w = 4, h = 4, c = "#000000" },
-        },
-        icon = { x = 14, y = 16, size = 52, ring = 3 },
-        name = { x = 76, y = 14, w = 132, font = F_PIXEL, size = 8, color = "q", lines = 2 },
-        piece = { x = 76, y = 50, w = 132, font = F_PIXEL, size = 7, color = "#9AA0FF" },
-        btn = {
-            shape = "rect", label = "none", iconSize = 26, shade = true,
-            cells = { { 216, 14, 44, 44 }, { 266, 14, 44, 44 }, { 316, 14, 44, 44 }, { 366, 14, 44, 44 } },
-            fill = { need = "#E04040", greed = "#E0B020", de = "#A060E0", pass = "#808080" },
-            border = "#000000", th = 3, sel = "#FFFFFF", selA = 0.5,
-        },
-        timer = { kind = "blocks", n = 20, x = 14, y = 76, w = 392, h = 10, gap = 4, fill = "#40E040", dim = "#2A2A5A" },
-        panel = { style = "flat", bg = "#1B1B3A", border = "#000000", th = 3, ink = "#E8E8FF", hi = "#E0B020", title = "#E0B020", titleBg = "#000000", font = F_FRIZ, dx = 10, y = 0 },
-    },
-    {
-        id = "oled", title = "Modo Oscuro OLED", src = SRC_UI, w = 520, h = 84,
-        ops = {
-            { op = "rect", x = 0, y = 0, c = "#000000" },
-            { op = "rect", x = 0, y = 0, w = 76, h = 84, c = "#0A0E27" },
-            { op = "outline", x = 0, y = 0, w = 520, h = 84, th = 1, c = "#1A1F3D" },
-        },
-        icon = { x = 12, y = 16, size = 52, ring = 2, glow = true },
-        name = { x = 88, y = 14, w = 238, font = F_FRIZ, size = 16, color = "q", lines = 2 },
-        piece = { x = 88, y = 54, w = 238, font = F_FRIZ, size = 12, color = "#7F88B8" },
-        btn = {
-            shape = "circle", label = "none", iconSize = 22, ringBg = "#000000",
-            cells = { { 338, 22, 40, 40 }, { 384, 22, 40, 40 }, { 430, 22, 40, 40 }, { 476, 22, 40, 40 } },
-            fill = { need = "#FFC83D", greed = "#3DDC97", de = "#B26BFF", pass = "#6B7599" },
-            border = "#FFC83D", th = 2, sel = "#FFC83D", selA = 0.35,
-        },
-        timer = { kind = "bar", x = 0, y = 0, w = 520, h = 3, fill = "#FFC83D", track = "#0A0E27", spark = true },
-        panel = { style = "flat", bg = "#000000", border = "#1A1F3D", th = 1, ink = "#E0E0F0", hi = "#FFC83D", title = "#FFC83D", titleBg = "#0A0E27", font = F_FRIZ, dx = 8, y = 0 },
-    },
-    {
-        id = "glass", title = "Cristal Esmerilado", src = SRC_UI, w = 300, h = 250,
+        id = "glass", title = "Cristal Esmerilado", src = "UI UX Pro Max", w = 300, h = 250,
         ops = {
             { op = "rect", x = 0, y = 0, c = "#1E2A5A", a = 0.6 },
             { op = "grad", x = 0, y = 0, w = 300, h = 90, dir = "VERTICAL", c1 = "#FFFFFF", a1 = 0, c2 = "#FFFFFF", a2 = 0.16 },
@@ -350,108 +267,6 @@ local THEMES = {
         timer = { kind = "bar", x = 18, y = 208, w = 264, h = 6, fill = "#8FB2FF", track = "#FFFFFF", trackA = 0.16 },
         panel = { style = "flat", bg = "#1E2A5A", bgA = 0.8, border = "#FFFFFF", borderA = 0.32, th = 1, ink = "#FFFFFF", hi = "#8FB2FF", title = "#BFD0FF", titleBg = "#FFFFFF", titleBgA = 0.1, font = F_FRIZ, dx = 8, y = 0 },
     },
-    {
-        id = "ticket", title = "El Billete", src = SRC_TASTE, w = 440, h = 150,
-        ops = {
-            { op = "rect", x = 0, y = 0, c = "#E3E2DA" },
-            { op = "rect", x = 0, y = 0, w = 112, h = 150, c = "#9FC7B8" },
-            { op = "rect", x = 112, y = 0, w = 328, h = 48, c = "#161C1A" },
-            { op = "row", x = 110, y = 12, n = 12, dy = 11, w = 4, h = 6, c = "#161C1A" },
-            { op = "circle", x = 112, y = 0, size = 22, c = "#161C1A" },
-            { op = "circle", x = 112, y = 150, size = 22, c = "#161C1A" },
-        },
-        icon = { x = 24, y = 42, size = 64, ring = 3 },
-        name = { x = 126, y = 7, w = 304, font = F_FRIZ, size = 17, color = "q", upper = true, lines = 2 },
-        piece = { x = 126, y = 56, w = 304, font = F_FRIZ, size = 13, color = "#161C1A" },
-        bind = { x = 126, y = 74, w = 304, font = F_FRIZ, size = 11, color = "#4A524F" },
-        btn = {
-            shape = "rect", label = "stack", iconSize = 20, labelFont = F_FRIZ, labelSize = 10, ink = "#E3E2DA", selInk = "#161C1A",
-            cells = { { 126, 94, 72, 40 }, { 206, 94, 72, 40 }, { 286, 94, 72, 40 }, { 366, 94, 72, 40 } },
-            fill = { need = "#161C1A", greed = "#161C1A", de = "#161C1A", pass = "#161C1A" },
-            sel = "#9FC7B8", selA = 1,
-        },
-        timer = { kind = "bar", x = 112, y = 142, w = 328, h = 8, fill = "#9FC7B8", track = "#C9C8BF" },
-        panel = { style = "flat", bg = "#161C1A", border = "#9FC7B8", th = 2, ink = "#E3E2DA", hi = "#9FC7B8", title = "#9FC7B8", titleBg = "#1F2725", font = F_FRIZ, dx = 8, y = 0 },
-    },
-    {
-        id = "poster", title = "Cartel Plano", src = SRC_TASTE, w = 380, h = 214,
-        ops = {
-            { op = "rect", x = 0, y = 0, w = 130, h = 122, c = "#FF8126" },
-            { op = "rect", x = 130, y = 0, w = 250, h = 122, c = "#161615" },
-        },
-        icon = { x = 12, y = 12, size = 44, ring = 3 },
-        ilvl = { x = 10, y = 62, w = 112, font = F_ANTON, size = 44, color = "#111111", justify = "LEFT" },
-        name = { x = 142, y = 12, w = 226, font = F_ANTON, size = 22, color = "q", upper = true, noIlvl = true, lines = 2 },
-        piece = { x = 142, y = 96, w = 226, font = F_FRIZ, size = 13, color = "#F2F2F2" },
-        btn = {
-            shape = "rect", label = "stack", iconSize = 28, labelFont = F_ANTON, labelSize = 15, upper = true,
-            cells = { { 0, 134, 95, 80 }, { 95, 134, 95, 80 }, { 190, 134, 95, 80 }, { 285, 134, 95, 80 } },
-            fill = { need = "#DE194B", greed = "#C5F53D", de = "#4DB3FF", pass = "#161615" },
-            inkBy = { need = "#FFFFFF", greed = "#111111", de = "#111111", pass = "#F2F2F2" },
-            sel = "#FFFFFF", selA = 0.4,
-        },
-        timer = { kind = "bar", x = 0, y = 122, w = 380, h = 8, fill = "#C5F53D", track = "#111111" },
-        panel = { style = "flat", bg = "#161615", border = "#FF8126", th = 3, ink = "#F2F2F2", hi = "#C5F53D", title = "#FF8126", titleBg = "#161615", font = F_FRIZ, dx = 8, y = 0 },
-    },
-    {
-        id = "specimen", title = "Ficha de Espécimen", src = SRC_TASTE, w = 330, h = 252,
-        ops = {
-            { op = "rect", x = 0, y = 0, c = "#F7F9FA" },
-            { op = "rect", x = 0, y = 0, w = 330, h = 52, c = "#1F3038" },
-            { op = "rect", x = 14, y = 66, w = 104, h = 104, c = "#ECF0F2" },
-            { op = "outline", x = 0, y = 0, w = 330, h = 252, th = 2, c = "#1F3038" },
-        },
-        icon = { x = 28, y = 80, size = 76, ring = 3 },
-        name = { x = 14, y = 7, w = 302, font = F_FRIZ, size = 16, color = "q", noIlvl = true, lines = 2 },
-        ilvl = { x = 130, y = 66, w = 190, font = F_MORPH, size = 22, color = "#0D7480", justify = "LEFT", fmt = true },
-        piece = { x = 130, y = 104, w = 190, font = F_FRIZ, size = 13, color = "#1F3038" },
-        bind = { x = 130, y = 128, w = 190, font = F_FRIZ, size = 12, color = "#5D6B72" },
-        btn = {
-            shape = "rect", label = "stack", iconSize = 22, labelFont = F_FRIZ, labelSize = 11, ink = "#FFFFFF",
-            cells = { { 14, 182, 68, 44 }, { 90, 182, 68, 44 }, { 166, 182, 68, 44 }, { 242, 182, 74, 44 } },
-            fill = { need = "#0D7480", greed = "#0D7480", de = "#0D7480", pass = "#5D6B72" },
-            sel = "#1F3038", selA = 1,
-        },
-        timer = { kind = "bar", x = 14, y = 236, w = 302, h = 6, fill = "#0D7480", track = "#ECF0F2" },
-        panel = { style = "flat", bg = "#F7F9FA", border = "#1F3038", th = 2, ink = "#1F3038", hi = "#0D7480", title = "#F7F9FA", titleBg = "#1F3038", font = F_FRIZ, dx = 8, y = 0, light = true },
-    },
-    {
-        id = "darkroom", title = "Cuarto Oscuro", src = SRC_TASTE, w = 250, h = 336,
-        ops = {
-            { op = "rect", x = 0, y = 0, c = "#1C1C1C" },
-            { op = "circle", x = 125, y = 84, size = 170, c = "#C8C5BA", a = 0.06 },
-            { op = "circle", x = 125, y = 84, size = 122, c = "#C8C5BA", a = 0.08 },
-        },
-        icon = { x = 85, y = 40, size = 80, ring = 2 },
-        name = { x = 14, y = 138, w = 222, font = F_FRIZ, size = 17, color = "q", upper = true, justify = "CENTER", lines = 2 },
-        piece = { x = 14, y = 176, w = 222, font = F_FRIZ, size = 12, color = "#9A9B96", justify = "CENTER" },
-        btn = {
-            shape = "rect", label = "inside", iconSize = 20, labelFont = F_FRIZ, labelSize = 14, ink = "#F1F1EF", selInk = "#1C1C1C",
-            cells = { { 14, 204, 222, 28 }, { 14, 236, 222, 28 }, { 14, 268, 222, 28 }, { 14, 300, 222, 28 } },
-            fill = { need = "#262626", greed = "#262626", de = "#262626", pass = "#262626" },
-            sel = "#8FA68E", selA = 1,
-        },
-        timer = { kind = "bar", x = 0, y = 332, w = 250, h = 4, fill = "#8FA68E", track = "#262626" },
-        panel = { style = "flat", bg = "#1C1C1C", border = "#8FA68E", th = 2, ink = "#F1F1EF", hi = "#8FA68E", title = "#8FA68E", titleBg = "#262626", font = F_FRIZ, dx = 8, y = 0 },
-    },
-    {
-        id = "monument", title = "Monumento", src = SRC_TASTE, w = 460, h = 194,
-        ops = {
-            { op = "rect", x = 0, y = 0, c = "#FFFFFF" },
-            { op = "rect", x = 0, y = 0, w = 460, h = 104, c = "#05070A" },
-        },
-        icon = { x = 16, y = 20, size = 64, ring = 3 },
-        name = { x = 96, y = 12, w = 352, font = F_SKURRI, size = 30, color = "q", lines = 2 },
-        piece = { x = 96, y = 80, w = 352, font = F_FRIZ, size = 13, color = "#FFFFFF" },
-        btn = {
-            shape = "rect", label = "inside", iconSize = 24, labelFont = F_FRIZ, labelSize = 17, ink = "#1F2B4D",
-            cells = { { 12, 124, 106, 56 }, { 122, 124, 106, 56 }, { 232, 124, 106, 56 }, { 342, 124, 106, 56 } },
-            fill = { need = "#E3E1DC", greed = "#E3E1DC", de = "#E3E1DC", pass = "#E3E1DC" },
-            sel = "#F7941D", selA = 1,
-        },
-        timer = { kind = "bar", x = 0, y = 104, w = 460, h = 8, fill = "#F7941D", track = "#E3E1DC" },
-        panel = { style = "flat", bg = "#FFFFFF", border = "#05070A", th = 3, ink = "#1F2B4D", hi = "#F7941D", title = "#FFFFFF", titleBg = "#05070A", font = F_FRIZ, dx = 8, y = 0, light = true },
-    },
 }
 
 local THEME_BY_ID = {}
@@ -459,7 +274,6 @@ for _, t in ipairs(THEMES) do THEME_BY_ID[t.id] = t end
 
 local anchor, stack
 local pools, active = {}, {}
-local BuildFrameFor
 
 local function Layout()
     local y, w = 0, FRAME_W
@@ -482,10 +296,6 @@ local function Release(f)
     local pool = pools[f.themeId]
     if pool then pool[#pool + 1] = f end
     Layout()
-end
-
-local function ReleaseAll()
-    for i = #active, 1, -1 do Release(active[i]) end
 end
 
 local function RefreshPanel(f)
@@ -712,17 +522,7 @@ local function BuildPanel(f, T)
     p:SetSize(PANEL_W, 80)
     p:SetPoint("TOPLEFT", f, "TOPRIGHT", P.dx or 8, -(P.y or 0))
     p:SetFrameLevel(f:GetFrameLevel() + 2)
-    if P.style == "parch" then
-        if p.SetBackdrop then
-            p:SetBackdrop({ bgFile = PARCH, edgeFile = TOOLEDGE, edgeSize = 14, insets = { left = 3, right = 3, top = 3, bottom = 3 } })
-            p:SetBackdropColor(1, 0.92, 0.74, 1)
-            p:SetBackdropBorderColor(0.6, 0.42, 0.2, 1)
-        end
-        local strip = Tex(p, "BACKGROUND", 0.2, 0.12, 0.05, 0.9, 1)
-        strip:SetPoint("TOPLEFT", p, "TOPLEFT", 4, -4)
-        strip:SetPoint("TOPRIGHT", p, "TOPRIGHT", -4, -4)
-        strip:SetHeight(26)
-    else
+    do
         local th = P.th or 1
         local bg = Tex(p, "BACKGROUND", Hex(P.bg, P.bgA))
         bg:SetAllPoints()
@@ -934,282 +734,11 @@ local function BuildGeneric(T)
     return f
 end
 
-local function SealPaint(b, enabled)
-    local w = b.kind.wax
-    if enabled then
-        b.wax:SetColorTexture(w[1], w[2], w[3], 1)
-        b.icon:SetDesaturated(false)
-        b:SetAlpha(1)
-    else
-        b.wax:SetColorTexture(0.45, 0.4, 0.34, 1)
-        b.icon:SetDesaturated(true)
-        b:SetAlpha(0.55)
-    end
-    b.enabled = enabled
-end
-
-local function BuildSeal(f, i, kind)
-    local b = CreateFrame("Button", nil, f)
-    b:SetSize(70, 86)
-    b:SetPoint("TOPLEFT", f, "TOPLEFT", 30 + (i - 1) * 70, -126)
-    b:SetFrameLevel(f:GetFrameLevel() + 6)
-    b.kind = kind
-    b.rim = Circle(b, "BACKGROUND", 1, 62, 0.1, 0.05, 0.02, 1)
-    b.rim:SetPoint("TOP", b, "TOP", 0, -2)
-    b.ring = Circle(b, "BACKGROUND", 2, 58, 0.83, 0.64, 0.27, 1)
-    b.ring:SetPoint("CENTER", b.rim, "CENTER", 0, 0)
-    b.sel = Circle(b, "BACKGROUND", 0, 72, 1, 0.84, 0.2, 0.75)
-    b.sel:SetPoint("CENTER", b.rim, "CENTER", 0, 0)
-    b.sel:Hide()
-    b.well = Circle(b, "BACKGROUND", 3, 53, 0.12, 0.06, 0.03, 1)
-    b.well:SetPoint("CENTER", b.rim, "CENTER", 0, 0)
-    b.wax = Circle(b, "ARTWORK", 1, 50, kind.wax[1], kind.wax[2], kind.wax[3], 1)
-    b.wax:SetPoint("CENTER", b.rim, "CENTER", 0, 0)
-    b.shade = Circle(b, "ARTWORK", 2, 50, 0, 0, 0, 0.28)
-    b.shade:SetPoint("CENTER", b.wax, "CENTER", 0, -4)
-    b.gloss = Circle(b, "ARTWORK", 3, 30, 1, 1, 1, 0.2)
-    b.gloss:SetPoint("CENTER", b.wax, "CENTER", -7, 9)
-    b.icon = b:CreateTexture(nil, "OVERLAY")
-    b.icon:SetSize(30, 30)
-    b.icon:SetPoint("CENTER", b.wax, "CENTER", 0, 0)
-    SetKindIcon(b.icon, kind)
-    b.label = b:CreateFontString(nil, "OVERLAY")
-    Font(b.label, F_MORPH, 13)
-    b.label:SetPoint("TOP", b.rim, "BOTTOM", 0, -5)
-    b.label:SetText(kind.label)
-    b.label:SetTextColor(0.2, 0.1, 0.03)
-    b.hover = Circle(b, "HIGHLIGHT", 0, 50, 1, 1, 1, 0.22)
-    b.hover:SetPoint("CENTER", b.rim, "CENTER", 0, 0)
-    function b:Paint(enabled) SealPaint(self, enabled) end
-    function b:Mark(selected)
-        self.sel:SetShown(selected)
-        self:SetAlpha(selected and 1 or 0.4)
-    end
-    b:SetScript("OnClick", function(self)
-        if self.enabled then Choose(f, self.kind) end
-    end)
-    b:SetScript("OnEnter", ButtonTooltip)
-    b:SetScript("OnLeave", function() GameTooltip:Hide() end)
-    return b
-end
-
-local function Roller(deco, atBottom)
-    local bands = { { 0.14, 0.07, 0.03, 5 }, { 0.45, 0.28, 0.12, 6 }, { 0.8, 0.57, 0.3, 8 }, { 0.55, 0.36, 0.17, 6 }, { 0.16, 0.08, 0.03, 5 } }
-    local off = 0
-    for _, band in ipairs(bands) do
-        local t = Tex(deco, "ARTWORK", band[1], band[2], band[3], 1)
-        if atBottom then
-            t:SetPoint("TOPLEFT", deco, "BOTTOMLEFT", 14, ROLLER_H - off)
-            t:SetPoint("TOPRIGHT", deco, "BOTTOMRIGHT", -14, ROLLER_H - off)
-        else
-            t:SetPoint("TOPLEFT", deco, "TOPLEFT", 14, -off)
-            t:SetPoint("TOPRIGHT", deco, "TOPRIGHT", -14, -off)
-        end
-        t:SetHeight(band[4])
-        off = off + band[4]
-    end
-    for _, side in ipairs({ "LEFT", "RIGHT" }) do
-        local sx = side == "LEFT" and 14 or -14
-        local corner = atBottom and "BOTTOM" .. side or "TOP" .. side
-        local cy = atBottom and (ROLLER_H / 2) or -(ROLLER_H / 2)
-        local cap = Circle(deco, "OVERLAY", 1, 38, 0.2, 0.1, 0.04, 1)
-        cap:SetPoint("CENTER", deco, corner, sx, cy)
-        local c2 = Circle(deco, "OVERLAY", 2, 34, 0.68, 0.45, 0.2, 1)
-        c2:SetPoint("CENTER", cap, "CENTER", 0, 0)
-        local c3 = Circle(deco, "OVERLAY", 3, 20, 0.3, 0.17, 0.07, 1)
-        c3:SetPoint("CENTER", cap, "CENTER", 0, 0)
-        local c4 = Circle(deco, "OVERLAY", 4, 9, 0.93, 0.74, 0.34, 1)
-        c4:SetPoint("CENTER", cap, "CENTER", 0, 0)
-    end
-end
-
-local function BuildScroll(T)
-    local f = NewFrame(T)
-    local paper = CreateFrame("Frame", nil, f, "BackdropTemplate")
-    paper:SetPoint("TOPLEFT", f, "TOPLEFT", 14, -16)
-    paper:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -14, 16)
-    paper:SetFrameLevel(f:GetFrameLevel() + 1)
-    if paper.SetBackdrop then
-        paper:SetBackdrop({ bgFile = PARCH, insets = { left = 0, right = 0, top = 0, bottom = 0 } })
-        paper:SetBackdropColor(1, 0.9, 0.7, 1)
-    end
-    local base = Tex(paper, "BACKGROUND", 0.78, 0.6, 0.34, 0.35)
-    base:SetAllPoints()
-    local stains = { { 40, 120, 90, 0.1 }, { 210, 60, 120, 0.12 }, { 90, 200, 110, 0.1 }, { 250, 190, 80, 0.12 }, { 150, 130, 160, 0.07 } }
-    for _, s in ipairs(stains) do
-        local blob = Circle(paper, "BACKGROUND", 1, s[3], 0.4, 0.24, 0.08, s[4])
-        blob:SetPoint("CENTER", paper, "TOPLEFT", s[1], -s[2])
-    end
-    local burn = {
-        { "VERTICAL", { 0.3, 0.17, 0.05, 0 }, { 0.3, 0.17, 0.05, 0.5 }, "top" },
-        { "VERTICAL", { 0.3, 0.17, 0.05, 0.5 }, { 0.3, 0.17, 0.05, 0 }, "bottom" },
-        { "HORIZONTAL", { 0.3, 0.17, 0.05, 0.5 }, { 0.3, 0.17, 0.05, 0 }, "left" },
-        { "HORIZONTAL", { 0.3, 0.17, 0.05, 0 }, { 0.3, 0.17, 0.05, 0.5 }, "right" },
-    }
-    for _, spec in ipairs(burn) do
-        local t = Tex(paper, "ARTWORK", 1, 1, 1, 1)
-        local side = spec[4]
-        if side == "top" then
-            t:SetPoint("TOPLEFT", paper, "TOPLEFT", 0, 0)
-            t:SetPoint("TOPRIGHT", paper, "TOPRIGHT", 0, 0)
-            t:SetHeight(46)
-        elseif side == "bottom" then
-            t:SetPoint("BOTTOMLEFT", paper, "BOTTOMLEFT", 0, 0)
-            t:SetPoint("BOTTOMRIGHT", paper, "BOTTOMRIGHT", 0, 0)
-            t:SetHeight(46)
-        elseif side == "left" then
-            t:SetPoint("TOPLEFT", paper, "TOPLEFT", 0, 0)
-            t:SetPoint("BOTTOMLEFT", paper, "BOTTOMLEFT", 0, 0)
-            t:SetWidth(26)
-        else
-            t:SetPoint("TOPRIGHT", paper, "TOPRIGHT", 0, 0)
-            t:SetPoint("BOTTOMRIGHT", paper, "BOTTOMRIGHT", 0, 0)
-            t:SetWidth(26)
-        end
-        Fade(t, spec[1], spec[2], spec[3])
-    end
-
-    local deco = CreateFrame("Frame", nil, f)
-    deco:SetAllPoints(f)
-    deco:SetFrameLevel(f:GetFrameLevel() + 3)
-    Roller(deco, false)
-    Roller(deco, true)
-
-    local shadow = Tex(deco, "BORDER", 1, 1, 1, 1)
-    shadow:SetPoint("TOPLEFT", deco, "TOPLEFT", 14, -ROLLER_H)
-    shadow:SetPoint("TOPRIGHT", deco, "TOPRIGHT", -14, -ROLLER_H)
-    shadow:SetHeight(10)
-    Fade(shadow, "VERTICAL", { 0.1, 0.05, 0.02, 0 }, { 0.1, 0.05, 0.02, 0.55 })
-
-    local ribbon = deco:CreateTexture(nil, "ARTWORK", nil, -1)
-    ribbon:SetPoint("TOPLEFT", deco, "TOPLEFT", 0, -36)
-    ribbon:SetPoint("TOPRIGHT", deco, "TOPRIGHT", 0, -36)
-    ribbon:SetHeight(66)
-    ribbon:SetTexture(MARBLE, "REPEAT", "REPEAT")
-    ribbon:SetHorizTile(true)
-    ribbon:SetVertTile(true)
-    ribbon:SetVertexColor(0.62, 0.2, 0.15)
-    local ribbonTint = Tex(deco, "ARTWORK", 0.16, 0.04, 0.03, 0.4)
-    ribbonTint:SetAllPoints(ribbon)
-    local ribbonShade = Tex(deco, "ARTWORK", 1, 1, 1, 1)
-    ribbonShade:SetAllPoints(ribbon)
-    Fade(ribbonShade, "VERTICAL", { 0, 0, 0, 0.45 }, { 1, 0.8, 0.5, 0.08 })
-    for _, y in ipairs({ -36, -101 }) do
-        local gold = Tex(deco, "OVERLAY", 0.9, 0.72, 0.32, 1)
-        gold:SetPoint("TOPLEFT", deco, "TOPLEFT", 0, y)
-        gold:SetPoint("TOPRIGHT", deco, "TOPRIGHT", 0, y)
-        gold:SetHeight(2)
-    end
-    for _, x in ipairs({ 6, FRAME_W - 6 }) do
-        local gem = Tex(deco, "OVERLAY", 0.93, 0.74, 0.34, 1)
-        gem:SetSize(8, 8)
-        gem:SetPoint("CENTER", deco, "TOPLEFT", x, -69)
-        if gem.SetRotation then gem:SetRotation(math.rad(45)) end
-    end
-
-    f.glow = deco:CreateTexture(nil, "ARTWORK", nil, 2)
-    f.glow:SetTexture(GLOW)
-    f.glow:SetBlendMode("ADD")
-    f.glow:SetSize(84, 84)
-    f.glow:SetPoint("CENTER", deco, "TOPLEFT", 40, -69)
-    f.ring = Tex(deco, "OVERLAY", 1, 1, 1, 1)
-    f.ring:SetSize(54, 54)
-    f.ring:SetPoint("CENTER", deco, "TOPLEFT", 40, -69)
-    local iconBg = Tex(deco, "OVERLAY", 0, 0, 0, 1)
-    iconBg:SetSize(50, 50)
-    iconBg:SetPoint("CENTER", f.ring, "CENTER", 0, 0)
-    f.icon = deco:CreateTexture(nil, "OVERLAY", nil, 2)
-    f.icon:SetSize(46, 46)
-    f.icon:SetPoint("CENTER", f.ring, "CENTER", 0, 0)
-    f.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    f.iconHit = CreateFrame("Frame", nil, f)
-    f.iconHit:SetAllPoints(f.ring)
-    f.iconHit:SetFrameLevel(f:GetFrameLevel() + 6)
-    f.iconHit:EnableMouse(true)
-    f.iconHit:SetScript("OnEnter", function(self)
-        if not f.link then return end
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        if f.rollID and not f.fake and GameTooltip.SetLootRollItem then
-            GameTooltip:SetLootRollItem(f.rollID)
-        else
-            GameTooltip:SetHyperlink(f.link)
-        end
-        GameTooltip:Show()
-    end)
-    f.iconHit:SetScript("OnLeave", function() GameTooltip:Hide() end)
-
-    f.name = deco:CreateFontString(nil, "OVERLAY")
-    Font(f.name, F_MORPH, 17, "OUTLINE")
-    f.name:SetPoint("TOPLEFT", deco, "TOPLEFT", 78, -42)
-    f.name:SetWidth(FRAME_W - 96)
-    f.name:SetJustifyH("LEFT")
-    f.name:SetWordWrap(true)
-    f.name:SetMaxLines(2)
-    f.piece = deco:CreateFontString(nil, "OVERLAY")
-    Font(f.piece, F_FRIZ, 12, "OUTLINE")
-    f.piece:SetPoint("BOTTOMLEFT", deco, "TOPLEFT", 78, -96)
-    f.piece:SetTextColor(0.9, 0.8, 0.58)
-    f.bind = deco:CreateFontString(nil, "OVERLAY")
-    Font(f.bind, F_FRIZ, 12)
-    f.bind:SetPoint("TOP", deco, "TOP", 0, -108)
-    f.bind:SetTextColor(0.25, 0.14, 0.05)
-
-    f.buttons = {}
-    for i, kind in ipairs(KINDS) do f.buttons[i] = BuildSeal(f, i, kind) end
-
-    local trackBorder = Tex(deco, "ARTWORK", 0.2, 0.11, 0.04, 1)
-    trackBorder:SetPoint("BOTTOMLEFT", deco, "BOTTOMLEFT", 29, 40)
-    trackBorder:SetSize(FRAME_W - 58, 10)
-    local track = Tex(deco, "OVERLAY", 0.08, 0.04, 0.02, 1)
-    track:SetPoint("CENTER", trackBorder, "CENTER", 0, 0)
-    track:SetSize(FRAME_W - 62, 6)
-    local fuse = deco:CreateTexture(nil, "OVERLAY", nil, 2)
-    fuse:SetTexture(BARTEX)
-    fuse:SetVertexColor(1, 0.66, 0.16)
-    fuse:SetPoint("LEFT", track, "LEFT", 0, 0)
-    fuse:SetSize(FRAME_W - 62, 6)
-    local spark = deco:CreateTexture(nil, "OVERLAY", nil, 3)
-    spark:SetTexture(SPARK)
-    spark:SetBlendMode("ADD")
-    spark:SetSize(22, 22)
-    spark:SetVertexColor(1, 0.7, 0.2)
-    f.setFrac = function(frac)
-        fuse:SetWidth(math.max(1, (FRAME_W - 62) * frac))
-        fuse:SetTexCoord(0, frac, 0, 1)
-        spark:ClearAllPoints()
-        spark:SetPoint("CENTER", fuse, "RIGHT", 0, 0)
-        if frac < 0.2 then fuse:SetVertexColor(1, 0.3 + frac, 0.12) end
-    end
-
-    f.panel = BuildPanel(f, T)
-
-    f.pulse = f.glow:CreateAnimationGroup()
-    f.pulse:SetLooping("BOUNCE")
-    local pa = f.pulse:CreateAnimation("Alpha")
-    pa:SetFromAlpha(0.45)
-    pa:SetToAlpha(1)
-    pa:SetDuration(1.3)
-    f.applyQuality = function(r, g, b, quality)
-        f.ring:SetColorTexture(r, g, b, 1)
-        f.glow:SetVertexColor(r, g, b)
-        f.name:SetTextColor(r, g, b)
-        if quality and quality >= 4 then f.pulse:Play() else f.pulse:Stop() end
-    end
-    return f
-end
-
-THEME_BY_ID.skeuo.build = BuildScroll
-
-BuildFrameFor = function(T)
-    if T.build then return T.build(T) end
-    return BuildGeneric(T)
-end
-
 local function Acquire()
-    local T = THEME_BY_ID[db.style] or THEMES[1]
+    local T = THEMES[1]
     pools[T.id] = pools[T.id] or {}
     local f = table.remove(pools[T.id])
-    if not f then f = BuildFrameFor(T) end
+    if not f then f = BuildGeneric(T) end
     f.closing = nil
     return f
 end
@@ -1343,8 +872,6 @@ end
 
 local FAKE_NAMES = { { "Brannlor", "need", 91 }, { "Mirelle", "need", 63 }, { "Tuk", "need", 41 }, { "Zandri", "greed", 88 }, { "Lyssa", "greed", 57 }, { "Orwen", "pass" } }
 
-local selector
-
 local function RunTest()
     HideBlizzard()
     for i = #active, 1, -1 do
@@ -1377,109 +904,11 @@ local function RunTest()
     end
 end
 
-local function UpdateSelector()
-    if not selector then return end
-    for _, b in ipairs(selector.buttons) do
-        b.on:SetShown(b.id == db.style)
-    end
-    local cur = THEME_BY_ID[db.style]
-    selector.current:SetText(cur and (cur.title .. " (" .. cur.src .. ")") or "")
-end
-
-local function SetStyle(id)
-    if not THEME_BY_ID[id] then return end
-    db.style = id
-    ReleaseAll()
-    RunTest()
-    UpdateSelector()
-end
-
-local function BuildSelector()
-    local s = CreateFrame("Frame", "BonusRollPlusStyles", UIParent, "BackdropTemplate")
-    s:SetSize(500, 262)
-    s:SetPoint("TOP", UIParent, "TOP", 0, -70)
-    s:SetFrameStrata("FULLSCREEN_DIALOG")
-    s:SetMovable(true)
-    s:EnableMouse(true)
-    s:RegisterForDrag("LeftButton")
-    s:SetScript("OnDragStart", s.StartMoving)
-    s:SetScript("OnDragStop", s.StopMovingOrSizing)
-    s:SetClampedToScreen(true)
-    if s.SetBackdrop then
-        s:SetBackdrop({ bgFile = WHITE, edgeFile = TOOLEDGE, edgeSize = 14, insets = { left = 3, right = 3, top = 3, bottom = 3 } })
-        s:SetBackdropColor(0.06, 0.05, 0.04, 0.96)
-        s:SetBackdropBorderColor(0.83, 0.64, 0.27, 1)
-    end
-    local title = s:CreateFontString(nil, "OVERLAY")
-    Font(title, F_MORPH, 18)
-    title:SetPoint("TOPLEFT", s, "TOPLEFT", 16, -14)
-    title:SetTextColor(0.95, 0.82, 0.46)
-    title:SetText("BonusRoll Plus")
-    s.current = s:CreateFontString(nil, "OVERLAY")
-    Font(s.current, F_FRIZ, 12)
-    s.current:SetPoint("TOPRIGHT", s, "TOPRIGHT", -44, -18)
-    s.current:SetTextColor(0.8, 0.72, 0.55)
-    local hint = s:CreateFontString(nil, "OVERLAY")
-    Font(hint, F_FRIZ, 11)
-    hint:SetPoint("TOPLEFT", s, "TOPLEFT", 16, -38)
-    hint:SetTextColor(0.62, 0.56, 0.44)
-    hint:SetText(ES and "Pulsa un estilo para verlo en vivo con tus objetos." or "Click a style to preview it live with your items.")
-    local close = CreateFrame("Button", nil, s, "UIPanelCloseButton")
-    close:SetPoint("TOPRIGHT", s, "TOPRIGHT", -2, -2)
-    s.buttons = {}
-    for i, T in ipairs(THEMES) do
-        local col = i <= 5 and 0 or 1
-        local row = (i - 1) % 5
-        local b = CreateFrame("Button", nil, s)
-        b:SetSize(236, 34)
-        b:SetPoint("TOPLEFT", s, "TOPLEFT", 12 + col * 244, -62 - row * 38)
-        b.id = T.id
-        local bg = Tex(b, "BACKGROUND", 0.14, 0.11, 0.08, 1)
-        bg:SetAllPoints()
-        b.on = Tex(b, "BORDER", 0.83, 0.64, 0.27, 1)
-        b.on:SetAllPoints()
-        local inner = Tex(b, "ARTWORK", 0.14, 0.11, 0.08, 1)
-        inner:SetPoint("TOPLEFT", b, "TOPLEFT", 2, -2)
-        inner:SetPoint("BOTTOMRIGHT", b, "BOTTOMRIGHT", -2, 2)
-        b.hl = Tex(b, "HIGHLIGHT", 1, 1, 1, 0.1)
-        b.hl:SetAllPoints()
-        local label = b:CreateFontString(nil, "OVERLAY")
-        Font(label, F_FRIZ, 12)
-        label:SetPoint("LEFT", b, "LEFT", 10, 5)
-        label:SetTextColor(0.95, 0.9, 0.78)
-        label:SetText(T.title)
-        local src = b:CreateFontString(nil, "OVERLAY")
-        Font(src, F_FRIZ, 10)
-        src:SetPoint("LEFT", b, "LEFT", 10, -8)
-        if T.src == SRC_UI then src:SetTextColor(0.55, 0.78, 1) else src:SetTextColor(0.7, 0.9, 0.55) end
-        src:SetText("(" .. T.src .. ")")
-        b:SetScript("OnClick", function() SetStyle(T.id) end)
-        s.buttons[#s.buttons + 1] = b
-    end
-    return s
-end
-
-local function ShowSelector()
-    if not selector then selector = BuildSelector() end
-    selector:Show()
-    UpdateSelector()
-end
-
 local function Slash(msg)
     local cmd, arg = (msg or ""):match("^(%S*)%s*(.-)$")
     cmd = cmd:lower()
     if cmd == "test" then
-        ShowSelector()
         RunTest()
-    elseif cmd == "style" or cmd == "estilo" then
-        if arg ~= "" and THEME_BY_ID[arg:lower()] then
-            SetStyle(arg:lower())
-        else
-            ShowSelector()
-            local ids = {}
-            for _, T in ipairs(THEMES) do ids[#ids + 1] = T.id end
-            print("|cffffd100BonusRoll Plus|r: /br style <" .. table.concat(ids, " | ") .. ">")
-        end
     elseif cmd == "scale" then
         local v = tonumber(arg)
         if v and v >= 0.5 and v <= 1.5 then
@@ -1496,7 +925,7 @@ local function Slash(msg)
         anchor:ClearAllPoints()
         anchor:SetPoint("BOTTOM", UIParent, "BOTTOM", -100, 190)
     else
-        print("|cffffd100BonusRoll Plus|r: /br test | style [id] | scale <0.5-1.5> | rolls | reset. Shift+drag a window to move it.")
+        print("|cffffd100BonusRoll Plus|r: /br test | scale <0.5-1.5> | rolls | reset. Shift+drag a window to move it.")
     end
 end
 
@@ -1508,12 +937,12 @@ ev:SetScript("OnEvent", function(self, event, a, b)
         db = BonusRollPlusDB
         if db.v ~= DEFAULTS.v then
             db.scale = DEFAULTS.scale
+            db.style = nil
             db.v = DEFAULTS.v
         end
         for k, v in pairs(DEFAULTS) do
             if db[k] == nil then db[k] = v end
         end
-        if not THEME_BY_ID[db.style] then db.style = DEFAULTS.style end
         anchor = CreateFrame("Frame", "BonusRollPlusAnchor", UIParent)
         anchor:SetSize(FRAME_W, 1)
         anchor:SetMovable(true)

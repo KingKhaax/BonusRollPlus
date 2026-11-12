@@ -1,8 +1,8 @@
 ## Interface: 16001, 11601, 120107, 120105
 ## Title: BonusRoll Plus
-## Notes: Replaces the group loot roll window with a parchment scroll that shows item level, armor slot and a live list of everyone's rolls. Type /br test to preview it.
+## Notes: Replaces the group loot roll window with a frosted-glass panel that shows item level, armor slot and a live list of everyone's rolls. Type /br test to preview it.
 ## Author: KingKhaax
-## Version: 0.1.0
+## Version: 0.3.0
 ## SavedVariables: BonusRollPlusDB
 ## IconTexture: Interface\Icons\INV_Misc_Dice_01
 

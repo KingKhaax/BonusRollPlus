@@ -58,27 +58,16 @@ for obj, s in pairs(scripts) do
     if s.OnClick then
         s.OnClick(obj)
         clicked = clicked + 1
-        break
     end
 end
-assert(clicked == 1, "no button click handler found")
+assert(clicked >= 1, "no button click handler found")
+assert(_G.__rolled and _G.__rolled[1] == 7, "RollOnLoot was not called for the real roll")
 handler(self, "CHAT_MSG_LOOT", "Brannlor won: " .. link)
 handler(self, "CANCEL_LOOT_ROLL", 7)
 for _, fn in ipairs(timers) do fn() end
 SlashCmdList.BONUSROLLPLUS("test")
 for _, fn in ipairs(timers) do fn() end
-for _, th in ipairs(ns.Themes) do
-    SlashCmdList.BONUSROLLPLUS("style " .. th.id)
-    for _, fn in ipairs(timers) do fn() end
-    handler(self, "START_LOOT_ROLL", 9, 45000)
-    handler(self, "CHAT_MSG_LOOT", "Brannlor has selected Need for: " .. link)
-    for obj, s in pairs(scripts) do
-        if s.OnClick then s.OnClick(obj) break end
-    end
-    handler(self, "CANCEL_LOOT_ROLL", 9)
-    for _, fn in ipairs(timers) do fn() end
-end
-assert(#ns.Themes == 10, "expected 10 themes")
+assert(#ns.Themes == 1, "expected 1 theme")
 SlashCmdList.BONUSROLLPLUS("scale 0.8")
 SlashCmdList.BONUSROLLPLUS("rolls")
 SlashCmdList.BONUSROLLPLUS("reset")
