@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pergamino en el Juego</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Marcellus&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+/* Escena 1600x900 escalada al ancho de la ventana; el pergamino va anclado encima de la barra de acción, como GroupLootContainer */
+:root{--page:#0b0907;--line:#33271a;--gold:#e3bf6a;--ink:#ecdcb4;--mute:#9a8a66;--cin:'Cinzel',Georgia,serif;--mar:'Marcellus',Georgia,serif;--fell:'IM Fell English',Georgia,serif;--fellsc:'IM Fell English SC','IM Fell English',Georgia,serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font-family:var(--mar);color-scheme:dark}
+.top{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);background:#120d08}
+.top h1{font-family:var(--cin);font-size:18px;margin:0;color:var(--gold);letter-spacing:.05em}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lbl{font-size:13px;color:var(--mute);margin-right:4px}
+.chip{font:inherit;font-size:13px;color:var(--ink);background:#1f160c;border:1px solid var(--line);border-radius:4px;padding:5px 11px;cursor:pointer}
+.chip[aria-pressed="true"]{background:#3a2a10;border-color:var(--gold)}
+.chip:focus-visible,.b:focus-visible{outline:2px solid #ffd100;outline-offset:2px}
+.wrap{padding:16px 20px 10px}
+.view{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:6px;box-shadow:0 0 0 1px #000,0 12px 30px #000c;background:#050403}
+.scene{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;overflow:hidden;font-family:var(--mar)}
+.note{max-width:1600px;margin:0 auto;padding:6px 20px 40px;color:var(--mute);font-size:13.5px;line-height:1.5}
+
+/* mundo */
+.bg{position:absolute;inset:0;background:
+  radial-gradient(260px 340px at 9% 52%,rgba(255,150,50,.5),transparent 70%),
+  radial-gradient(260px 340px at 91% 52%,rgba(255,150,50,.45),transparent 70%),
+  radial-gradient(900px 420px at 50% 62%,rgba(90,70,150,.28),transparent 70%),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.35) 0 3px,transparent 3px 120px),
+  linear-gradient(#17121c 0%,#241a22 48%,#120d10 48.2%,#0a0708 100%)}
+.arch{position:absolute;top:0;width:520px;height:520px;border-radius:260px 260px 0 0;box-shadow:inset 0 0 0 26px #1d1620,inset 0 0 0 30px #0d0a10;background:linear-gradient(#0b080e,#1a131a)}
+.arch.a{left:-120px}.arch.b{left:540px;width:520px}.arch.c{left:1200px}
+.floor{position:absolute;left:0;right:0;top:432px;bottom:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 2px,transparent 2px 70px),radial-gradient(ellipse at 50% 20%,rgba(140,90,40,.25),transparent 70%)}
+.torch{position:absolute;width:16px;height:70px;border-radius:4px;background:linear-gradient(#5a3a1a,#2a1808)}
+.torch::before{content:"";position:absolute;left:-14px;top:-40px;width:44px;height:52px;border-radius:50% 50% 40% 40%;background:radial-gradient(ellipse at 50% 70%,#fff0b0,#ff9a2a 45%,rgba(255,80,10,0) 72%)}
+.fig{position:absolute;filter:drop-shadow(0 10px 8px #000)}
+
+/* interfaz del jugador */
+.uf{position:absolute;display:flex;gap:8px;align-items:center}
+.por{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 40% 30%,#6a7a9a,#1c2438);box-shadow:0 0 0 3px #1a1a1a,0 0 0 4px #8a7a4a}
+.bars{width:176px}
+.bn{font-size:14px;color:#ffd100;text-shadow:0 1px 0 #000;margin-bottom:2px}
+.bar{height:15px;background:#0a0a0a;border:1px solid #000;border-radius:2px;margin-top:2px;position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0}
+.bar em{position:absolute;inset:0;text-align:center;font-style:normal;font-size:11px;line-height:14px;color:#fff;text-shadow:0 1px 0 #000}
+.hp i{background:linear-gradient(#4adf50,#1f8f2a);width:100%}.mp i{background:linear-gradient(#4a8aff,#1f4aa0);width:92%}.eh i{background:linear-gradient(#df3a30,#8a1a14);width:74%}
+.mini{position:absolute;right:40px;top:30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 45% 40%,#4a6a3a,#243a24 60%,#14200f);box-shadow:0 0 0 4px #3a2e1a,0 0 0 6px #b8892f,0 0 0 7px #000,0 6px 12px #000a;overflow:hidden}
+.mini::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(25deg,transparent 0 28px,rgba(0,0,0,.2) 28px 30px)}
+.mini .me{position:absolute;left:84px;top:80px;width:0;height:0;border:7px solid transparent;border-bottom:14px solid #fff;transform:rotate(30deg)}
+.mini .dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#4aa3ff;box-shadow:0 0 0 1px #000}
+.zone{position:absolute;right:40px;top:8px;width:180px;text-align:center;font-family:var(--cin);font-size:13px;color:#ffd100;text-shadow:0 1px 0 #000}
+.buffs{position:absolute;right:238px;top:36px;display:grid;grid-template-columns:repeat(5,30px);gap:4px}
+.buffs i{display:block;width:30px;height:30px;border-radius:3px;box-shadow:0 0 0 1px #000}
+.qt{position:absolute;right:30px;top:240px;width:230px;font-size:13px;line-height:1.5;text-shadow:0 1px 0 #000;color:#ececec}
+.qt b{display:block;color:#ffd100;font-weight:400;margin-bottom:2px}
+.qt span{display:block;color:#bbb}
+.chat{position:absolute;left:24px;bottom:34px;width:430px;height:196px;padding:8px 10px;background:linear-gradient(#0008,#000a);border-radius:3px;font-size:13.5px;line-height:1.45;text-shadow:0 1px 0 #000;overflow:hidden}
+.chat .p{color:#aad372}.chat .g{color:#7ec0ff}.chat .l{color:#ffd100}.chat .s{color:#ff8a8a}
+.bags{position:absolute;right:30px;bottom:30px;display:flex;gap:5px}
+.bags i{width:34px;height:34px;border-radius:5px;background:linear-gradient(#5a4020,#2a1a0a);box-shadow:0 0 0 1px #000,inset 0 0 0 1px #d6b86a77}
+.abar{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:4px;padding:8px 10px;background:linear-gradient(#2a2118,#14100b);border-radius:4px;box-shadow:0 0 0 1px #000,0 0 0 3px #7a5a22,0 0 0 4px #000,inset 0 1px 0 #d6b86a66}
+.abar .s{position:relative;width:46px;height:46px;background:#0b0907;box-shadow:0 0 0 1px #000,0 0 0 2px #5a4318,inset 0 0 8px #000;border-radius:3px}
+.abar .s i{position:absolute;inset:3px;border-radius:2px;opacity:.9}
+.abar .s u{position:absolute;right:3px;top:1px;font-size:11px;text-decoration:none;color:#fff;text-shadow:0 1px 0 #000}
+.abar .cap{position:absolute;top:50%;margin-top:-28px;width:52px;height:78px}
+.abar .cap.l{left:-62px}.abar .cap.r{right:-62px;transform:scaleX(-1)}
+.xp{position:absolute;left:50%;bottom:6px;width:690px;height:10px;transform:translateX(-50%);background:#0a0a0a;box-shadow:0 0 0 1px #000,0 0 0 2px #5a4318;border-radius:2px}
+.xp i{display:block;height:100%;width:63%;background:linear-gradient(#a96df0,#5a2aa0)}
+
+/* ventana de botín (diseño 2) */
+.lootstack{position:absolute;left:50%;bottom:112px;width:0;display:flex;flex-direction:column-reverse;align-items:flex-start;gap:10px}
+.lootstack .slot{position:relative;zoom:var(--ui,.8);margin-left:-190px;display:flex;gap:14px;align-items:flex-start}
+.d2{--d:0s;position:relative}
+.b{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:filter .12s,transform .12s}
+.b svg{width:22px;height:22px;flex:none;pointer-events:none}
+.b span{display:none}
+.b:hover{filter:brightness(1.22)}
+.b:active{transform:translateY(1px)}
+.d2.done .b{opacity:.42}
+.d2.done .b[data-on="1"]{opacity:1;filter:brightness(1.25) drop-shadow(0 2px 5px #ffd100)}
+.ic{--is:46px;width:var(--is);height:var(--is);display:grid;place-items:center;flex:none;position:relative;border-radius:var(--ir,4px);overflow:hidden;background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--q) 38%,#15110d),#0a0908 88%);box-shadow:0 0 0 1px #000,0 0 0 2px var(--q),0 2px 7px color-mix(in srgb,var(--q) 55%,transparent)}
+.ic svg{width:76%;height:76%}
+.ic::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.26),transparent 46%)}
+.nm{font-family:var(--fellsc);font-size:16px;line-height:1.15;color:var(--q);text-shadow:0 1px 0 #000,1px 0 0 #000,-1px 0 0 #000,0 -1px 0 #000,0 2px 5px #0008;overflow-wrap:anywhere}
+.d2 .sc{width:300px;position:relative}
+.d2 .rl{display:block;height:24px;margin:0 -9px;border-radius:12px;background:linear-gradient(#2b1809,#8a5a2c 28%,#d09a58 48%,#8a5a2c 70%,#2a180a);box-shadow:0 4px 6px #000a;position:relative;z-index:2}
+.d2 .pp{position:relative;margin:-2px 0;padding:16px 20px 18px;color:#3a2410;font-family:var(--fell);background:radial-gradient(circle at 12% 18%,#ead9a6 0,transparent 42%),radial-gradient(circle at 90% 82%,#b99a5c 0,transparent 46%),radial-gradient(circle at 70% 10%,#c9ae74 0,transparent 30%),linear-gradient(#dcc690,#c6a766);box-shadow:inset 0 0 34px #6a461a99,inset 0 0 3px #3a2208}
+.d2 .rib{display:flex;align-items:center;gap:10px;margin:0 -30px 10px;padding:7px 24px 7px 22px;background:linear-gradient(#3a2216,#22130b);clip-path:polygon(0 0,100% 0,calc(100% - 13px) 50%,100% 100%,0 100%,13px 50%);color:#efdcb0;filter:drop-shadow(0 3px 3px #0008)}
+.d2 .rib .ic{--is:42px;--ir:50%}
+.d2 .tt{min-width:0}.d2 .nm small{font-family:var(--fell);font-size:14px;color:#efdcb0;text-shadow:0 1px 0 #000;white-space:nowrap}.d2 .pc{font-family:var(--fell);font-style:italic;font-size:12.5px;color:#cdb98a;margin-top:2px}
+.d2 .q{margin:0 0 10px;text-align:center;font-style:italic;font-size:14.5px;color:#4a2f14}
+.d2 .seals{display:flex;justify-content:space-between;gap:6px}
+.d2 .b{flex-direction:column;gap:4px;width:56px}
+.d2 .wx{width:48px;height:48px;display:grid;place-items:center;border-radius:50% 46% 52% 48%/48% 52% 46% 50%;box-shadow:inset 0 2px 3px #ffffff55,inset 0 -3px 5px #0006,0 3px 4px #0007}
+.d2 .wx svg{filter:drop-shadow(0 1px 0 #ffffff55);opacity:.92}
+.d2 .b-need .wx{background:radial-gradient(circle at 35% 28%,#e0483c,#8c1710)}
+.d2 .b-greed .wx{background:radial-gradient(circle at 35% 28%,#f0c455,#9a6a10)}
+.d2 .b-de .wx{background:radial-gradient(circle at 35% 28%,#a16ee0,#4e2a85)}
+.d2 .b-pass .wx{background:radial-gradient(circle at 35% 28%,#6f655a,#2f2924)}
+.d2 .b span{display:block;font-family:var(--fellsc);font-size:12.5px;color:#3a2410}
+.d2 .fuse{margin-top:12px;height:4px;position:relative}
+.d2 .fuse b{display:block;height:100%;width:100%;position:relative;background:repeating-linear-gradient(90deg,#5a3a18 0 6px,transparent 6px 9px);animation:dw 16s linear infinite;animation-delay:var(--d)}
+.d2 .fuse b::after{content:"";position:absolute;right:-4px;top:-3px;width:10px;height:10px;border-radius:50%;background:radial-gradient(#fff6c0,#ff9a1a 55%,transparent 70%);box-shadow:0 0 6px 2px #ff8a1a}
+@keyframes dw{from{width:100%}to{width:0}}
+@media (prefers-reduced-motion:reduce){.d2 .fuse b{animation:none;width:64%}.b{transition:none}}
+.rolls{width:206px;padding:8px 10px 9px;background:linear-gradient(#d6c08a,#c2a362);color:#3a2410;font-family:var(--fell);border:1px solid #6a4a20;border-radius:4px;box-shadow:0 6px 14px #0009,inset 0 0 14px #6a461a66;transform:rotate(1.2deg);align-self:flex-start}
+.rolls h3{margin:0 0 5px;font-family:var(--fellsc);font-size:13px;letter-spacing:.06em;color:#8a1a10;font-weight:400;display:flex;justify-content:space-between}
+.rolls h3 em{font-style:normal;opacity:.75}
+.rrow{display:grid;grid-template-columns:16px 1fr auto;gap:7px;align-items:center;padding:3px 4px;border-radius:3px;font-size:13.5px;line-height:1.2}
+.rrow svg{width:16px;height:16px}
+.rrow .w{color:#3a2410}
+.rrow .w::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);margin-right:6px;box-shadow:0 0 0 1px #3a2410}
+.rrow .n{font-variant-numeric:tabular-nums;min-width:22px;text-align:right}
+.rrow.lead{background:linear-gradient(90deg,rgba(138,26,16,.22),transparent)}
+.rrow.lead .n{color:#8a1a10;font-weight:700}
+.rrow.me{box-shadow:inset 0 0 0 1px #8a1a10}
+.rrow.wait,.rrow.pass{opacity:.55}
+.crown{width:12px;height:12px;margin-right:4px;vertical-align:-1px;fill:#8a1a10}
+.hide-rolls .rolls{display:none}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8ecf0"/><stop offset=".5" stop-color="#8f97a0"/><stop offset="1" stop-color="#4d535b"/></linearGradient>
+    <linearGradient id="goldg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".5" stop-color="#e0a92c"/><stop offset="1" stop-color="#8b5a0e"/></linearGradient>
+    <linearGradient id="vio" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1d9ff"/><stop offset=".5" stop-color="#a95de0"/><stop offset="1" stop-color="#4b1d7a"/></linearGradient>
+    <linearGradient id="redg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9b8a"/><stop offset="1" stop-color="#a11d12"/></linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6e2a0"/><stop offset=".45" stop-color="#b8892f"/><stop offset="1" stop-color="#5a3c10"/></linearGradient>
+  </defs>
+  <symbol id="helm" viewBox="0 0 40 40"><path d="M20 3c1 3 1 6 0 9" fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/><path d="M7 24C7 13 13 8 20 8s13 5 13 16v8l-5 5v-9H12v9l-5-5z" fill="url(#steel)" stroke="#1b1b1b" stroke-width="1.2" stroke-linejoin="round"/><rect x="13" y="19" width="14" height="3.2" rx="1" fill="#0c0c0c"/><path d="M20 8v11" stroke="#2a2d31" stroke-width="1.4"/><path d="M10 14c3-4 7-5.5 10-5.5" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="shoulder" viewBox="0 0 40 40"><path d="M5 28C5 14 14 7 24 7c6 0 11 3 11 9 0 5-4 8-8 9l-2 8H9z" fill="url(#steel)" stroke="#1b1b1b" stroke-width="1.2" stroke-linejoin="round"/><path d="M10 20c5-6 12-8 19-6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4" stroke-linecap="round"/><circle cx="26" cy="18" r="2" fill="#c8362a"/></symbol>
+  <symbol id="sword" viewBox="0 0 40 40"><path d="M30 5l5 5-17 17-4-4z" fill="url(#steel)" stroke="#1b1b1b" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 21l7 7M9 24l7 7" stroke="#6a4a1a" stroke-width="3.2" stroke-linecap="round"/><path d="M8 32l-3 3" stroke="#d6a844" stroke-width="3.2" stroke-linecap="round"/></symbol>
+  <symbol id="ring" viewBox="0 0 40 40"><circle cx="20" cy="24" r="10" fill="none" stroke="url(#goldg)" stroke-width="5"/><circle cx="20" cy="24" r="10" fill="none" stroke="#2a1a05" stroke-width="1"/><path d="M20 4l6 7-6 6-6-6z" fill="#c8362a" stroke="#1b1b1b" stroke-width="1.2" stroke-linejoin="round"/></symbol>
+  <symbol id="dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" fill="#f4efe2" stroke="#1b1b1b" stroke-width="1.3"/><circle cx="8" cy="8" r="1.7" fill="#7a1010"/><circle cx="16" cy="8" r="1.7" fill="#7a1010"/><circle cx="12" cy="12" r="1.7" fill="#7a1010"/><circle cx="8" cy="16" r="1.7" fill="#7a1010"/><circle cx="16" cy="16" r="1.7" fill="#7a1010"/></symbol>
+  <symbol id="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="url(#goldg)" stroke="#3a2406" stroke-width="1.3"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#7a4d08" stroke-width="1.3"/><path d="M9.4 9.4c.6-1.4 3.9-1.7 4.9-.2M14.5 14.6c-.7 1.5-4.1 1.6-4.9.1-.9-1.7 4.8-1.2 4.8-3" fill="none" stroke="#7a4d08" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="de" viewBox="0 0 24 24"><path d="M12 1.8l2.4 6.4 6.8 1-5 4.6 1.4 6.8L12 17.3 6.4 20.6l1.4-6.8-5-4.6 6.8-1z" fill="url(#vio)" stroke="#1d0a33" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="11.5" r="2.2" fill="#fff" fill-opacity=".85"/></symbol>
+  <symbol id="pass" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" stroke="#1b0503" stroke-width="5.2" stroke-linecap="round"/><path d="M5 5l14 14M19 5L5 19" stroke="url(#redg)" stroke-width="3.2" stroke-linecap="round"/></symbol>
+  <symbol id="crown" viewBox="0 0 16 16"><path d="M1.5 12.5l-.8-8 4 3.2L8 2.5l3.3 5.2 4-3.2-.8 8z"/></symbol>
+  <symbol id="wing" viewBox="0 0 48 72"><path d="M46 36C40 30 40 22 34 16 28 10 18 8 6 12c8 2 12 6 12 10-6-2-10 0-14 4 8 0 12 4 12 8-6 0-10 4-12 8 8 0 12 2 12 6-6 2-8 6-8 10 12-2 20-6 26-12 6-4 8-6 12-10z" fill="url(#brass)" stroke="#2a1a05" stroke-width="1.4" stroke-linejoin="round"/><circle cx="41" cy="36" r="3.4" fill="#c0392b" stroke="#2a1a05"/></symbol>
+</svg>
+
+<div class="top">
+  <h1>Pergamino enrollado en el juego</h1>
+  <div class="grp" id="cnt"><span class="lbl">Objetos a la vez</span></div>
+  <div class="grp" id="uis"><span class="lbl">Escala de interfaz</span></div>
+  <div class="grp"><button class="chip" id="rtoggle" aria-pressed="true">Ventanita de tiradas</button></div>
+</div>
+<div class="wrap"><div class="view" id="view"><div class="scene" id="scene">
+  <div class="bg"></div>
+  <div class="arch a"></div><div class="arch b"></div><div class="arch c"></div>
+  <div class="floor"></div>
+  <i class="torch" style="left:140px;top:300px"></i><i class="torch" style="left:1440px;top:300px"></i><i class="torch" style="left:770px;top:260px"></i>
+  <svg class="fig" style="left:690px;top:300px" width="220" height="330" viewBox="0 0 220 330"><path d="M110 20c20 0 30 16 30 34 0 12-6 20-12 26l24 40c10 24 14 70 18 120l-120 0c4-50 8-96 18-120l24-40c-6-6-12-14-12-26 0-18 10-34 30-34z" fill="#0a0810"/><path d="M80 120l-40-60M140 120l56-90" stroke="#0a0810" stroke-width="12" stroke-linecap="round"/><path d="M196 24v70" stroke="#7a8aa0" stroke-width="4"/></svg>
+  <svg class="fig" style="left:1000px;top:330px" width="150" height="290" viewBox="0 0 150 290"><path d="M75 20c14 0 22 12 22 26 0 10-4 16-10 22l16 30c8 20 10 60 12 100H35c2-40 4-80 12-100l16-30c-6-6-10-12-10-22 0-14 8-26 22-26z" fill="#0c0a12"/></svg>
+  <svg class="fig" style="left:470px;top:360px" width="130" height="270" viewBox="0 0 130 270"><path d="M65 18c12 0 20 10 20 22 0 9-4 14-9 20l14 28c7 18 9 56 10 90H30c1-34 3-72 10-90l14-28c-5-6-9-11-9-20 0-12 8-22 20-22z" fill="#0d0a10"/></svg>
+
+  <div class="uf" style="left:24px;top:22px"><div class="por"></div><div class="bars"><div class="bn">Rafael</div><div class="bar hp"><i></i><em>41.208 / 41.208</em></div><div class="bar mp"><i></i><em>92%</em></div></div></div>
+  <div class="uf" style="left:300px;top:22px"><div class="por" style="background:radial-gradient(circle at 40% 30%,#8a2a3a,#2a0a14)"></div><div class="bars"><div class="bn" style="color:#ff6a5a">Voidlord Zhaal</div><div class="bar eh"><i></i><em>74%</em></div></div></div>
+  <div class="zone">Citadela del Vacío</div>
+  <div class="mini"><i class="me"></i><i class="dot" style="left:60px;top:96px"></i><i class="dot" style="left:112px;top:70px"></i><i class="dot" style="left:98px;top:118px"></i></div>
+  <div class="buffs"><i style="background:#3a6aa0"></i><i style="background:#a0603a"></i><i style="background:#6aa03a"></i><i style="background:#a03a6a"></i><i style="background:#a0a03a"></i></div>
+  <div class="qt"><b>Banda: Citadela del Vacío</b><span>Zhaal derrotado 2/3</span><span>Objetos de botín 4</span></div>
+  <div class="chat"><div class="l">[Botín] Brannlor gana: [Crown of the Fallen Prince] (Necesidad - 91)</div><div class="g">[Banda] Mirelle: bien hecho!</div><div class="p">[Grupo] Lyssa: me quedo con el anillo</div><div class="l">[Botín] Zandri tira Codicia por [Elder Headpiece] (88)</div><div class="s">Voidlord Zhaal usa Pulso Abisal.</div><div class="l">[Botín] Rafael: Necesidad - [Crown of the Fallen Prince]</div></div>
+  <div class="bags"><i></i><i></i><i></i><i></i><i></i></div>
+
+  <div class="xp"><i></i></div>
+  <div class="abar" id="abar"></div>
+  <div class="lootstack" id="stack"></div>
+</div></div></div>
+<p class="note">Es una maqueta de cómo se vería dentro del juego, no una captura real. El fondo, la interfaz del jugador y los nombres son de ejemplo. El pergamino va donde Blizzard pone las ventanas de tirada, encima de la barra de acción, y se apila hacia arriba cuando caen varios objetos. Pulsa los botones para probar la lista de tiradas.</p>
+
+<script>
+const ITEMS=[
+ {c:'#a335ee',item:'Crown of the Fallen Prince',ic:'helm',lv:66,pc:'Head · Plate'},
+ {c:'#0070dd',item:'Elder Headpiece',ic:'helm',lv:58,pc:'Head · Leather'},
+ {c:'#1eff00',item:"Stonecutter's Pauldrons",ic:'shoulder',lv:61,pc:'Shoulder · Mail'}
+];
+const A=[['need','Need','dice'],['greed','Greed','coin'],['de','Disenchant','de'],['pass','Pass','pass']];
+const G={need:'dice',greed:'coin',de:'de',pass:'pass',wait:'dice'};
+const OTHERS=[
+ {w:'Brannlor',c:'#C69B6D',t:'need',n:91},{w:'Mirelle',c:'#F48CBA',t:'need',n:63},{w:'Tuk',c:'#4aa3ff',t:'need',n:41},
+ {w:'Zandri',c:'#FFF468',t:'greed',n:88},{w:'Lyssa',c:'#FFFFFF',t:'greed',n:57},{w:'Orwen',c:'#AAD372',t:'pass',n:0},{w:'Kael',c:'#3FC7EB',t:'wait',n:0}
+];
+const st={n:3,ui:.8};
+const you={};
+const $=s=>document.querySelector(s);
+
+function rollsHTML(k){
+  const list=OTHERS.map(o=>({...o}));
+  if(you[k])list.push({w:'Rafael',c:'#ffd100',t:you[k].t,n:you[k].n,me:true});
+  const rank={need:0,de:1,greed:2,pass:3,wait:4};
+  list.sort((a,b)=>rank[a.t]-rank[b.t]||b.n-a.n);
+  const lead=list.find(x=>x.t==='need')||list.find(x=>x.t==='greed');
+  return '<h3>Rolls<em>'+list.filter(x=>x.t!=='wait').length+'/'+list.length+'</em></h3>'+list.map(x=>{
+    const cls='rrow'+(x.me?' me':'')+(x===lead?' lead':'')+(x.t==='wait'?' wait':'')+(x.t==='pass'?' pass':'');
+    const num=x.t==='pass'?'—':x.t==='wait'?'…':x.n;
+    const cr=x===lead?'<svg class="crown" viewBox="0 0 16 16"><use href="#crown"/></svg>':'';
+    return '<div class="'+cls+'"><svg><use href="#'+G[x.t]+'"/></svg><span class="w" style="--c:'+x.c+'">'+cr+x.w+'</span><span class="n">'+num+'</span></div>';
+  }).join('');
+}
+function rollHTML(k){
+  const it=ITEMS[k];
+  return '<div class="slot"><div class="d2" style="--q:'+it.c+';--d:-'+(k*3.2)+'s" data-k="'+k+'"><div class="sc"><i class="rl"></i><div class="pp"><div class="rib"><span class="ic"><svg><use href="#'+it.ic+'"/></svg></span><div class="tt"><div class="nm">'+it.item+'<small> ('+it.lv+')</small></div><div class="pc">'+it.pc+'</div></div></div><p class="q">¿Quién se queda con esto?</p><div class="seals">'+
+   A.map(([a,l,g])=>'<button class="b b-'+a+'" data-act="'+a+'" title="'+l+'" aria-label="'+l+'"><span class="wx"><svg><use href="#'+g+'"/></svg></span><span>'+l+'</span></button>').join('')+
+   '</div><div class="fuse"><b></b></div></div><i class="rl"></i></div></div>'+(k===0?'<aside class="rolls" data-k="0"></aside>':'')+'</div>';
+}
+function render(){
+  const s=$('#stack');
+  s.style.setProperty('--ui',st.ui);
+  s.innerHTML=Array.from({length:st.n},(_,k)=>rollHTML(k)).join('');
+  s.querySelectorAll('.d2').forEach(d=>{
+    const k=+d.dataset.k;
+    d.querySelectorAll('.b').forEach(b=>b.addEventListener('click',()=>{
+      const a=b.dataset.act;
+      you[k]={t:a,n:a==='pass'?0:1+Math.floor(Math.random()*100)};
+      d.classList.add('done');
+      d.querySelectorAll('.b').forEach(x=>x.dataset.on=x===b?'1':'0');
+      const r=s.querySelector('.rolls[data-k="'+k+'"]');
+      if(r)r.innerHTML=rollsHTML(k);
+    }));
+  });
+  const r=s.querySelector('.rolls');if(r)r.innerHTML=rollsHTML(0);
+}
+(function(){
+  const ab=$('#abar');
+  const cols=['#a03a2a','#2a6aa0','#6aa02a','#a02a6a','#a0a02a','#2aa0a0','#7a3aa0','#a06a2a','#3a3aa0','#2aa06a','#a03a3a','#3a8aa0'];
+  const keys=['1','2','3','4','5','6','7','8','9','0','-','='];
+  ab.innerHTML='<svg class="cap l"><use href="#wing"/></svg><svg class="cap r"><use href="#wing"/></svg>'+cols.map((c,i)=>'<div class="s"><i style="background:linear-gradient(135deg,'+c+',#1a1008)"></i><u>'+keys[i]+'</u></div>').join('');
+})();
+function fit(){const v=$('#view'),sc=$('#scene');sc.style.transform='scale('+(v.clientWidth/1600)+')'}
+addEventListener('resize',fit);
+const cn=$('#cnt');
+[1,2,3].forEach(n=>{const b=document.createElement('button');b.className='chip';b.textContent=n;b.setAttribute('aria-pressed',n===st.n);b.onclick=()=>{st.n=n;cn.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render()};cn.appendChild(b)});
+const us=$('#uis');
+[['70%',.7],['80%',.8],['100%',1]].forEach(([l,v])=>{const b=document.createElement('button');b.className='chip';b.textContent=l;b.setAttribute('aria-pressed',v===st.ui);b.onclick=()=>{st.ui=v;us.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render()};us.appendChild(b)});
+$('#rtoggle').addEventListener('click',e=>{const on=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',on);document.body.classList.toggle('hide-rolls',!on)});
+render();fit();
+</script>
+</body>
+</html>
