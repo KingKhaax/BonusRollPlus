@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2 }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -247,6 +247,38 @@ local function DeltaText(d)
     return "|cffaaaaaa=|r"
 end
 
+local function UnknownAppearance(link)
+    if not (C_TransmogCollection and C_TransmogCollection.GetItemInfo and C_TransmogCollection.PlayerKnowsSource) then return false end
+    local ok, _, sourceID = pcall(C_TransmogCollection.GetItemInfo, link)
+    if not ok or not sourceID then return false end
+    local ok2, known = pcall(C_TransmogCollection.PlayerKnowsSource, sourceID)
+    return ok2 and known == false
+end
+
+local function ValueInfo(link)
+    if not (db.showValue and link) then return nil end
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local _, _, _, _, _, _, _, _, equipLoc, _, sell = get(link)
+    local price
+    local id = ItemID(link)
+    if _G.TSM_API and _G.TSM_API.GetCustomPriceValue and id then
+        local ok, value = pcall(_G.TSM_API.GetCustomPriceValue, "DBMarket", "i:" .. id)
+        if ok and type(value) == "number" and value > 0 then price = value end
+    end
+    if not price and type(sell) == "number" and sell > 0 then price = sell end
+    local newLook = equipLoc and equipLoc ~= "" and UnknownAppearance(link)
+    if not price and not newLook then return nil end
+    local text = ""
+    if price then text = GetCoinTextureString and GetCoinTextureString(price) or tostring(price) end
+    if newLook then text = "|cffd070ff*|r " .. text end
+    return text
+end
+
+local function UpdateValue(f)
+    if not f.value then return end
+    f.value:SetText((not f.hasWarn and ValueInfo(f.link)) or "")
+end
+
 local function Hex(h, a)
     local r, g, b = h:match("#?(%x%x)(%x%x)(%x%x)")
     return tonumber(r, 16) / 255, tonumber(g, 16) / 255, tonumber(b, 16) / 255, a or 1
@@ -413,6 +445,8 @@ local function UpdateEndBtn()
 end
 
 function Release(f)
+    if f.pooled then return end
+    f.pooled = true
     f:Hide()
     if f.mini then f.mini:Hide() end
     f.panel:Hide()
@@ -535,7 +569,10 @@ end
 local function Choose(f, kind)
     if f.chosen then return end
     f.chosen = kind.key
-    if f.rollID and not f.fake then RollOnLoot(f.rollID, kind.roll) end
+    if f.rollID and not f.fake then
+        RollOnLoot(f.rollID, kind.roll)
+        if db.stats then db.stats.rolled = (db.stats.rolled or 0) + 1 end
+    end
     local me = ShortName(UnitName("player"))
     AddEntry(f, me, kind.key, f.fake and math.random(1, 100) or nil)
     for _, b in ipairs(f.buttons) do b:Mark(b.kind == kind) end
@@ -617,6 +654,13 @@ local function NewFrame(T)
         if not frac then return end
         if frac < 0 then frac = 0 elseif frac > 1 then frac = 1 end
         if self.setFrac then self.setFrac(frac) end
+        if self.ring then
+            if db.flash and not self.chosen and frac > 0 and frac < 0.2 then
+                self.ring:SetAlpha(0.35 + 0.65 * math.abs(math.sin(GetTime() * 5)))
+            else
+                self.ring:SetAlpha(1)
+            end
+        end
         if self.fake and frac <= 0 and not self.closing then
             self.closing = true
             C_Timer.After(1, function() Release(self) end)
@@ -869,7 +913,10 @@ local function BuildGeneric(T)
     f.iconHit:SetScript("OnLeave", function() GameTooltip:Hide() end)
     f.name = Text(f, T.name)
     f.piece = Text(f, T.piece)
-    if T.bind then f.bind = Text(f, T.bind) end
+    if T.bind then
+        f.bind = Text(f, T.bind)
+        f.value = Text(f, { x = T.bind.x + T.bind.w - 150, y = T.bind.y, w = 150, font = T.bind.font, size = T.bind.size, justify = "RIGHT", color = T.bind.color })
+    end
     if T.ilvl then f.ilvl = Text(f, T.ilvl) end
     f.buttons = {}
     for i, kind in ipairs(KINDS) do f.buttons[i] = BuildGenericButton(f, T, i, kind) end
@@ -976,9 +1023,21 @@ end
 local function Acquire()
     local T = THEME_BY_ID[db.theme] or THEMES[1]
     pools[T.id] = pools[T.id] or {}
-    local f = table.remove(pools[T.id])
+    local pool, f = pools[T.id], nil
+    while #pool > 0 do
+        local candidate = table.remove(pool)
+        local busy = false
+        for _, a in ipairs(active) do
+            if a == candidate then busy = true break end
+        end
+        if not busy then
+            f = candidate
+            break
+        end
+    end
     if not f then f = BuildGeneric(T) end
     f.closing = nil
+    f.pooled = nil
     return f
 end
 
@@ -1011,6 +1070,7 @@ local function Setup(f, data)
             if delta then pieceText = pieceText .. "  " .. DeltaText(delta) end
         end
         f.piece:SetText(pieceText)
+        UpdateValue(f)
         if f.ilvl then
             local text = ""
             if ilvl then
@@ -1021,13 +1081,17 @@ local function Setup(f, data)
     end
     f.refreshTexts = Texts
     Texts()
+    f.hasWarn = data.canNeed == false
     if f.bind then
-        if data.canNeed == false then
+        if f.hasWarn then
+            f.bind:SetWidth(T.bind.w)
             f.bind:SetText("|cffff5555" .. L.CANT_USE .. "|r")
         else
+            f.bind:SetWidth(T.bind.w - 150)
             f.bind:SetText(data.bop and (ITEM_BIND_ON_PICKUP or "") or "")
         end
     end
+    UpdateValue(f)
     for _, btn in ipairs(f.buttons) do
         btn:Mark(false)
         btn.reason = nil
@@ -1076,7 +1140,11 @@ local function FindFrame(itemID, link)
     end
 end
 
-local AFTER_AWARD = 5
+local function AwardDelay()
+    local d = db and tonumber(db.closeDelay)
+    if d and d >= 0 and d <= 15 then return d end
+    return 2
+end
 
 local function Readable(v)
     if v == nil then return false end
@@ -1087,6 +1155,11 @@ local function MarkWon(f, name, link)
     local e = AddEntry(f, name)
     if e.won then return end
     e.won = true
+    if db.stats and name == ShortName(UnitName("player")) then
+        db.stats.won = (db.stats.won or 0) + 1
+        if e.kind == "need" then db.stats.needWon = (db.stats.needWon or 0) + 1 end
+        if e.kind == "greed" then db.stats.greedWon = (db.stats.greedWon or 0) + 1 end
+    end
     if db.history then
         table.insert(db.history, {
             t = time(), link = link, winner = name, kind = e.kind, value = e.value,
@@ -1096,7 +1169,7 @@ local function MarkWon(f, name, link)
     end
     local token = f.token
     f.closingSoon = true
-    C_Timer.After(AFTER_AWARD, function()
+    C_Timer.After(AwardDelay(), function()
         if f.token == token and f.closingSoon then Release(f) end
     end)
 end
@@ -1105,7 +1178,7 @@ local function ReleaseAfterAward(f)
     if f.closingSoon then return end
     f.closingSoon = true
     local token = f.token
-    C_Timer.After(AFTER_AWARD, function()
+    C_Timer.After(AwardDelay(), function()
         if f.token == token and f.closingSoon then Release(f) end
     end)
 end
@@ -1226,12 +1299,21 @@ local function OnStartRoll(rollID, rollTime)
     HideBlizzard()
     local texture, name, _, quality, bop, canNeed, canGreed, canDE, reasonNeed, reasonGreed, reasonDE = GetLootRollItemInfo(rollID)
     if not name then return end
+    if db.sound then pcall(PlaySound, (SOUNDKIT and SOUNDKIT.READY_CHECK) or 8960) end
     local f = Acquire()
-    Setup(f, {
+    local ok, err = pcall(Setup, f, {
         rollID = rollID, rollTime = rollTime, link = GetLootRollItemLink(rollID), texture = texture, name = name,
         quality = quality, bop = bop, canNeed = canNeed, canGreed = canGreed, canDE = canDE,
         reasonNeed = reasonNeed, reasonGreed = reasonGreed, reasonDE = reasonDE,
     })
+    if not ok then
+        f.pooled = nil
+        Release(f)
+        local handler = geterrorhandler and geterrorhandler()
+        if handler then handler(err) end
+        print("|cffff5555BonusRoll Plus|r: " .. tostring(err))
+        return
+    end
     C_Timer.After(0.6, function()
         if f.rollID == rollID and f.refreshTexts then f.refreshTexts() end
         if f.rollID == rollID then SyncFromHistory(f) end
@@ -1333,6 +1415,36 @@ end
 function ns.SetShowRolls(v)
     db.showRolls = v and true or false
     for _, f in ipairs(active) do f.panel:SetShown(db.showRolls and not f.queued) end
+end
+
+function ns.SetOption(key, v)
+    db[key] = v and true or false
+    for _, f in ipairs(active) do
+        if f.refreshTexts then f.refreshTexts() end
+    end
+end
+
+function ns.GetStats()
+    local st = db.stats or {}
+    local week, now = 0, time()
+    for _, h in ipairs(db.history or {}) do
+        if h.me and h.t and now - h.t <= 7 * 86400 then week = week + 1 end
+    end
+    return st.rolled or 0, st.won or 0, st.needWon or 0, st.greedWon or 0, week
+end
+
+function ns.GetHistoryLines(n)
+    local lines, list = {}, db.history or {}
+    for i = #list, math.max(1, #list - (n or 30) + 1), -1 do
+        local h = list[i]
+        local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
+        lines[#lines + 1] = string.format("%s  %s  >  %s%s", date("%d/%m %H:%M", h.t), h.link or "?", who, h.value and (" (" .. h.value .. ")") or "")
+    end
+    return lines
+end
+
+function ns.SetCloseDelay(v)
+    db.closeDelay = v
 end
 
 function ns.SetCompact(v)
@@ -1513,6 +1625,8 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         db.history = db.history or {}
         db.profiles = db.profiles or {}
         db.charProfile = db.charProfile or {}
+        db.specProfile = db.specProfile or {}
+        db.stats = db.stats or { rolled = 0, won = 0, needWon = 0, greedWon = 0 }
         if db.v ~= DEFAULTS.v then
             db.scale = DEFAULTS.scale
             db.style = nil
@@ -1540,6 +1654,8 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         self:RegisterEvent("CANCEL_LOOT_ROLL")
         self:RegisterEvent("CHAT_MSG_LOOT")
         pcall(self.RegisterEvent, self, "LOOT_HISTORY_UPDATE_DROP")
+        pcall(self.RegisterEvent, self, "PLAYER_SPECIALIZATION_CHANGED")
+        pcall(self.RegisterEvent, self, "ACTIVE_TALENT_GROUP_CHANGED")
         self:RegisterEvent("PLAYER_LOGIN")
         self:RegisterEvent("PLAYER_ENTERING_WORLD")
         self:RegisterEvent("GROUP_ROSTER_UPDATE")
@@ -1557,6 +1673,10 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         OnCancelRoll(a)
     elseif event == "CHAT_MSG_LOOT" then
         OnLootMessage(a)
+    elseif event == "PLAYER_SPECIALIZATION_CHANGED" or event == "ACTIVE_TALENT_GROUP_CHANGED" then
+        C_Timer.After(1, function()
+            if ns.Profiles then ns.Profiles.AutoLoad() end
+        end)
     elseif event == "LOOT_HISTORY_UPDATE_DROP" then
         OnHistoryDrop(a, b)
     elseif event == "CHAT_MSG_ADDON" then

@@ -11,6 +11,25 @@ local PANEL, DARK, LINE = "#262626", "#0F0F0F", "#3A3A3A"
 
 local CHANGES = {
     {
+        v = "0.6.0", d = "13/11/2026",
+        en = {
+            "Vendor or auction value on every roll (TradeSkillMaster prices when you have it), with a purple * when the item has an appearance you do not own.",
+            "New History tab with statistics: rolls joined, rolls won, Need and Greed wins and the last 7 days.",
+            "Profiles can also load automatically per specialization.",
+            "Optional sound and flashing alerts, and a setting for how many seconds the window stays after the winner is announced.",
+            "Designs reduced from 20 to the 10 best finished ones, and the settings window opens faster.",
+            "Fixed: when two or more items dropped at once, one of the roll windows could be missing.",
+        },
+        es = {
+            "Valor de venta o de subasta en cada tirada (precios de TradeSkillMaster si lo tienes), con un * morado cuando el objeto tiene una apariencia que no posees.",
+            "Nueva pestaña Historial con estadísticas: tiradas en las que has participado, ganadas, con Necesidad y con Codicia, y los últimos 7 días.",
+            "Los perfiles también se pueden cargar automáticamente por especialización.",
+            "Avisos opcionales de sonido y parpadeo, y un ajuste con los segundos que se queda la ventana tras anunciarse el ganador.",
+            "Los diseños pasan de 20 a los 10 mejor acabados, y la ventana de ajustes abre más rápido.",
+            "Corregido: cuando caían dos o más objetos a la vez, podía faltar una de las ventanas de tirada.",
+        },
+    },
+    {
         v = "0.5.0", d = "13/11/2026",
         en = {
             "Settings window (/br open, or \"Open settings\" in the game's AddOns options) with 20 window designs and a live preview of each one. The default is still the frosted glass.",
@@ -307,7 +326,15 @@ local function BuildDesigns(tab)
     tab.BuildAll = function()
         if previewsBuilt then return end
         previewsBuilt = true
-        for i = 1, #ns.ThemeList do BuildNext(i) end
+        local built = 0
+        local function Step()
+            for _ = 1, 3 do
+                built = built + 1
+                if ns.ThemeList[built] then BuildNext(built) end
+            end
+            if built < #ns.ThemeList then C_Timer.After(0, Step) end
+        end
+        Step()
     end
 end
 
@@ -316,7 +343,7 @@ local function BuildSettings(tab)
     local y = 0
     local function Place(w, gap)
         w:SetPoint("TOPLEFT", tab, "TOPLEFT", 8, -y)
-        y = y + (gap or 52)
+        y = y + (gap or 42)
     end
     tab.widgets = {}
     local function Add(w, gap)
@@ -335,19 +362,32 @@ local function BuildSettings(tab)
     Add(MakeSlider(tab, L.MAX_WINDOWS, 1, 5, 1,
         function() return db().maxVisible end,
         function(v) ns.SetMaxVisible(v) end))
+    Add(MakeSlider(tab, L.CLOSE_DELAY, 0, 15, 1,
+        function() return db().closeDelay end,
+        function(v) ns.SetCloseDelay(v) end,
+        function(v) return string.format("%ds", v) end))
     Add(MakeCheck(tab, L.SHOW_ROLLS,
         function() return db().showRolls end,
-        function(v) ns.SetShowRolls(v) end), 30)
+        function(v) ns.SetShowRolls(v) end), 24)
     local lock
     lock = Add(MakeCheck(tab, L.LOCK,
         function() return db().locked end,
-        function(v) ns.SetLocked(v) end), 30)
+        function(v) ns.SetLocked(v) end), 24)
     Add(MakeCheck(tab, L.SHOW_UPGRADE,
         function() return db().showUpgrade end,
-        function(v) ns.SetShowUpgrade(v) end), 30)
+        function(v) ns.SetShowUpgrade(v) end), 24)
     Add(MakeCheck(tab, L.COMPACT_ROWS,
         function() return db().compact end,
-        function(v) ns.SetCompact(v) end), 40)
+        function(v) ns.SetCompact(v) end), 24)
+    Add(MakeCheck(tab, L.SHOW_VALUE,
+        function() return db().showValue end,
+        function(v) ns.SetOption("showValue", v) end), 24)
+    Add(MakeCheck(tab, L.SOUND_ALERT,
+        function() return db().sound end,
+        function(v) ns.SetOption("sound", v) end), 24)
+    Add(MakeCheck(tab, L.FLASH_ALERT,
+        function() return db().flash end,
+        function(v) ns.SetOption("flash", v) end), 34)
     local b1 = MakeTestToggle(tab, 230, 26, function()
         ns.SetLocked(false)
         lock:Refresh()
@@ -357,12 +397,12 @@ local function BuildSettings(tab)
     b1:SetPoint("TOPLEFT", 8, -y)
     b3:SetPoint("LEFT", b1, "RIGHT", 8, 0)
     b4:SetPoint("LEFT", b3, "RIGHT", 8, 0)
-    y = y + 40
+    y = y + 36
     local hint = Label(tab, L.MOVE_HINT, 12, SOFT)
     hint:SetPoint("TOPLEFT", 8, -y)
     hint:SetWidth(560)
     hint:SetWordWrap(true)
-    y = y + 50
+    y = y + 44
     local reset = MakeButton(tab, L.RESET_ALL, 200, 26, function()
         local d, def = ns.GetDB(), ns.GetDefaults()
         for k, v in pairs(def) do d[k] = v end
@@ -374,6 +414,7 @@ local function BuildSettings(tab)
         ns.SetMaxVisible(d.maxVisible)
         ns.SetCompact(d.compact)
         ns.SetShowUpgrade(d.showUpgrade)
+        ns.SetOption("showValue", d.showValue)
         ns.ApplyTheme(d.theme)
         for _, w in ipairs(tab.widgets) do w:Refresh() end
         RefreshCells()
@@ -410,11 +451,12 @@ local function BuildProfiles(tab)
     end
 
     local nameText
-    local useCheck
+    local useCheck, specCheck
     local function Refresh()
         Rebuild()
         nameText:SetText(entries[index] or L.PROFILE_NONE)
         useCheck:Refresh()
+        if specCheck then specCheck:Refresh() end
         tab.update:SetAlpha(entries[index] and 1 or 0.4)
         tab.delete:SetAlpha(entries[index] and 1 or 0.4)
     end
@@ -429,6 +471,7 @@ local function BuildProfiles(tab)
         end
         nameText:SetText(name or L.PROFILE_NONE)
         useCheck:Refresh()
+        if specCheck then specCheck:Refresh() end
         tab.update:SetAlpha(name and 1 or 0.4)
         tab.delete:SetAlpha(name and 1 or 0.4)
     end
@@ -484,6 +527,18 @@ local function BuildProfiles(tab)
         end)
     useCheck:SetSize(560, 22)
     useCheck:SetPoint("TOPLEFT", 8, -122)
+    specCheck = MakeCheck(tab, L.PROFILE_THISSPEC,
+        function()
+            local name = entries[index]
+            return name and P.AssignedForSpec() == name
+        end,
+        function(v)
+            local name = entries[index]
+            if name then P.UseOnThisSpec(v and name or nil) end
+        end)
+    specCheck:SetSize(560, 22)
+    specCheck:SetPoint("TOPLEFT", 8, -148)
+    specCheck:SetShown(P.SpecAvailable())
 
     local dlg
     local function Dialog(mode)
@@ -551,14 +606,48 @@ local function BuildProfiles(tab)
     end
 
     local exp = MakeButton(tab, L.PROFILE_EXPORT, 150, 26, function() Dialog("export") end)
-    exp:SetPoint("TOPLEFT", 8, -164)
+    exp:SetPoint("TOPLEFT", 8, -190)
     local imp = MakeButton(tab, L.PROFILE_IMPORT, 150, 26, function() Dialog("import") end)
     imp:SetPoint("LEFT", exp, "RIGHT", 8, 0)
 
     status = Label(tab, "", 13, "#4FE3C1")
-    status:SetPoint("TOPLEFT", 8, -212)
+    status:SetPoint("TOPLEFT", 8, -238)
     status:SetWidth(560)
     tab.Refresh = Refresh
+end
+
+local function BuildHistory(tab)
+    local lines = {}
+    for i = 1, 4 do
+        lines[i] = Label(tab, "", 14, i == 1 and "#FFFFFF" or "#E8E8E8")
+        lines[i]:SetPoint("TOPLEFT", 8, -(4 + (i - 1) * 22))
+        lines[i]:SetWidth(560)
+    end
+    local sf, child = MakeScroll(tab, 584, 280)
+    sf:SetPoint("TOPLEFT", 0, -104)
+    local list = Label(child, "", 13, "#FFFFFF")
+    list:SetPoint("TOPLEFT", 4, -4)
+    list:SetWidth(560)
+    list:SetWordWrap(true)
+    list:SetSpacing(4)
+    local show = MakeButton(tab, L.HISTORY_BTN, 220, 26, function() ns.PrintHistory(10) end)
+    show:SetPoint("BOTTOMLEFT", 8, 4)
+    local clear = MakeButton(tab, L.HISTORY_CLEAR_BTN, 170, 26, function()
+        ns.ClearHistory()
+        tab.Refresh()
+    end)
+    clear:SetPoint("LEFT", show, "RIGHT", 8, 0)
+    tab.Refresh = function()
+        local rolled, won, needWon, greedWon, week = ns.GetStats()
+        local pct = rolled > 0 and math.floor(won / rolled * 100 + 0.5) or 0
+        lines[1]:SetText(string.format(L.STATS_ROLLED, rolled))
+        lines[2]:SetText(string.format(L.STATS_WON, won, pct))
+        lines[3]:SetText(string.format(L.STATS_KINDS, needWon, greedWon))
+        lines[4]:SetText(string.format(L.STATS_WEEK, week))
+        local entries = ns.GetHistoryLines(30)
+        list:SetText(#entries > 0 and table.concat(entries, "\n") or L.HISTORY_EMPTY)
+        sf:Sync(list:GetStringHeight() + 16)
+    end
 end
 
 local function BuildAbout(tab)
@@ -596,6 +685,7 @@ local function ShowTab(i)
     if i == 1 and tabs[1].BuildAll then tabs[1].BuildAll(); RefreshCells() end
     if i == 2 and tabs[2].Refresh then tabs[2].Refresh() end
     if i == 3 and tabs[3].Refresh then tabs[3].Refresh() end
+    if i == 4 and tabs[4].Refresh then tabs[4].Refresh() end
 end
 
 local function Build()
@@ -624,13 +714,13 @@ local function Build()
     title:SetPoint("TOPLEFT", 18, -14)
     local close = MakeButton(win, "X", 24, 22, function() win:Hide() end)
     close:SetPoint("TOPRIGHT", -10, -10)
-    local names = { L.TAB_DESIGNS, L.TAB_SETTINGS, L.TAB_PROFILES, L.TAB_ABOUT }
+    local names = { L.TAB_DESIGNS, L.TAB_SETTINGS, L.TAB_PROFILES, L.TAB_HISTORY, L.TAB_ABOUT }
     local area = CreateFrame("Frame", nil, win)
     area:SetPoint("TOPLEFT", 18, -84)
     area:SetPoint("BOTTOMRIGHT", -34, 56)
-    for i = 1, 4 do
-        local b = MakeButton(win, names[i], 145, 26, function() ShowTab(i) end)
-        b:SetPoint("TOPLEFT", 18 + (i - 1) * 150, -48)
+    for i = 1, 5 do
+        local b = MakeButton(win, names[i], 120, 26, function() ShowTab(i) end)
+        b:SetPoint("TOPLEFT", 18 + (i - 1) * 124, -48)
         tabButtons[i] = b
         local t = CreateFrame("Frame", nil, area)
         t:SetAllPoints()
@@ -639,7 +729,8 @@ local function Build()
     BuildDesigns(tabs[1])
     BuildSettings(tabs[2])
     BuildProfiles(tabs[3])
-    BuildAbout(tabs[4])
+    BuildHistory(tabs[4])
+    BuildAbout(tabs[5])
     local foot = Label(win, "", 14, "#E8B04A")
     foot:SetPoint("BOTTOM", 0, 12)
     foot:SetWidth(600)

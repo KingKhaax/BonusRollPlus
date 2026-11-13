@@ -1,5 +1,17 @@
 # Cambios
 
+## 0.6.0 (pendiente de publicar)
+
+- Valor de venta o de subasta (precio de TradeSkillMaster si lo tienes) en cada tirada, con un * morado cuando el objeto tiene una apariencia que no posees.
+- Avisos opcionales: sonido al aparecer una tirada y parpadeo del marco cuando queda poco tiempo.
+- Pestaña Historial con estadísticas: tiradas en las que has participado, ganadas, con Necesidad y con Codicia, y ganadas en los últimos 7 días.
+- Perfiles por especialización, además de por personaje.
+- De 20 a 10 diseños de ventana, los más cuidados: cristal esmerilado, pergamino arcano, forja de acero, vacío violeta, cofre dorado, piedra rúnica, escarcha, minimal oscuro, Alianza y Horda.
+- La ventana de ajustes carga las vistas previas poco a poco y abre más rápido.
+- Ajuste para elegir cu�ntos segundos se queda la ventana tras anunciarse el ganador (2 por defecto, de 0 a 15).
+- El addon es exclusivo de WoW Forever.
+- Corregido: cuando caían dos o más objetos a la vez, podía faltar una de las ventanas de tirada.
+
 ## 0.5.0 (13/11/2026)
 
 - Ventana de ajustes (`/br open` o «Abrir ajustes» en las opciones de AddOns): 20 diseños con vista previa, el cristal esmerilado por defecto, tamaño, opacidad, ventanas visibles, lista de tiradas y posición bloqueable.

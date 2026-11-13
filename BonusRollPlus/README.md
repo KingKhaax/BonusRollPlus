@@ -94,6 +94,15 @@ Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
 
+### 0.6.0 (pendiente de publicar)
+
+- Valor de venta o de subasta en cada tirada, con * morado si la apariencia es nueva.
+- Avisos opcionales de sonido y parpadeo.
+- Pestaña Historial con estadísticas.
+- Perfiles por especialización.
+- Diez diseños de ventana en lugar de veinte.
+- Exclusivo de WoW Forever.
+
 ### 0.5.0 (13/11/2026)
 
 - **Ventana de ajustes** (`/br open` o «Abrir ajustes» en las opciones de AddOns): 20 diseños con vista previa, tamaño, opacidad, ventanas visibles, lista de tiradas y posición bloqueable. Acerca de con el changelog.

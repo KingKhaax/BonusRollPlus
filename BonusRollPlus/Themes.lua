@@ -110,38 +110,10 @@ Add("frost", "Frost", "Escarcha", {
     bar = "#E9F9FF", track = "#FFFFFF", tracka = 0.25, shine = 0.22,
     orn = function(w, h) return { { op = "circle", x = w - 20, y = h - 20, size = 70, c = "#FFFFFF", a = 0.12 } } end,
 })
-Add("fel", "Fel", "Fel angular", {
-    layout = "stack", font = F_ARIAL, bg = "#0C1A0A", border = "#7DFF3A", borderA = 0.7, ink = "#E6FFD6", sub = "#A8D98A",
-    bfill = "#7DFF3A", bfa = 0.07, bborder = "#7DFF3A", bba = 0.35, sel = "#3BA10F", sela = 0.88, selInk = "#FFFFFF",
-    bar = "#5FE01F", track = "#7DFF3A", tracka = 0.15, shine = 0.05,
-    orn = function(w, h) return { { op = "rect", x = 0, y = 0, w = 4, h = h, c = "#7DFF3A", a = 0.85 } } end,
-})
-Add("blood", "Blood", "Sangre", {
-    layout = "rail", font = F_MORPH, bg = "#240810", border = "#C4161F", ink = "#FFE4E4", sub = "#E8A9A9",
-    bfill = "#C4161F", bfa = 0.16, bborder = "#FF5050", bba = 0.45, sel = "#E0232D", sela = 0.92, selInk = "#FFFFFF",
-    bar = "#E0232D", track = "#000000", tracka = 0.5, shine = 0.05,
-    orn = function(w, h) return { { op = "rect", x = 0, y = h - 3, w = w, h = 3, c = "#E0232D", a = 1 } } end,
-})
-Add("tavern", "Tavern", "Taberna", {
-    layout = "grid", font = F_FRIZ, bg = "#4F3219", border = "#2A1A0A", bth = 2, ink = "#F4E4C4", sub = "#E8D3A8",
-    bfill = "#000000", bfa = 0.28, bborder = "#2A1A0A", bba = 1, sel = "#D9A441", sela = 0.92, selInk = "#2A1A05",
-    bar = "#D9A441", track = "#2A1A0A", tracka = 0.9, shine = 0.05,
-    orn = function(w, h) return {
-        { op = "row", x = 22, y = 0, n = 13, dx = 22, dy = 0, w = 2, h = h, c = "#3A2410", a = 0.7 },
-        { op = "outline", x = 2, y = 2, w = w - 4, h = h - 4, th = 2, c = "#8E6319", a = 1 },
-        { op = "circle", x = 9, y = h - 9, size = 8, c = "#FFE9B0", a = 0.9 }, { op = "circle", x = w - 9, y = h - 9, size = 8, c = "#FFE9B0", a = 0.9 },
-    } end,
-})
 Add("minimal", "Dark Minimal", "Minimal oscuro", {
     layout = "row", font = F_ARIAL, bg = "#0E0E12", bgA = 0.94, border = "#2A2A33", ink = "#FFFFFF", sub = "#8A8A96",
     bfill = "#FFFFFF", bfa = 0.03, bborder = "#2A2A33", bba = 1, sel = "#FFFFFF", sela = 0.14, selInk = "#FFFFFF",
     bar = "#FFFFFF", track = "#2A2A33", tracka = 1, shine = 0,
-})
-Add("neon", "Arcane Neon", "Neón arcano", {
-    layout = "ring", font = F_ARIAL, bg = "#040C18", bgA = 0.94, border = "#19F0FF", ink = "#CFFBFF", sub = "#7FDFE8",
-    bfill = "#19F0FF", bfa = 0.08, bborder = "#19F0FF", bba = 1, sel = "#19F0FF", sela = 0.35, selInk = "#FFFFFF",
-    bar = "#19F0FF", track = "#0C2A3A", tracka = 1, shine = 0.04, spark = true,
-    orn = function(w, h) return { { op = "outline", x = 3, y = 3, w = w - 6, h = h - 6, th = 1, c = "#19F0FF", a = 0.25 } } end,
 })
 Add("alliance", "Alliance", "Alianza", {
     layout = "split", font = F_MORPH, bg = "#122A5C", border = "#E6C35A", bth = 2, ink = "#EEF3FF", sub = "#C8D6FF",
@@ -157,46 +129,6 @@ Add("horde", "Horde", "Horda", {
     bfill = "#FFFFFF", bfa = 0.04, bborder = "#4A1A1A", bba = 1, sel = "#B81D1D", sela = 0.92, selInk = "#FFFFFF",
     bar = "#FF6B3D", track = "#000000", tracka = 0.5, shine = 0.04,
     orn = function(w, h) return { { op = "rect", x = 0, y = 0, w = 6, h = h, c = "#B81D1D", a = 1 }, { op = "rect", x = w - 6, y = 0, w = 6, h = h, c = "#B81D1D", a = 1 } } end,
-})
-Add("nature", "Nature", "Naturaleza", {
-    layout = "grid", font = F_FRIZ, bg = "#2B3A18", border = "#8FB04A", ink = "#F1FFD6", sub = "#D3E6A8",
-    bfill = "#B4DC64", bfa = 0.1, bborder = "#B4DC64", bba = 0.4, sel = "#A6CF4A", sela = 0.88, selInk = "#10200A",
-    bar = "#A6CF4A", track = "#000000", tracka = 0.4, shine = 0.06,
-    orn = function(w, h) return { { op = "circle", x = w - 30, y = h - 20, size = 90, c = "#A6CF4A", a = 0.11 }, { op = "circle", x = 20, y = 20, size = 60, c = "#B4DC64", a = 0.08 } } end,
-})
-Add("mist", "Mist", "Bruma", {
-    layout = "rail", font = F_MORPH, bg = "#0E0E16", bgA = 0.95, border = "#3A3A4C", ink = "#EDEDF7", sub = "#8C8CA6",
-    bfill = "#FFFFFF", bfa = 0.05, bborder = "#FFFFFF", bba = 0.12, sel = "#FFFFFF", sela = 0.18, selInk = "#FFFFFF",
-    bar = "#C9C9E6", track = "#1D1D28", tracka = 1, shine = 0.02,
-    orn = function(w, h) return { { op = "circle", x = 90, y = 0, size = 240, c = "#5A5A8A", a = 0.16 } } end,
-})
-Add("hologram", "Hologram", "Holograma", {
-    layout = "row", font = F_ARIAL, bg = "#00283C", bgA = 0.82, border = "#3DE8FF", ink = "#D6FBFF", sub = "#8AE8F5",
-    bfill = "#3DE8FF", bfa = 0.07, bborder = "#3DE8FF", bba = 0.35, sel = "#3DE8FF", sela = 0.35, selInk = "#FFFFFF",
-    bar = "#3DE8FF", track = "#0A4A5A", blocks = true, shine = 0.03,
-    orn = function(w, h) return { { op = "row", x = 0, y = 1, n = math.floor(h / 4), dx = 0, dy = 4, w = w, h = 1, c = "#FFFFFF", a = 0.05 } } end,
-})
-Add("banner", "Banner", "Estandarte", {
-    layout = "grid", font = F_FRIZ, bg = "#1F1A28", border = "#4A4158", ink = "#EDE6FA", sub = "#B1A8C6",
-    bfill = "#FFFFFF", bfa = 0.06, bborder = "#FFFFFF", bba = 0.16, sel = "#5A8BD6", sela = 0.88, selInk = "#FFFFFF",
-    bar = "#5A8BD6", track = "#FFFFFF", tracka = 0.14, shine = 0.06,
-    orn = function(w, h) return { { op = "rect", x = 0, y = 0, w = w, h = 4, c = "#5A8BD6", a = 1 } } end,
-})
-Add("holy", "Holy Light", "Luz sagrada", {
-    layout = "ring", font = F_MORPH, bg = "#F3E2AE", border = "#D9A93A", bth = 2, ink = "#4A3205", sub = "#7A5A14",
-    bfill = "#D9A93A", bfa = 0.22, bborder = "#D9A93A", bba = 1, sel = "#FFE58A", sela = 0.95, selInk = "#4A3205",
-    bar = "#E0A92A", track = "#7A5A14", tracka = 0.25, shine = 0.25,
-    orn = function(w, h) return { { op = "circle", x = 150, y = 0, size = 220, c = "#FFFFFF", a = 0.28 } } end,
-})
-Add("leather", "Stitched Leather", "Cuero cosido", {
-    layout = "stack", font = F_MORPH, bg = "#4A3220", border = "#25160A", bth = 2, ink = "#F4E6CE", sub = "#DFC3A0",
-    bfill = "#000000", bfa = 0.26, bborder = "#25160A", bba = 1, sel = "#B9672A", sela = 0.92, selInk = "#FFFFFF",
-    bar = "#E8A060", track = "#25160A", tracka = 0.9, shine = 0.05,
-    orn = function(w, h) return {
-        { op = "row", x = 8, y = 7, n = 36, dx = 8, dy = 0, w = 4, h = 1, c = "#C99A62", a = 0.75 },
-        { op = "row", x = 8, y = h - 8, n = 36, dx = 8, dy = 0, w = 4, h = 1, c = "#C99A62", a = 0.75 },
-        { op = "grain", n = 90, c = "#000000", a = 0.08 },
-    } end,
 })
 
 ns.ThemeDefs = D

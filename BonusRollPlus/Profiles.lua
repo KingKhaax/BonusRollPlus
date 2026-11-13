@@ -1,9 +1,9 @@
 local ADDON, ns = ...
 local L = ns.L
 
-local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "x", "y" }
+local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "closeDelay", "x", "y" }
 local KIND = {
-    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", x = "n", y = "n",
+    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", showValue = "b", sound = "b", flash = "b", closeDelay = "n", x = "n", y = "n",
 }
 local PREFIX = "BRP1;"
 
@@ -49,9 +49,10 @@ function P.Sanitize(t)
     out.scale = clamp(t.scale, 0.5, 1.5, def.scale)
     out.alpha = clamp(t.alpha, 0.3, 1, def.alpha)
     out.maxVisible = math.floor(clamp(t.maxVisible, 1, 5, def.maxVisible))
-    for _, k in ipairs({ "showRolls", "showUpgrade", "compact", "locked" }) do
+    for _, k in ipairs({ "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash" }) do
         if t[k] == nil then out[k] = def[k] else out[k] = t[k] and true or false end
     end
+    out.closeDelay = math.floor(clamp(t.closeDelay, 0, 15, def.closeDelay))
     out.x = tonumber(t.x)
     out.y = tonumber(t.y)
     if not (out.x and out.y) then out.x, out.y = nil, nil end
@@ -76,6 +77,8 @@ function P.Apply(snapshot)
     ns.SetShowRolls(d.showRolls)
     ns.SetCompact(d.compact)
     ns.SetShowUpgrade(d.showUpgrade)
+    ns.SetCloseDelay(d.closeDelay)
+    ns.SetOption("showValue", d.showValue)
     ns.SetLocked(d.locked)
     ns.SetPosition(d.x, d.y)
     ns.ApplyTheme(d.theme)
@@ -114,6 +117,9 @@ function P.Delete(name)
     for key, assigned in pairs(d.charProfile) do
         if assigned == name then d.charProfile[key] = nil end
     end
+    for key, assigned in pairs(d.specProfile) do
+        if assigned == name then d.specProfile[key] = nil end
+    end
 end
 
 function P.UseOnThisCharacter(name)
@@ -124,8 +130,28 @@ function P.AssignedHere()
     return db().charProfile[charKey()]
 end
 
+local function specKey()
+    local index = GetSpecialization and GetSpecialization()
+    if not index or index == 0 then return nil end
+    return charKey() .. ":" .. tostring(index)
+end
+
+function P.SpecAvailable()
+    return specKey() ~= nil
+end
+
+function P.AssignedForSpec()
+    local key = specKey()
+    return key and db().specProfile[key] or nil
+end
+
+function P.UseOnThisSpec(name)
+    local key = specKey()
+    if key then db().specProfile[key] = name end
+end
+
 function P.AutoLoad()
-    local name = P.AssignedHere()
+    local name = P.AssignedForSpec() or P.AssignedHere()
     if name and db().profiles[name] then P.Load(name) end
 end
 

@@ -1,16 +1,16 @@
 local ADDON, ns = ...
 
 ns.ThemeNames = {
-    enUS = { "Frosted Glass", "Arcane Parchment", "Steel Forge", "Violet Void", "Gold Chest", "Runic Stone", "Frost", "Fel", "Blood", "Tavern", "Dark Minimal", "Arcane Neon", "Alliance", "Horde", "Nature", "Mist", "Hologram", "Banner", "Holy Light", "Stitched Leather" },
-    esES = { "Cristal esmerilado", "Pergamino arcano", "Forja de acero", "Vacío violeta", "Cofre dorado", "Piedra rúnica", "Escarcha", "Fel angular", "Sangre", "Taberna", "Minimal oscuro", "Neón arcano", "Alianza", "Horda", "Naturaleza", "Bruma", "Holograma", "Estandarte", "Luz sagrada", "Cuero cosido" },
-    deDE = { "Milchglas", "Arkanes Pergament", "Stahlschmiede", "Violette Leere", "Goldtruhe", "Runenstein", "Frost", "Teufelsmagie", "Blut", "Taverne", "Dunkel-Minimal", "Arkaner Neon", "Allianz", "Horde", "Natur", "Nebel", "Hologramm", "Banner", "Heiliges Licht", "Genähtes Leder" },
-    frFR = { "Verre dépoli", "Parchemin arcanique", "Forge d'acier", "Vide violet", "Coffre doré", "Pierre runique", "Givre", "Gangrené", "Sang", "Taverne", "Minimal sombre", "Néon arcanique", "Alliance", "Horde", "Nature", "Brume", "Hologramme", "Bannière", "Lumière sacrée", "Cuir cousu" },
-    itIT = { "Vetro satinato", "Pergamena arcana", "Forgia d'acciaio", "Vuoto viola", "Forziere dorato", "Pietra runica", "Gelo", "Vile", "Sangue", "Taverna", "Minimal scuro", "Neon arcano", "Alleanza", "Orda", "Natura", "Nebbia", "Ologramma", "Stendardo", "Luce sacra", "Cuoio cucito" },
-    ptBR = { "Vidro fosco", "Pergaminho arcano", "Forja de aço", "Vazio violeta", "Baú dourado", "Pedra rúnica", "Gelo", "Vil", "Sangue", "Taverna", "Minimalista escuro", "Neon arcano", "Aliança", "Horda", "Natureza", "Névoa", "Holograma", "Estandarte", "Luz sagrada", "Couro costurado" },
-    ruRU = { "Матовое стекло", "Тайный пергамент", "Стальная кузня", "Фиолетовая Бездна", "Золотой сундук", "Рунический камень", "Мороз", "Скверна", "Кровь", "Таверна", "Тёмный минимализм", "Тайный неон", "Альянс", "Орда", "Природа", "Туман", "Голограмма", "Знамя", "Священный свет", "Прошитая кожа" },
-    koKR = { "간유리", "비전 양피지", "강철 대장간", "보랏빛 공허", "황금 보물상자", "룬 석재", "서리", "지옥불", "피", "선술집", "어두운 미니멀", "비전 네온", "얼라이언스", "호드", "자연", "안개", "홀로그램", "깃발", "성스러운 빛", "바느질 가죽" },
-    zhCN = { "磨砂玻璃", "奥术羊皮纸", "钢铁熔炉", "紫色虚空", "黄金宝箱", "符文石", "霜冻", "邪能", "鲜血", "酒馆", "暗色极简", "奥术霓虹", "联盟", "部落", "自然", "迷雾", "全息", "旗帜", "圣光", "缝线皮革" },
-    zhTW = { "霧面玻璃", "奧術羊皮紙", "鋼鐵熔爐", "紫色虛空", "黃金寶箱", "符文石", "霜凍", "魔化", "鮮血", "酒館", "暗色極簡", "奧術霓虹", "聯盟", "部落", "自然", "迷霧", "全息", "旗幟", "聖光", "縫線皮革" },
+    enUS = { "Frosted Glass", "Arcane Parchment", "Steel Forge", "Violet Void", "Gold Chest", "Runic Stone", "Frost", "Dark Minimal", "Alliance", "Horde" },
+    esES = { "Cristal esmerilado", "Pergamino arcano", "Forja de acero", "Vacío violeta", "Cofre dorado", "Piedra rúnica", "Escarcha", "Minimal oscuro", "Alianza", "Horda" },
+    deDE = { "Milchglas", "Arkanes Pergament", "Stahlschmiede", "Violette Leere", "Goldtruhe", "Runenstein", "Frost", "Dunkel-Minimal", "Allianz", "Horde" },
+    frFR = { "Verre dépoli", "Parchemin arcanique", "Forge d'acier", "Vide violet", "Coffre doré", "Pierre runique", "Givre", "Minimal sombre", "Alliance", "Horde" },
+    itIT = { "Vetro satinato", "Pergamena arcana", "Forgia d'acciaio", "Vuoto viola", "Forziere dorato", "Pietra runica", "Gelo", "Minimal scuro", "Alleanza", "Orda" },
+    ptBR = { "Vidro fosco", "Pergaminho arcano", "Forja de aço", "Vazio violeta", "Baú dourado", "Pedra rúnica", "Gelo", "Minimalista escuro", "Aliança", "Horda" },
+    ruRU = { "Матовое стекло", "Тайный пергамент", "Стальная кузня", "Фиолетовая Бездна", "Золотой сундук", "Рунический камень", "Мороз", "Тёмный минимализм", "Альянс", "Орда" },
+    koKR = { "간유리", "비전 양피지", "강철 대장간", "보랏빛 공허", "황금 보물상자", "룬 석재", "서리", "어두운 미니멀", "얼라이언스", "호드" },
+    zhCN = { "磨砂玻璃", "奥术羊皮纸", "钢铁熔炉", "紫色虚空", "黄金宝箱", "符文石", "霜冻", "暗色极简", "联盟", "部落" },
+    zhTW = { "霧面玻璃", "奧術羊皮紙", "鋼鐵熔爐", "紫色虛空", "黃金寶箱", "符文石", "霜凍", "暗色極簡", "聯盟", "部落" },
 }
 ns.ThemeNames.esMX = ns.ThemeNames.esES
 

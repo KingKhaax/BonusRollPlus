@@ -132,3 +132,152 @@ local FIRST = {
 }
 ns.ChangelogL["0.4.0"] = {}
 for loc, text in pairs(FIRST) do ns.ChangelogL["0.4.0"][loc] = { text } end
+
+local MORE = {
+    enUS = {
+        SHOW_VALUE = "Show the vendor or auction value (a purple * means an appearance you do not own)", SOUND_ALERT = "Play a sound when a roll appears",
+        FLASH_ALERT = "Flash the item frame when time is running out", PROFILE_THISSPEC = "Load this profile automatically on this specialization",
+        TAB_HISTORY = "History", STATS_ROLLED = "Rolls you took part in: %d", STATS_WON = "Rolls won: %d (%d%%)",
+        STATS_KINDS = "Won with Need: %d · won with Greed: %d", STATS_WEEK = "Won in the last 7 days: %d", HISTORY_CLEAR_BTN = "Clear history",
+    },
+    esES = {
+        SHOW_VALUE = "Mostrar el valor de venta o de subasta (un * morado indica una apariencia que no tienes)", SOUND_ALERT = "Reproducir un sonido cuando aparece una tirada",
+        FLASH_ALERT = "Parpadear el marco del objeto cuando queda poco tiempo", PROFILE_THISSPEC = "Cargar este perfil automáticamente en esta especialización",
+        TAB_HISTORY = "Historial", STATS_ROLLED = "Tiradas en las que has participado: %d", STATS_WON = "Tiradas ganadas: %d (%d%%)",
+        STATS_KINDS = "Ganadas con Necesidad: %d · ganadas con Codicia: %d", STATS_WEEK = "Ganadas en los últimos 7 días: %d", HISTORY_CLEAR_BTN = "Borrar historial",
+    },
+    deDE = {
+        SHOW_VALUE = "Händler- oder Auktionswert anzeigen (ein lila * bedeutet ein Aussehen, das du nicht besitzt)", SOUND_ALERT = "Ton abspielen, wenn ein Wurf erscheint",
+        FLASH_ALERT = "Gegenstandsrahmen blinken lassen, wenn die Zeit knapp wird", PROFILE_THISSPEC = "Dieses Profil bei dieser Spezialisierung automatisch laden",
+        TAB_HISTORY = "Verlauf", STATS_ROLLED = "Würfe, an denen du teilgenommen hast: %d", STATS_WON = "Gewonnene Würfe: %d (%d%%)",
+        STATS_KINDS = "Mit Bedarf gewonnen: %d · mit Gier gewonnen: %d", STATS_WEEK = "In den letzten 7 Tagen gewonnen: %d", HISTORY_CLEAR_BTN = "Verlauf löschen",
+    },
+    frFR = {
+        SHOW_VALUE = "Afficher la valeur de vente ou d'enchères (un * violet signale une apparence que vous n'avez pas)", SOUND_ALERT = "Jouer un son quand un jet apparaît",
+        FLASH_ALERT = "Faire clignoter le cadre de l'objet quand le temps presse", PROFILE_THISSPEC = "Charger ce profil automatiquement pour cette spécialisation",
+        TAB_HISTORY = "Historique", STATS_ROLLED = "Jets auxquels vous avez participé : %d", STATS_WON = "Jets remportés : %d (%d%%)",
+        STATS_KINDS = "Remportés avec Besoin : %d · remportés avec Cupidité : %d", STATS_WEEK = "Remportés ces 7 derniers jours : %d", HISTORY_CLEAR_BTN = "Effacer l'historique",
+    },
+    itIT = {
+        SHOW_VALUE = "Mostra il valore di vendita o d'asta (un * viola indica un aspetto che non possiedi)", SOUND_ALERT = "Riproduci un suono quando compare un tiro",
+        FLASH_ALERT = "Fai lampeggiare il riquadro dell'oggetto quando il tempo sta finendo", PROFILE_THISSPEC = "Carica automaticamente questo profilo con questa specializzazione",
+        TAB_HISTORY = "Cronologia", STATS_ROLLED = "Tiri a cui hai partecipato: %d", STATS_WON = "Tiri vinti: %d (%d%%)",
+        STATS_KINDS = "Vinti con Necessità: %d · vinti con Cupidigia: %d", STATS_WEEK = "Vinti negli ultimi 7 giorni: %d", HISTORY_CLEAR_BTN = "Cancella cronologia",
+    },
+    ptBR = {
+        SHOW_VALUE = "Mostrar o valor de venda ou de leilão (um * roxo indica uma aparência que você não possui)", SOUND_ALERT = "Tocar um som quando uma rolagem aparecer",
+        FLASH_ALERT = "Piscar a moldura do item quando o tempo estiver acabando", PROFILE_THISSPEC = "Carregar este perfil automaticamente nesta especialização",
+        TAB_HISTORY = "Histórico", STATS_ROLLED = "Rolagens de que você participou: %d", STATS_WON = "Rolagens vencidas: %d (%d%%)",
+        STATS_KINDS = "Vencidas com Necessidade: %d · vencidas com Ganância: %d", STATS_WEEK = "Vencidas nos últimos 7 dias: %d", HISTORY_CLEAR_BTN = "Limpar histórico",
+    },
+    ruRU = {
+        SHOW_VALUE = "Показывать цену продажи или аукциона (фиолетовая * — внешний вид, которого у вас нет)", SOUND_ALERT = "Проигрывать звук при появлении броска",
+        FLASH_ALERT = "Мигать рамкой предмета, когда время на исходе", PROFILE_THISSPEC = "Автоматически загружать этот профиль для этой специализации",
+        TAB_HISTORY = "История", STATS_ROLLED = "Бросков, в которых вы участвовали: %d", STATS_WON = "Выиграно бросков: %d (%d%%)",
+        STATS_KINDS = "Выиграно по «Мне нужно»: %d · по «Не откажусь»: %d", STATS_WEEK = "Выиграно за последние 7 дней: %d", HISTORY_CLEAR_BTN = "Очистить историю",
+    },
+    koKR = {
+        SHOW_VALUE = "상점 또는 경매장 가치 표시 (보라색 *는 보유하지 않은 외형)", SOUND_ALERT = "주사위가 나타나면 소리 재생",
+        FLASH_ALERT = "시간이 얼마 남지 않으면 아이템 테두리 깜빡임", PROFILE_THISSPEC = "이 전문화에서 이 프로필을 자동으로 불러오기",
+        TAB_HISTORY = "기록", STATS_ROLLED = "참여한 주사위: %d", STATS_WON = "획득한 주사위: %d (%d%%)",
+        STATS_KINDS = "필요로 획득: %d · 욕심으로 획득: %d", STATS_WEEK = "최근 7일간 획득: %d", HISTORY_CLEAR_BTN = "기록 지우기",
+    },
+    zhCN = {
+        SHOW_VALUE = "显示商店或拍卖行价值（紫色 * 表示你尚未拥有的外观）", SOUND_ALERT = "出现掷骰时播放提示音",
+        FLASH_ALERT = "时间不多时让物品边框闪烁", PROFILE_THISSPEC = "在此专精下自动加载此配置",
+        TAB_HISTORY = "记录", STATS_ROLLED = "参与的掷骰：%d", STATS_WON = "赢得的掷骰：%d（%d%%）",
+        STATS_KINDS = "需求赢得：%d · 贪婪赢得：%d", STATS_WEEK = "最近7天赢得：%d", HISTORY_CLEAR_BTN = "清除记录",
+    },
+    zhTW = {
+        SHOW_VALUE = "顯示商店或拍賣場價值（紫色 * 表示你尚未擁有的外觀）", SOUND_ALERT = "出現擲骰時播放提示音",
+        FLASH_ALERT = "時間不多時讓物品邊框閃爍", PROFILE_THISSPEC = "在此專精下自動載入此設定檔",
+        TAB_HISTORY = "記錄", STATS_ROLLED = "參與的擲骰：%d", STATS_WON = "贏得的擲骰：%d（%d%%）",
+        STATS_KINDS = "需求贏得：%d · 貪婪贏得：%d", STATS_WEEK = "最近7天贏得：%d", HISTORY_CLEAR_BTN = "清除記錄",
+    },
+}
+MORE.esMX = MORE.esES
+for loc, strings in pairs(MORE) do
+    local target = ns.Strings[loc]
+    if target then
+        for k, v in pairs(strings) do target[k] = v end
+    end
+end
+
+local DELAY = {
+    enUS = "Seconds the window stays after the winner is announced", esES = "Segundos que se queda la ventana tras anunciarse el ganador",
+    deDE = "Sekunden, die das Fenster nach der Gewinnerverkündung bleibt", frFR = "Secondes pendant lesquelles la fenêtre reste après l'annonce du gagnant",
+    itIT = "Secondi in cui la finestra resta dopo l'annuncio del vincitore", ptBR = "Segundos que a janela permanece após o anúncio do vencedor",
+    ruRU = "Секунд, сколько окно остаётся после объявления победителя", koKR = "승자 발표 후 창이 유지되는 시간(초)",
+    zhCN = "公布赢家后窗口保留的秒数", zhTW = "公布贏家後視窗保留的秒數",
+}
+DELAY.esMX = DELAY.esES
+for loc, text in pairs(DELAY) do
+    if ns.Strings[loc] then ns.Strings[loc].CLOSE_DELAY = text end
+end
+
+ns.ChangelogL["0.6.0"] = {
+    deDE = {
+        "Händler- oder Auktionswert bei jedem Wurf (TradeSkillMaster-Preise, falls vorhanden), mit einem lila *, wenn du das Aussehen noch nicht besitzt.",
+        "Neuer Reiter „Verlauf“ mit Statistiken: Teilnahmen, gewonnene Würfe, Siege mit Bedarf und Gier sowie die letzten 7 Tage.",
+        "Profile lassen sich auch pro Spezialisierung automatisch laden.",
+        "Optionale Hinweise: Ton beim Erscheinen eines Wurfs und blinkender Rahmen, wenn die Zeit knapp wird, sowie eine Einstellung, wie viele Sekunden das Fenster nach der Gewinnerverkündung bleibt.",
+        "Fensterdesigns von 20 auf die 10 am besten ausgearbeiteten reduziert; das Einstellungsfenster öffnet schneller.",
+        "Behoben: Wenn zwei oder mehr Gegenstände gleichzeitig fielen, konnte ein Würfelfenster fehlen.",
+    },
+    frFR = {
+        "Valeur de vente ou d'enchères sur chaque jet (prix TradeSkillMaster si vous l'avez), avec un * violet quand l'objet a une apparence que vous n'avez pas.",
+        "Nouvel onglet Historique avec des statistiques : jets auxquels vous avez participé, jets remportés, victoires avec Besoin et Cupidité, et les 7 derniers jours.",
+        "Les profils peuvent aussi se charger automatiquement par spécialisation.",
+        "Avis optionnels : un son à l'apparition d'un jet et un cadre clignotant quand le temps presse, plus un réglage du nombre de secondes pendant lesquelles la fenêtre reste après l'annonce du gagnant.",
+        "Styles de fenêtre ramenés de 20 aux 10 plus soignés ; la fenêtre de réglages s'ouvre plus vite.",
+        "Corrigé : quand deux objets ou plus tombaient en même temps, une des fenêtres de jet pouvait manquer.",
+    },
+    itIT = {
+        "Valore di vendita o d'asta su ogni tiro (prezzi di TradeSkillMaster se li hai), con un * viola quando l'oggetto ha un aspetto che non possiedi.",
+        "Nuova scheda Cronologia con statistiche: tiri a cui hai partecipato, tiri vinti, vittorie con Necessità e Cupidigia e gli ultimi 7 giorni.",
+        "I profili si possono caricare automaticamente anche per specializzazione.",
+        "Avvisi opzionali: un suono quando compare un tiro e un riquadro lampeggiante quando il tempo sta finendo, più un'impostazione per i secondi in cui la finestra resta dopo l'annuncio del vincitore.",
+        "Stili di finestra ridotti da 20 ai 10 più curati; la finestra delle impostazioni si apre più velocemente.",
+        "Corretto: quando due o più oggetti cadevano insieme, una delle finestre dei tiri poteva mancare.",
+    },
+    ptBR = {
+        "Valor de venda ou de leilão em cada rolagem (preços do TradeSkillMaster, se você o tiver), com um * roxo quando o item tem uma aparência que você não possui.",
+        "Nova aba Histórico com estatísticas: rolagens de que participou, rolagens vencidas, vitórias com Necessidade e Ganância e os últimos 7 dias.",
+        "Os perfis também podem ser carregados automaticamente por especialização.",
+        "Avisos opcionais: um som quando uma rolagem aparece e uma moldura piscando quando o tempo está acabando, além de um ajuste para os segundos que a janela permanece após o anúncio do vencedor.",
+        "Estilos de janela reduzidos de 20 para os 10 mais bem acabados; a janela de configurações abre mais rápido.",
+        "Corrigido: quando dois ou mais itens caíam ao mesmo tempo, uma das janelas de rolagem podia faltar.",
+    },
+    ruRU = {
+        "Цена продажи или аукциона в каждом броске (цены TradeSkillMaster, если он есть), с фиолетовой * для внешнего вида, которого у вас нет.",
+        "Новая вкладка «История» со статистикой: броски, в которых вы участвовали, выигранные, победы по «Мне нужно» и «Не откажусь» и последние 7 дней.",
+        "Профили теперь можно загружать автоматически и для каждой специализации.",
+        "Необязательные оповещения: звук при появлении броска и мигающая рамка, когда время на исходе, а также настройка длительности показа окна после объявления победителя.",
+        "Дизайнов окна стало 10 вместо 20 — самые проработанные; окно настроек открывается быстрее.",
+        "Исправлено: когда одновременно выпадало два предмета или больше, одно из окон розыгрыша могло не появиться.",
+    },
+    koKR = {
+        "모든 주사위에 상점 또는 경매장 가치 표시(TradeSkillMaster 가격 사용 가능), 보유하지 않은 외형은 보라색 *로 표시.",
+        "통계가 있는 새 기록 탭: 참여한 주사위, 획득한 주사위, 필요/욕심 획득 수, 최근 7일.",
+        "프로필을 전문화별로도 자동으로 불러올 수 있습니다.",
+        "선택 가능한 알림: 주사위가 나타날 때 소리, 시간이 얼마 남지 않으면 깜빡이는 테두리, 승자 발표 후 창이 유지되는 시간 설정.",
+        "창 디자인을 20개에서 가장 잘 다듬은 10개로 줄였고, 설정 창이 더 빨리 열립니다.",
+        "수정: 아이템 두 개 이상이 동시에 떨어질 때 주사위 창 하나가 빠질 수 있던 문제.",
+    },
+    zhCN = {
+        "每次掷骰显示商店或拍卖行价值（有 TradeSkillMaster 时使用其价格），尚未拥有的外观用紫色 * 标记。",
+        "设置窗口新增“记录”标签页和统计：参与的掷骰、赢得的掷骰、需求与贪婪赢得次数以及最近7天。",
+        "配置现在也可以按专精自动加载。",
+        "可选提示：出现掷骰时播放声音、时间不多时边框闪烁，并可设置公布赢家后窗口保留的秒数。",
+        "窗口样式从20种精简为最精致的10种；设置窗口打开更快。",
+        "修复：同时掉落两件或更多物品时，可能缺少其中一个掷骰窗口。",
+    },
+    zhTW = {
+        "每次擲骰顯示商店或拍賣場價值（有 TradeSkillMaster 時使用其價格），尚未擁有的外觀以紫色 * 標記。",
+        "設定視窗新增「記錄」分頁和統計：參與的擲骰、贏得的擲骰、需求與貪婪贏得次數以及最近7天。",
+        "設定檔現在也可以依專精自動載入。",
+        "可選提示：出現擲骰時播放聲音、時間不多時邊框閃爍，並可設定公布贏家後視窗保留的秒數。",
+        "視窗樣式從20種精簡為最精緻的10種；設定視窗開啟更快。",
+        "修復：同時掉落兩件或更多物品時，可能缺少其中一個擲骰視窗。",
+    },
+}
