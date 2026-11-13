@@ -74,6 +74,28 @@ Version **0.6.0**. The default style is **Frosted Glass**, and there are 10 desi
 
 This section sums up everything done up to 2026-11-13: how the addon is built, how it is tested and published, and what the author has decided. Read it all before changing anything.
 
+## Resuming the work in a new session
+
+Use this when you pick the project up on another PC or in a new working session.
+
+1. **Get the code.** Clone the repository or update it:
+   ```
+   git clone https://github.com/KingKhaax/BonusRollPlus.git
+   cd BonusRollPlus
+   git pull --rebase
+   ```
+2. **Check the tools.** You need `git`, a Lua interpreter (`lua` 5.4 or `luajit`) and, to publish, PowerShell plus the user environment variable `CURSEFORGE_API_TOKEN`. Don't copy the token into the repo.
+3. **Run the tests** before changing anything, so you know the starting point is clean:
+   ```
+   lua tests/core_tests.lua
+   lua tests/smoke_test.lua
+   ```
+4. **Install the addon in the game.** Copy the `BonusRollPlus` folder to `World of Warcraft\_forever_\Interface\AddOns\`, replacing the old one (on Windows: `robocopy BonusRollPlus "<AddOns>\BonusRollPlus" /MIR`). Then `/reload` and `/br test` in game.
+5. **Read the state.** Read this whole notes section, `CHANGELOG.md` and `git log --oneline -10`. The version in `BonusRollPlus/BonusRollPlus.toc` is the current one; "Current status" and "Pending" below say what is published and what is left.
+6. **Brief the new session.** Start it with a message like this one (in Spanish, the author's language):
+   > Retoma el addon BonusRoll Plus del repositorio KingKhaax/BonusRollPlus. Lee entero el README (sección «Notes for whoever continues the work»), el CHANGELOG y los últimos commits, pasa las pruebas, instala la carpeta BonusRollPlus en AddOns de WoW Forever y dime en qué estado está y qué queda pendiente antes de tocar nada.
+7. **When you finish**, follow "How to publish a version", update "Current status" and "Pending" in this README, and push. That keeps the next session in sync.
+
 ## Current status
 
 | Item | Status |
@@ -93,7 +115,7 @@ This section sums up everything done up to 2026-11-13: how the addon is built, h
 
 - **Single client: WoW Forever.** The addon is exclusive to that client (game version 1.60.1 on CurseForge, id 17053). Retail and Classic don't need to be supported. The `.toc` still lists Retail interfaces (16001, 11601, 120107, 120105); only clean them up if the author asks.
 - **Language:** always talk to the author in Spanish. Any message he is going to publish has its translation underneath.
-- **Commits:** author and committer `sr.kitkat <180756772+KingKhaax@users.noreply.github.com>`. **No AI tool attribution** of any kind and no `Co-Authored-By` lines.
+- **Commits:** author and committer `sr.kitkat <180756772+KingKhaax@users.noreply.github.com>`. **No attribution lines** of any kind and no `Co-Authored-By` lines.
 - **Versions:** one at a time. While one is unpublished, don't number another. If the author says he already uploaded one, the pending one becomes the next.
 - **Changelog:** important changes only. No minor fixes or loose text tweaks.
 - **New texts:** every new key goes into **all 11 languages** (esES, esMX, enUS, deDE, frFR, itIT, ptBR, ruRU, koKR, zhCN, zhTW), with the same `%s`/`%d` placeholders as English. A test checks this.
@@ -167,7 +189,7 @@ Tips: run the test 40 times in a row to catch intermittent failures (there was o
 
 1. Bump the number in `BonusRollPlus/BonusRollPlus.toc`, `README.md`, `BonusRollPlus/README.md` and `CHANGELOG.md`; add the entry to `CHANGES` in `Settings.lua` and the per-language notes in `LocalesText.lua`/`LocalesExtra.lua`.
 2. Write the English changelog in `tools/changelog-en.md` (sections New, Improvement, Fix).
-3. Run the tests. Commit as `sr.kitkat`, with no AI attribution, and `git push origin main`.
+3. Run the tests. Commit as `sr.kitkat`, with no attribution lines, and `git push origin main`.
 4. Build the zip `Desktop\BonusRollPlus-X.Y.Z.zip` with **one `BonusRollPlus` folder** inside, entries with `/` and **without** the `.omc` folder (it sometimes appears inside the addon; delete it first).
 5. Upload with the API: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/upload_curseforge.ps1 -ProjectId 1800719 [-Upload]` (without `-Upload` it is a dry run). The token is in the user environment variable `CURSEFORGE_API_TOKEN`; never write it into files or commit it.
 6. The **page description is set by hand** on CurseForge. The latest is in `docs/descripcion-curseforge.html` (English, with the Spanish part underneath). The author adds the screenshots: pending, see below.
