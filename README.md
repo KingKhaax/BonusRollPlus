@@ -88,6 +88,8 @@ Contenido de la 0.5.0 (ya publicada): ventana de ajustes con 20 diseños, perfil
 
 Contenido pendiente de la 0.6.0 (ver `CHANGELOG.md` y `tools/changelog-en.md`): valor de venta o subasta con `*` morado de apariencia nueva, pestaña Historial con estadísticas, perfiles por especialización, avisos de sonido y parpadeo, ajuste de segundos de cierre tras el ganador (2 por defecto), diseños de 20 a 10, vistas previas cargadas poco a poco, corrección de ventanas duplicadas cuando caen varios objetos a la vez.
 
+> **El repositorio es público desde el 2026-11-13** (las capturas de la descripción se cargan desde raw.githubusercontent.com y con el repo privado daban 404). No subas nunca tokens, claves ni datos personales.
+
 ## Reglas del autor (obligatorias)
 
 - **Cliente único: WoW Forever.** El addon es exclusivo de ese cliente (versión de juego 1.60.1 en CurseForge, id 17053). No hay que cuidar Retail ni Classic. El `.toc` aún lista interfaces de Retail (16001, 11601, 120107, 120105); limpiar solo si el autor lo pide.
