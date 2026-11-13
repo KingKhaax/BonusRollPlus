@@ -188,5 +188,5 @@ for loc, strings in pairs(ns.Strings) do
 end
 print("0.6.0 extras ok")
 
-for loc, items in pairs(ns.ChangelogL["0.6.0"]) do assert(#items == 6, "0.6.0 notes " .. loc) end
+for loc, items in pairs(ns.ChangelogL["0.6.0"]) do assert(#items == 7, "0.6.0 notes " .. loc) end
 print("0.6.0 notes ok")

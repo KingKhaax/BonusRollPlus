@@ -53,7 +53,7 @@ Arrastra una ventana para moverla. El candado de su esquina la fija; otro clic l
 
 ## Estado
 
-Versión **0.5.0**. El estilo por defecto es **Cristal Esmerilado** y hay 10 diseños para elegir en `/br open`. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
+Versión **0.6.0**. El estilo por defecto es **Cristal Esmerilado** y hay 10 diseños para elegir en `/br open`. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
 
 ## Qué hay en este repositorio
 

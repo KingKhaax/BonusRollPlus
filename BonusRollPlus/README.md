@@ -1,6 +1,6 @@
 <p align="center"><img src="../assets/logo.png" width="360" alt="BonusRoll Plus"></p>
 
-# BonusRoll Plus 0.5.0
+# BonusRoll Plus 0.6.0
 
 Documentación completa del addon: qué hace, cómo funciona por dentro, comandos, historial de cambios, lo que falta y cómo llevarlo a otro ordenador.
 
@@ -94,7 +94,7 @@ Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
 
-### 0.6.0 (pendiente de publicar)
+### 0.6.0 (13/11/2026)
 
 - Valor de venta o de subasta en cada tirada, con * morado si la apariencia es nueva.
 - Avisos opcionales de sonido y parpadeo.
@@ -102,6 +102,7 @@ Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 - Perfiles por especialización.
 - Diez diseños de ventana en lugar de veinte.
 - Exclusivo de WoW Forever.
+- El historial muestra el nivel de objeto, sigue el idioma del juego y enseña el tooltip al pasar el ratón o hacer clic.
 
 ### 0.5.0 (13/11/2026)
 

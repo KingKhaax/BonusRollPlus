@@ -8,6 +8,7 @@
 - **New setting** to choose how many seconds the window stays after the winner is announced (2 by default).
 
 ### Improvement
+- The history shows the item level of every piece, follows the game's language and opens the item tooltip when you hover or click it.
 - Window designs reduced from 20 to the 10 best finished ones: frosted glass, arcane parchment, steel forge, violet void, gold chest, runic stone, frost, dark minimal, Alliance and Horde.
 - The settings window opens faster.
 - The addon is now exclusive to the WoW Forever client.

@@ -1162,7 +1162,7 @@ local function MarkWon(f, name, link)
     end
     if db.history then
         table.insert(db.history, {
-            t = time(), link = link, winner = name, kind = e.kind, value = e.value,
+            t = time(), link = link, id = ItemID(link), ilvl = (ItemMeta(link)), winner = name, kind = e.kind, value = e.value,
             me = name == ShortName(UnitName("player")),
         })
         while #db.history > 100 do table.remove(db.history, 1) end
@@ -1434,12 +1434,8 @@ function ns.GetStats()
 end
 
 function ns.GetHistoryLines(n)
-    local lines, list = {}, db.history or {}
-    for i = #list, math.max(1, #list - (n or 30) + 1), -1 do
-        local h = list[i]
-        local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
-        lines[#lines + 1] = string.format("%s  %s  >  %s%s", date("%d/%m %H:%M", h.t), h.link or "?", who, h.value and (" (" .. h.value .. ")") or "")
-    end
+    local lines = {}
+    for _, entry in ipairs(ns.GetHistoryEntries(n or 30)) do lines[#lines + 1] = entry.text end
     return lines
 end
 
@@ -1469,19 +1465,45 @@ function ns.SetPosition(x, y)
     end
 end
 
+local function HistoryItem(h)
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local link = h.link
+    if get and (h.link or h.id) then
+        local ok, name, fresh = pcall(get, h.link or h.id)
+        if ok and name and type(fresh) == "string" then link = fresh end
+    end
+    local ilvl = h.ilvl
+    if link and C_Item and C_Item.GetDetailedItemLevelInfo then
+        local detailed = C_Item.GetDetailedItemLevelInfo(link)
+        if detailed and detailed > 0 then ilvl = detailed end
+    end
+    return link, ilvl
+end
+
+function ns.GetHistoryEntries(n)
+    local out, list = {}, db.history or {}
+    for i = #list, math.max(1, #list - (n or 30) + 1), -1 do
+        local h = list[i]
+        local link, ilvl = HistoryItem(h)
+        local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
+        local level = ilvl and ("  |cffefdcb0(" .. ilvl .. ")|r") or ""
+        local roll = h.value and (" (" .. h.value .. ")") or ""
+        out[#out + 1] = {
+            link = link,
+            text = string.format("%s  %s%s  >  %s%s", date("%d/%m %H:%M", h.t), link or "?", level, who, roll),
+        }
+    end
+    return out
+end
+
 function ns.PrintHistory(n)
-    local list = db.history or {}
     print("|cffffd100BonusRoll Plus|r: " .. L.HISTORY_TITLE)
-    if #list == 0 then
+    local entries = ns.GetHistoryEntries(n or 10)
+    if #entries == 0 then
         print(L.HISTORY_EMPTY)
         return
     end
-    for i = math.max(1, #list - (n or 10) + 1), #list do
-        local h = list[i]
-        local who = h.me and ("|cff40ff40" .. h.winner .. "|r") or h.winner
-        local roll = h.value and (" (" .. h.value .. ")") or ""
-        print(string.format("%s  %s  >  %s%s", date("%d/%m %H:%M", h.t), h.link or "?", who, roll))
-    end
+    for i = #entries, 1, -1 do print(entries[i].text) end
 end
 
 function ns.ClearHistory()

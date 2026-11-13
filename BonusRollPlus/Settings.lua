@@ -14,7 +14,7 @@ local CHANGES = {
         v = "0.6.0", d = "13/11/2026",
         en = {
             "Vendor or auction value on every roll (TradeSkillMaster prices when you have it), with a purple * when the item has an appearance you do not own.",
-            "New History tab with statistics: rolls joined, rolls won, Need and Greed wins and the last 7 days.",
+            "New History tab with statistics: rolls joined, rolls won, Need and Greed wins and the last 7 days. Items show their item level, follow the game's language and open their tooltip when hovered or clicked.",
             "Profiles can also load automatically per specialization.",
             "Optional sound and flashing alerts, and a setting for how many seconds the window stays after the winner is announced.",
             "Designs reduced from 20 to the 10 best finished ones, and the settings window opens faster.",
@@ -22,7 +22,7 @@ local CHANGES = {
         },
         es = {
             "Valor de venta o de subasta en cada tirada (precios de TradeSkillMaster si lo tienes), con un * morado cuando el objeto tiene una apariencia que no posees.",
-            "Nueva pestaña Historial con estadísticas: tiradas en las que has participado, ganadas, con Necesidad y con Codicia, y los últimos 7 días.",
+            "Nueva pestaña Historial con estadísticas: tiradas en las que has participado, ganadas, con Necesidad y con Codicia, y los últimos 7 días. Los objetos muestran su nivel, siguen el idioma del juego y enseñan su tooltip al pasar el ratón o hacer clic.",
             "Los perfiles también se pueden cargar automáticamente por especialización.",
             "Avisos opcionales de sonido y parpadeo, y un ajuste con los segundos que se queda la ventana tras anunciarse el ganador.",
             "Los diseños pasan de 20 a los 10 mejor acabados, y la ventana de ajustes abre más rápido.",
@@ -616,6 +616,8 @@ local function BuildProfiles(tab)
     tab.Refresh = Refresh
 end
 
+local HISTORY_ROWS, ROW_H = 30, 20
+
 local function BuildHistory(tab)
     local lines = {}
     for i = 1, 4 do
@@ -625,11 +627,35 @@ local function BuildHistory(tab)
     end
     local sf, child = MakeScroll(tab, 584, 280)
     sf:SetPoint("TOPLEFT", 0, -104)
-    local list = Label(child, "", 13, "#FFFFFF")
-    list:SetPoint("TOPLEFT", 4, -4)
-    list:SetWidth(560)
-    list:SetWordWrap(true)
-    list:SetSpacing(4)
+    local rows = {}
+    for i = 1, HISTORY_ROWS do
+        local row = CreateFrame("Button", nil, child)
+        row:SetSize(560, ROW_H)
+        row:SetPoint("TOPLEFT", 4, -4 - (i - 1) * ROW_H)
+        row.hl = row:CreateTexture(nil, "HIGHLIGHT")
+        row.hl:SetAllPoints()
+        row.hl:SetColorTexture(Hex(ACCENT, 0.18))
+        row.text = Label(row, "", 13, "#FFFFFF")
+        row.text:SetPoint("LEFT", 4, 0)
+        row.text:SetWidth(552)
+        row.text:SetWordWrap(false)
+        row:SetScript("OnEnter", function(self)
+            if not self.link then return end
+            GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+            pcall(GameTooltip.SetHyperlink, GameTooltip, self.link)
+            GameTooltip:Show()
+        end)
+        row:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        row:SetScript("OnClick", function(self)
+            if not self.link then return end
+            if IsModifiedClick and IsModifiedClick() and HandleModifiedItemClick and HandleModifiedItemClick(self.link) then return end
+            if SetItemRef then pcall(SetItemRef, self.link, self.link, "LeftButton") end
+        end)
+        row:Hide()
+        rows[i] = row
+    end
+    local empty = Label(child, "", 13, "#E8E8E8")
+    empty:SetPoint("TOPLEFT", 8, -8)
     local show = MakeButton(tab, L.HISTORY_BTN, 220, 26, function() ns.PrintHistory(10) end)
     show:SetPoint("BOTTOMLEFT", 8, 4)
     local clear = MakeButton(tab, L.HISTORY_CLEAR_BTN, 170, 26, function()
@@ -644,9 +670,23 @@ local function BuildHistory(tab)
         lines[2]:SetText(string.format(L.STATS_WON, won, pct))
         lines[3]:SetText(string.format(L.STATS_KINDS, needWon, greedWon))
         lines[4]:SetText(string.format(L.STATS_WEEK, week))
-        local entries = ns.GetHistoryLines(30)
-        list:SetText(#entries > 0 and table.concat(entries, "\n") or L.HISTORY_EMPTY)
-        sf:Sync(list:GetStringHeight() + 16)
+        local entries = ns.GetHistoryEntries(HISTORY_ROWS)
+        for i, row in ipairs(rows) do
+            local entry = entries[i]
+            if entry then
+                row.link = entry.link
+                row.text:SetText(entry.text)
+                row:Show()
+            else
+                row.link = nil
+                row:Hide()
+            end
+        end
+        empty:SetText(#entries == 0 and L.HISTORY_EMPTY or "")
+        sf:Sync(math.max(#entries, 1) * ROW_H + 16)
+    end
+    tab.Retry = function()
+        if tab:IsShown() then tab.Refresh() end
     end
 end
 

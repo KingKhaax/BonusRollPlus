@@ -281,3 +281,18 @@ ns.ChangelogL["0.6.0"] = {
         "修復：同時掉落兩件或更多物品時，可能缺少其中一個擲骰視窗。",
     },
 }
+
+local HISTORY_NOTE = {
+    deDE = "Im Verlauf zeigen Gegenstände ihre Gegenstandsstufe, folgen der Spielsprache und öffnen beim Überfahren oder Anklicken ihren Tooltip.",
+    frFR = "Dans l'historique, les objets affichent leur niveau d'objet, suivent la langue du jeu et ouvrent leur infobulle au survol ou au clic.",
+    itIT = "Nella cronologia gli oggetti mostrano il livello oggetto, seguono la lingua del gioco e aprono il suggerimento al passaggio del mouse o al clic.",
+    ptBR = "No histórico, os itens mostram o nível do item, seguem o idioma do jogo e abrem a dica ao passar o mouse ou clicar.",
+    ruRU = "В истории предметы показывают уровень, следуют языку игры и открывают подсказку при наведении или щелчке.",
+    koKR = "기록에서 아이템이 아이템 레벨을 표시하고, 게임 언어를 따르며, 마우스를 올리거나 클릭하면 툴팁이 열립니다.",
+    zhCN = "记录中的物品会显示物品等级，跟随游戏语言，鼠标悬停或点击时显示提示信息。",
+    zhTW = "記錄中的物品會顯示物品等級，跟隨遊戲語言，滑鼠移上或點擊時顯示提示資訊。",
+}
+for loc, text in pairs(HISTORY_NOTE) do
+    local list = ns.ChangelogL["0.6.0"] and ns.ChangelogL["0.6.0"][loc]
+    if list then table.insert(list, 3, text) end
+end
