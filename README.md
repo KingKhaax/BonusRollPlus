@@ -2,200 +2,199 @@
 
 <h1 align="center">BonusRoll Plus</h1>
 
-<p align="center"><b>La ventana de tirada de botín de WoW, en cristal esmerilado.</b><br>
-Un addon para World of Warcraft Forever que sustituye la ventana de Necesidad, Codicia, Desencantar y Pasar por un panel translúcido con el nivel de objeto, la pieza y la lista de tiradas de todos al lado.</p>
+<p align="center"><b>The WoW loot roll window, in frosted glass.</b><br>
+An addon for World of Warcraft Forever that replaces the Need, Greed, Disenchant and Pass window with a translucent panel showing the item level, the gear slot and everyone's rolls right next to it.</p>
 
 <p align="center"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_dice_01.jpg" width="40" height="40" align="absmiddle"> <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_coin_01.jpg" width="40" height="40" align="absmiddle"> <img src="https://wow.zamimg.com/images/wow/icons/large/inv_enchant_disenchant.jpg" width="40" height="40" align="absmiddle"> <img src="https://wow.zamimg.com/images/wow/icons/large/spell_chargenegative.jpg" width="40" height="40" align="absmiddle"></p>
 
 ---
 
-## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_01.jpg" width="28" height="28" align="absmiddle"> Para qué sirve
+## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_01.jpg" width="28" height="28" align="absmiddle"> What it does
 
-La ventana de tirada que trae el juego es pequeña y no te dice casi nada. Con BonusRoll Plus, al caer un objeto en grupo ves de un vistazo:
+The game's own roll window is small and tells you almost nothing. With BonusRoll Plus, when an item drops in a group you see at a glance:
 
 | | |
 |---|---|
-| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_01.jpg" width="28" height="28" align="absmiddle"> | **El nombre del objeto** con el color de su calidad, y a su lado **el nivel de objeto entre paréntesis** |
-| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_shoulder_01.jpg" width="28" height="28" align="absmiddle"> | **La pieza a la que pertenece**, por ejemplo `Head · Plate` o `Shoulder · Mail` |
-| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_dice_01.jpg" width="28" height="28" align="absmiddle"> | **Necesidad**, <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_coin_01.jpg" width="28" height="28" align="absmiddle"> **Codicia**, <img src="https://wow.zamimg.com/images/wow/icons/large/inv_enchant_disenchant.jpg" width="28" height="28" align="absmiddle"> **Desencantar** y <img src="https://wow.zamimg.com/images/wow/icons/large/spell_chargenegative.jpg" width="28" height="28" align="absmiddle"> **Pasar** en cuatro botones con su nombre. Los que no puedes elegir salen apagados y el tooltip dice por qué |
-| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_note_01.jpg" width="28" height="28" align="absmiddle"> | **Una ventanita al lado con las tiradas de cada jugador**, con su color de clase y una corona para quien va ganando |
-| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_gear_01.jpg" width="28" height="28" align="absmiddle"> | **Una barra de tiempo** que se vacía mientras decides |
-| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> | **Aviso de actualización**: si te cruzas con alguien que tiene una versión más nueva, el addon te lo dice |
-| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_bag_08.jpg" width="28" height="28" align="absmiddle"> | **Traducido a los 11 idiomas del juego**: español (España y México), inglés, alemán, francés, italiano, portugués de Brasil, ruso, coreano y chino (simplificado y tradicional) |
+| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_01.jpg" width="28" height="28" align="absmiddle"> | **The item name** in its quality colour, with **the item level in brackets** next to it |
+| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_shoulder_01.jpg" width="28" height="28" align="absmiddle"> | **The slot it belongs to**, for example `Head · Plate` or `Shoulder · Mail` |
+| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_dice_01.jpg" width="28" height="28" align="absmiddle"> | **Need**, <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_coin_01.jpg" width="28" height="28" align="absmiddle"> **Greed**, <img src="https://wow.zamimg.com/images/wow/icons/large/inv_enchant_disenchant.jpg" width="28" height="28" align="absmiddle"> **Disenchant** and <img src="https://wow.zamimg.com/images/wow/icons/large/spell_chargenegative.jpg" width="28" height="28" align="absmiddle"> **Pass** as four labelled buttons. The ones you can't pick are dimmed and the tooltip says why |
+| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_note_01.jpg" width="28" height="28" align="absmiddle"> | **A small side window with every player's roll**, in their class colour, with a crown on whoever is winning |
+| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_gear_01.jpg" width="28" height="28" align="absmiddle"> | **A timer bar** that empties while you decide |
+| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> | **Update notice**: if you meet someone with a newer version, the addon tells you |
+| <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_bag_08.jpg" width="28" height="28" align="absmiddle"> | **Translated into the game's 11 languages**: Spanish (Spain and Mexico), English, German, French, Italian, Brazilian Portuguese, Russian, Korean and Chinese (Simplified and Traditional) |
 
-Si caen varios objetos a la vez, las ventanas se apilan hacia arriba sobre la barra de acción.
+If several items drop at once, the windows stack upwards above the action bar.
 
-## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Instalación
+## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Installation
 
-1. Copia la carpeta **`BonusRollPlus`** de este repositorio (no el repositorio entero) dentro de:
+1. Copy the **`BonusRollPlus`** folder from this repository (not the whole repository) into:
    ```
    World of Warcraft\_forever_\Interface\AddOns\
    ```
-2. Abre el juego y, en la pantalla de personajes, comprueba en **AddOns** que aparece *BonusRoll Plus*.
-3. Dentro del juego escribe `/br test` para verlo sin esperar a un botín.
+2. Start the game and, on the character screen, check that *BonusRoll Plus* appears under **AddOns**.
+3. In game, type `/br test` to see it without waiting for loot.
 
-Si el juego ya estaba abierto, escribe `/reload` antes.
+If the game was already running, type `/reload` first.
 
-## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_bag_08.jpg" width="28" height="28" align="absmiddle"> Comandos
+## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_bag_08.jpg" width="28" height="28" align="absmiddle"> Commands
 
-| Comando | Qué hace |
+| Command | What it does |
 |---|---|
-| `/br open` | Abre la ventana de ajustes: 10 diseños con vista previa, tamaño, opacidad, ventanas visibles y Acerca de |
-| `/br test` | Muestra tres ventanas de prueba con tus objetos equipados |
-| `/br scale 0.5-1.5` | Cambia el tamaño (por defecto 1) |
-| `/br rolls` | Muestra u oculta la ventanita de tiradas |
-| `/br lock` | Fija o desbloquea las ventanas (igual que el candado) |
-| `/br reset` | Devuelve las ventanas a su sitio |
-| `/br version` | Muestra la versión instalada |
-| `/bonusroll` | Es otro nombre para `/br` |
+| `/br open` | Opens the settings window: 10 designs with preview, size, opacity, visible windows and About |
+| `/br test` | Shows three test windows using your equipped items |
+| `/br scale 0.5-1.5` | Changes the size (default 1) |
+| `/br rolls` | Shows or hides the rolls window |
+| `/br lock` | Locks or unlocks the windows (same as the padlock) |
+| `/br reset` | Puts the windows back in their default place |
+| `/br history [n\|clear]` | Shows or clears your roll history |
+| `/br version` | Shows the installed version |
+| `/bonusroll` | Another name for `/br` |
 
-Arrastra una ventana para moverla. El candado de su esquina la fija; otro clic la desbloquea. La posición se guarda.
+Drag a window to move it. The padlock in its corner locks it; click again to unlock. The position is saved.
 
-## Estado
+## Status
 
-Versión **0.6.0**. El estilo por defecto es **Cristal Esmerilado** y hay 10 diseños para elegir en `/br open`. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
+Version **0.6.0**. The default style is **Frosted Glass**, and there are 10 designs to choose from in `/br open`. The logic is tested with Lua and a simulation of the game, but **most of it has not yet been checked inside the client**. All the details, known limits and what is missing are in [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
 
-## Qué hay en este repositorio
+## What's in this repository
 
-| Ruta | Contenido |
+| Path | Contents |
 |---|---|
-| `BonusRollPlus/` | El addon, listo para copiar al juego |
-| `assets/` | El logo y el icono del addon |
-| `index.html` | Las 16 primeras propuestas de diseño (histórico) |
-| `preview-en-juego.html` | Maqueta del primer diseño sobre una pantalla de juego (histórico) |
-| `tests/` | Pruebas de la lectura de mensajes y un recorrido completo con una simulación del juego |
-| `tools/` | Script de subida a CurseForge y changelog en inglés de la versión |
-| `docs/` | Última descripción de la página de CurseForge (HTML) |
+| `BonusRollPlus/` | The addon, ready to copy into the game |
+| `assets/` | The addon logo, icon and screenshots |
+| `tests/` | Tests for message parsing and a full run against a simulation of the game |
+| `tools/` | CurseForge upload script and the English changelog for the version |
+| `docs/` | Latest CurseForge page description (HTML) |
 
-<sub>Los iconos son de World of Warcraft y pertenecen a Blizzard Entertainment. Este proyecto no está afiliado a Blizzard.</sub>
+<sub>The icons are from World of Warcraft and belong to Blizzard Entertainment. This project is not affiliated with Blizzard.</sub>
 
 ---
 
-# Notas para quien continúe el trabajo (otra sesión de Claude o una persona)
+# Notes for whoever continues the work
 
-Este apartado resume todo lo hecho hasta el 2026-11-13, cómo está montado el addon, cómo se prueba y se publica, y qué decisiones ha tomado el autor. Léelo entero antes de tocar nada.
+This section sums up everything done up to 2026-11-13: how the addon is built, how it is tested and published, and what the author has decided. Read it all before changing anything.
 
-## Estado actual
+## Current status
 
-| Cosa | Estado |
+| Item | Status |
 |---|---|
-| **0.5.0** | Publicada en CurseForge el 2026-11-13 (proyecto **1800719**, id de archivo 9589441). Commit `290c683`. Pendiente de la revisión de CurseForge. |
-| **0.4.0** | Primera versión subida a mano por el autor el 2026-11-12. |
-| **0.6.0** | Publicada en CurseForge el 2026-11-13 (id de archivo 9590891), a petición del autor. Commit `11c610a`. El `.toc` y el changelog ya están en 0.6.0. |
-| Pruebas en el juego | **Casi nada está verificado en el cliente.** Todo se prueba con una simulación (ver «Pruebas»). Lo que el autor ha confirmado a mano: la ventana de tirada, que se oculta la de Blizzard (con ajustes posteriores) y el panel de tiradas tras varias correcciones. |
+| **0.4.0** | First version, uploaded by hand by the author on 2026-11-12. |
+| **0.5.0** | Published on CurseForge on 2026-11-13 (project **1800719**, file id 9589441). Commit `290c683`. |
+| **0.6.0** | Published on CurseForge on 2026-11-13 (file id 9590891), at the author's request. Commit `11c610a`. Pending CurseForge review. |
+| In-game testing | **Almost nothing is verified in the client.** Everything is tested with a simulation (see "Tests"). Confirmed by hand by the author: the roll window, hiding the Blizzard window (after some fixes) and the rolls panel after several fixes. |
 
-Contenido de la 0.5.0 (ya publicada): ventana de ajustes con 20 diseños, perfiles, historial `/br history`, diferencia de nivel de objeto, aviso de «no puedes usar este objeto», filas compactas, máximo de ventanas visibles, candado, icono de clase, aviso de actualización entre jugadores, textos en 11 idiomas y dato curioso en el pie de los ajustes.
+0.5.0 contents: settings window with 20 designs, profiles, `/br history`, item level difference, "you can't use this item" warning, compact rows, maximum visible windows, padlock, class icon, update notice between players, texts in 11 languages and a random fact in the settings footer.
 
-Contenido pendiente de la 0.6.0 (ver `CHANGELOG.md` y `tools/changelog-en.md`): valor de venta o subasta con `*` morado de apariencia nueva, pestaña Historial con estadísticas, perfiles por especialización, avisos de sonido y parpadeo, ajuste de segundos de cierre tras el ganador (2 por defecto), diseños de 20 a 10, vistas previas cargadas poco a poco, corrección de ventanas duplicadas cuando caen varios objetos a la vez.
+0.6.0 contents (see `CHANGELOG.md` and `tools/changelog-en.md`): sale or auction value with a purple `*` for an uncollected appearance, History tab with statistics, per-specialization profiles, sound and flash alerts, setting for how many seconds the window stays after the winner (2 by default), designs cut from 20 to 10, previews loaded gradually, fix for missing windows when several items drop at once.
 
-> **El repositorio es público desde el 2026-11-13** (las capturas de la descripción se cargan desde raw.githubusercontent.com y con el repo privado daban 404). No subas nunca tokens, claves ni datos personales.
+> **The repository has been public since 2026-11-13** (the screenshots in the description load from raw.githubusercontent.com and returned 404 while the repo was private). Never commit tokens, keys or personal data.
 
-## Reglas del autor (obligatorias)
+## Author's rules (mandatory)
 
-- **Cliente único: WoW Forever.** El addon es exclusivo de ese cliente (versión de juego 1.60.1 en CurseForge, id 17053). No hay que cuidar Retail ni Classic. El `.toc` aún lista interfaces de Retail (16001, 11601, 120107, 120105); limpiar solo si el autor lo pide.
-- **Idioma:** al autor se le habla siempre en castellano. Todo mensaje que él vaya a publicar lleva debajo su traducción.
-- **Commits:** autor y committer `sr.kitkat <180756772+KingKhaax@users.noreply.github.com>`. **Sin ninguna marca de Claude** ni líneas `Co-Authored-By`.
-- **Versiones:** de una en una. Mientras la pendiente no esté publicada no se numera otra. Si el autor dice que ya subió una, la pendiente pasa a ser la siguiente.
-- **Changelog:** solo cambios importantes. Nada de arreglos menores o textos sueltos.
-- **Textos nuevos:** toda clave nueva va a los **11 idiomas** (esES, esMX, enUS, deDE, frFR, itIT, ptBR, ruRU, koKR, zhCN, zhTW), con los mismos marcadores `%s`/`%d` que el inglés. Hay una prueba que lo comprueba.
-- **No tocar sin que lo pida:** otros addons, ajustes del juego, el PC. Está permitido *leer* los addons del autor para entender conflictos.
-- **Nada de ventanas en pantalla al probar** y nada de terminales visibles: las tareas programadas usan `conhost --headless`.
-- **Código sin comentarios** salvo lo imprescindible.
+- **Single client: WoW Forever.** The addon is exclusive to that client (game version 1.60.1 on CurseForge, id 17053). Retail and Classic don't need to be supported. The `.toc` still lists Retail interfaces (16001, 11601, 120107, 120105); only clean them up if the author asks.
+- **Language:** always talk to the author in Spanish. Any message he is going to publish has its translation underneath.
+- **Commits:** author and committer `sr.kitkat <180756772+KingKhaax@users.noreply.github.com>`. **No AI tool attribution** of any kind and no `Co-Authored-By` lines.
+- **Versions:** one at a time. While one is unpublished, don't number another. If the author says he already uploaded one, the pending one becomes the next.
+- **Changelog:** important changes only. No minor fixes or loose text tweaks.
+- **New texts:** every new key goes into **all 11 languages** (esES, esMX, enUS, deDE, frFR, itIT, ptBR, ruRU, koKR, zhCN, zhTW), with the same `%s`/`%d` placeholders as English. A test checks this.
+- **Don't touch unless asked:** other addons, game settings, the PC. *Reading* the author's addons to understand conflicts is allowed.
+- **No windows on screen while testing** and no visible terminals: scheduled tasks use `conhost --headless`.
+- **Code without comments** except where essential.
 
-## Mapa de archivos (`BonusRollPlus/`)
+## File map (`BonusRollPlus/`)
 
-El orden de carga es el del `.toc`:
+Load order is the one in the `.toc`:
 
-| Archivo | Para qué sirve |
+| File | Purpose |
 |---|---|
-| `Locales.lua` | Textos base de la ventana y del panel, en 11 idiomas. Crea `ns.L` y `ns.Strings`. |
-| `LocalesSettings.lua` | Textos de la ventana de ajustes, en 11 idiomas; reescribe la ayuda de `/br`. |
-| `LocalesText.lua` | Nombres de los diseños y changelog de «Acerca de» en los 8 idiomas que no son es/en. |
-| `LocalesExtra.lua` | Más textos (perfiles, historial, estadísticas, valores, avisos) y notas de versión por idioma. |
-| `Themes.lua` | Los diseños de ventana (se añaden a los del Core). Cada diseño es una tabla de datos, no código. |
-| `Core.lua` | Todo el motor: lectura de mensajes, ventanas, diseño, cierre, ajustes en vivo, comandos y eventos. |
-| `Facts.lua`, `FactsDEFR.lua`, `FactsITPT.lua`, `FactsRUKO.lua`, `FactsZH.lua` | 200 datos curiosos de WoW; los dos primeros idiomas van en `Facts.lua` (es, en) y el resto en tablas alineadas por posición. |
-| `Profiles.lua` | Perfiles: guardar, cargar, exportar e importar (`BRP1;…`), por personaje y por especialización. |
-| `Settings.lua` | Ventana de ajustes (5 pestañas: Diseños, Ajustes, Perfiles, Historial, Acerca de) y el botón en las opciones de AddOns. |
+| `Locales.lua` | Base texts for the window and the panel, in 11 languages. Creates `ns.L` and `ns.Strings`. |
+| `LocalesSettings.lua` | Settings window texts, in 11 languages; rewrites the `/br` help. |
+| `LocalesText.lua` | Design names and the About changelog in the 8 languages other than es/en. |
+| `LocalesExtra.lua` | More texts (profiles, history, statistics, values, alerts) and release notes per language. |
+| `Themes.lua` | The window designs (added to the ones in Core). Each design is a data table, not code. |
+| `Core.lua` | The whole engine: message parsing, windows, layout, closing, live settings, commands and events. |
+| `Facts.lua`, `FactsDEFR.lua`, `FactsITPT.lua`, `FactsRUKO.lua`, `FactsZH.lua` | 200 WoW facts; the first two languages are in `Facts.lua` (es, en) and the rest in tables aligned by position. |
+| `Profiles.lua` | Profiles: save, load, export and import (`BRP1;…`), per character and per specialization. |
+| `Settings.lua` | Settings window (5 tabs: Designs, Settings, Profiles, History, About) and the button in the AddOns options. |
 
-Fuera del addon: `tests/` (pruebas), `tools/` (script de subida y changelog en inglés), `assets/` (logo e icono), y `index.html` / `preview-en-juego.html` (maquetas históricas).
+Outside the addon: `tests/` (tests), `tools/` (upload script and English changelog), `assets/` (logo, icon and screenshots), `docs/` (CurseForge description).
 
-## Cómo funciona una tirada (resumen de `Core.lua`)
+## How a roll works (summary of `Core.lua`)
 
-1. **`START_LOOT_ROLL`** → `OnStartRoll` oculta las ventanas de Blizzard, lee `GetLootRollItemInfo`, pide una ventana con `Acquire` y la rellena con `Setup` (dentro de `pcall`: si falla, imprime el error en rojo y lo manda al gestor de errores).
-2. **Ventanas:** se reutilizan desde una reserva por diseño (`pools`). `Release` es idempotente (marca `pooled`) y `Acquire` nunca devuelve una ventana que siga en `active`. Esto arregló el fallo de «cae un objeto y falta una ventana».
-3. **Diseño (`Layout`):** apila hasta `maxVisible` ventanas completas; las demás esperan ocultas y, si `compact` está activo, se muestran como filas de una línea (`BuildMini`).
-4. **Panel de tiradas (lista de al lado):** se alimenta de dos fuentes, ambas válidas a la vez:
-   - el chat (`CHAT_MSG_LOOT`, patrones construidos a partir de los textos globales del cliente; en `esES` las tiradas usan marcadores posicionales);
-   - el historial de botín del juego (`C_LootHistory`, evento `LOOT_HISTORY_UPDATE_DROP`), que es la fuente que usa ForeverPlusPlus.
-   Se asocia cada mensaje con su ventana por id de objeto y, si no coincide, por **nombre del objeto** (`FindFrame`). Los valores pueden venir «secretos» (`issecretvalue`); se saltan con `Readable`.
-5. **Cierre:** al elegir, la ventana se queda hasta que se anuncia el ganador (`MarkWon`) o «todos pasaron» y se cierra `closeDelay` segundos después (2 por defecto, de 0 a 15). Si la tirada acaba sin ganador anunciado, espera hasta el tiempo real de la tirada más 10 s. Cada tirada tiene un `token` propio para que los cierres programados no cierren otra tirada.
-6. **Necesidad nunca se bloquea.** Si el juego dice que no puedes usar el objeto, solo se muestra el aviso rojo `CANT_USE` y el motivo del juego en el tooltip. El autor lo exige para vender BoE.
-7. **Ventanas de Blizzard:** `HideBlizzard` deja invisibles `GroupLootFrame1..4` y las del contenedor con `SetAlpha(0)` y sin ratón, tras `GroupLootContainer_AddFrame`/`_Update` con `hooksecurefunc` y un retardo. **No usar `HookScript` sobre esas ventanas** y **no recorrer `UIParent`** con `GetName()`: da errores de «objeto prohibido / taint». Con el addon desactivado vuelven a verse.
-8. **Valor y apariencia:** `ValueInfo` usa precio de TradeSkillMaster (`TSM_API.GetCustomPriceValue("DBMarket", "i:ID")`) si existe, si no el precio de venta. Un `*` morado marca una apariencia no coleccionada (`C_TransmogCollection`, protegido con `pcall`).
-9. **Diferencia de nivel de objeto:** `UpgradeDelta` compara con lo equipado en la casilla (anillos y abalorios con el más flojo; armas ignoran huecos vacíos).
-10. **Estadísticas e historial:** `db.history` (máx. 100) y `db.stats`. La pestaña Historial y `/br history` las leen.
+1. **`START_LOOT_ROLL`** → `OnStartRoll` hides the Blizzard windows, reads `GetLootRollItemInfo`, gets a window with `Acquire` and fills it with `Setup` (inside `pcall`: on failure it prints the error in red and sends it to the error handler).
+2. **Windows:** reused from a pool per design (`pools`). `Release` is idempotent (marks `pooled`) and `Acquire` never returns a window still in `active`. This fixed the "an item drops and a window is missing" bug.
+3. **Layout (`Layout`):** stacks up to `maxVisible` full windows; the rest wait hidden and, if `compact` is on, show as one-line rows (`BuildMini`).
+4. **Rolls panel (side list):** fed by two sources, both valid at once:
+   - the chat (`CHAT_MSG_LOOT`, patterns built from the client's global strings; in `esES` the rolls use positional placeholders);
+   - the game's loot history (`C_LootHistory`, event `LOOT_HISTORY_UPDATE_DROP`), the source ForeverPlusPlus uses.
+   Each message is matched to its window by item id and, failing that, by **item name** (`FindFrame`). Values may arrive "secret" (`issecretvalue`); they are skipped with `Readable`.
+5. **Closing:** after choosing, the window stays until the winner is announced (`MarkWon`) or "everyone passed", and closes `closeDelay` seconds later (2 by default, 0 to 15). If the roll ends with no winner announced, it waits for the real roll time plus 10 s. Each roll has its own `token` so scheduled closes never close another roll.
+6. **Need is never blocked.** If the game says you can't use the item, only the red `CANT_USE` warning and the game's reason in the tooltip are shown. The author requires this to sell BoE items.
+7. **Blizzard windows:** `HideBlizzard` makes `GroupLootFrame1..4` and the container's frames invisible with `SetAlpha(0)` and no mouse, after `GroupLootContainer_AddFrame`/`_Update` via `hooksecurefunc` and a delay. **Don't use `HookScript` on those frames** and **don't walk `UIParent`** with `GetName()`: it causes "forbidden object / taint" errors. With the addon disabled they show again.
+8. **Value and appearance:** `ValueInfo` uses the TradeSkillMaster price (`TSM_API.GetCustomPriceValue("DBMarket", "i:ID")`) if available, otherwise the vendor price. A purple `*` marks an uncollected appearance (`C_TransmogCollection`, guarded with `pcall`).
+9. **Item level difference:** `UpgradeDelta` compares with what is equipped in the slot (rings and trinkets against the weaker one; weapons ignore empty slots).
+10. **Statistics and history:** `db.history` (max 100) and `db.stats`. The History tab and `/br history` read them.
 
-### Diseños
-`Themes.lua` define cada diseño con `Make(id, título, títuloES, parámetros)`. Las posiciones de los botones salen del `layout` (`grid`, `split`, `row`, `stack`, `ring`, `rail`). El diseño por defecto, `glass`, está en `Core.lua`. Los nombres de los diseños por idioma están en `LocalesText.lua` (`ns.ThemeNames`, un array por idioma **alineado por posición con `ns.ThemeList`**): si añades o quitas un diseño hay que tocar los 11 arrays.
+### Designs
+`Themes.lua` defines each design with `Make(id, title, titleES, params)`. Button positions come from the `layout` (`grid`, `split`, `row`, `stack`, `ring`, `rail`). The default design, `glass`, lives in `Core.lua`. Design names per language are in `LocalesText.lua` (`ns.ThemeNames`, one array per language **aligned by position with `ns.ThemeList`**): adding or removing a design means touching all 11 arrays.
 
-### Ventana de ajustes (`Settings.lua`)
-Estilo plano oscuro inspirado en los valores por defecto de ElvUI (`#1A1A1A`, borde negro, acento `#1784D1`, fuente `ARIALN`). Los controles son propios (no usa plantillas de Blizzard). Las vistas previas de los diseños se construyen con el mismo código de las ventanas reales (`ns.BuildPreview`), de 3 en 3 por fotograma. El pie muestra un dato curioso aleatorio.
+### Settings window (`Settings.lua`)
+Flat dark style inspired by ElvUI defaults (`#1A1A1A`, black border, `#1784D1` accent, `ARIALN` font). The controls are custom (no Blizzard templates). Design previews are built with the same code as the real windows (`ns.BuildPreview`), 3 per frame. The footer shows a random fact.
 
-### Aviso de actualización
-Se envía la versión por **mensajes de addon** (prefijo `BRPLUS`, texto `V:0.5.0`) a grupo, banda, instancia y hermandad, como mucho cada 20 s. No es chat visible ni susurro. Al recibir una versión mayor, el addon escribe un aviso en el chat del jugador (`VERSION_OUTDATED`, en 11 idiomas). **No consulta CurseForge** (un addon no puede). Limitación: solo funciona si coincide con alguien que tenga la versión nueva.
-Ideas pendientes (el autor aún no las ha decidido): recordar la versión más nueva vista y avisar en sesiones siguientes, y enviarla también a amigos de Battle.net.
+### Update notice
+The version is sent through **addon messages** (prefix `BRPLUS`, text `V:0.6.0`) to party, raid, instance and guild, at most every 20 s. It is not visible chat or a whisper. On receiving a higher version, the addon prints a notice in the player's chat (`VERSION_OUTDATED`, in 11 languages). **It does not query CurseForge** (an addon can't). Limitation: it only works if you meet someone who has the new version.
+Open ideas (not decided by the author yet): remember the newest version seen and warn in later sessions, and also send it to Battle.net friends.
 
-## Datos guardados (`BonusRollPlusDB`)
+## Saved data (`BonusRollPlusDB`)
 
-`scale`, `alpha`, `theme`, `maxVisible`, `showRolls`, `showUpgrade`, `compact`, `showValue`, `sound`, `flash`, `closeDelay`, `locked`, `x`, `y`, `v`, `history`, `profiles`, `charProfile`, `specProfile`, `activeProfile`, `stats`. Los valores por defecto están en `DEFAULTS` (`Core.lua`). Los perfiles guardan solo las claves de `ORDER` en `Profiles.lua`.
+`scale`, `alpha`, `theme`, `maxVisible`, `showRolls`, `showUpgrade`, `compact`, `showValue`, `sound`, `flash`, `closeDelay`, `locked`, `x`, `y`, `v`, `history`, `profiles`, `charProfile`, `specProfile`, `activeProfile`, `stats`. Defaults are in `DEFAULTS` (`Core.lua`). Profiles only store the keys in `ORDER` in `Profiles.lua`.
 
-Comandos: `/br open`, `/br test`, `/br scale`, `/br rolls`, `/br lock`, `/br reset`, `/br history [n|clear]`, `/br version`, `/br debug` (imprime lo que el addon lee del chat, el texto crudo y las ventanas abiertas; útil para diagnosticar el panel de tiradas).
+Commands: `/br open`, `/br test`, `/br scale`, `/br rolls`, `/br lock`, `/br reset`, `/br history [n|clear]`, `/br version`, `/br debug` (prints what the addon reads from chat, the raw text and the open windows; useful for diagnosing the rolls panel).
 
-## Pruebas
+## Tests
 
-No hay cliente de WoW en el entorno de desarrollo. Hay un intérprete de **Lua 5.4** (no LuaJIT):
+There is no WoW client in the development environment. Use a **Lua 5.4** or LuaJIT interpreter:
 
 ```
-lua tests/core_tests.lua      # lectura de mensajes, comparador de versiones
-lua tests/smoke_test.lua      # recorrido completo con una simulación del juego
+lua tests/core_tests.lua      # message parsing, version comparison
+lua tests/smoke_test.lua      # full run against a simulation of the game
 ```
 
-`smoke_test.lua` simula el juego con objetos «comodín» (cualquier función desconocida devuelve otro comodín). Por eso **pasar las pruebas no demuestra que algo se vea bien en el juego**: solo que no hay errores de Lua en esos caminos. Comprueba además: 10 diseños, nombres de diseños y changelog en todos los idiomas, claves nuevas en todos los idiomas, mismos `%s`/`%d`, round trip de perfiles, valores fuera de rango, historial y estadísticas.
-Consejos: lanza la prueba 40 veces seguidas para detectar fallos intermitentes (hubo uno por recorrer una tabla mientras se modificaba); en Windows, `lua.exe` no entiende rutas `/tmp`, usa rutas `C:/...`.
+`smoke_test.lua` simulates the game with "wildcard" objects (any unknown function returns another wildcard). So **passing the tests doesn't prove something looks right in game**: only that there are no Lua errors on those paths. It also checks: 10 designs, design names and changelog in every language, new keys in every language, same `%s`/`%d`, profile round trip, out-of-range values, history and statistics.
+Tips: run the test 40 times in a row to catch intermittent failures (there was one caused by iterating a table while modifying it); on Windows, `lua.exe` doesn't understand `/tmp` paths, use `C:/...` paths.
 
-## Cómo publicar una versión
+## How to publish a version
 
-1. Sube el número en `BonusRollPlus/BonusRollPlus.toc`, `README.md`, `BonusRollPlus/README.md` y `CHANGELOG.md`; añade la entrada en `CHANGES` de `Settings.lua` y las notas por idioma en `LocalesText.lua`/`LocalesExtra.lua`.
-2. Escribe el changelog en inglés en `tools/changelog-en.md` (secciones New, Improvement, Fix).
-3. Pasa las pruebas. Haz commit como `sr.kitkat`, sin marca de Claude, y `git push origin main`.
-4. Crea el zip `Desktop\BonusRollPlus-X.Y.Z.zip` con **una carpeta `BonusRollPlus`** dentro, entradas con `/` y **sin** la carpeta `.omc` (a veces aparece dentro del addon; bórrala antes).
-5. Sube con la API: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/upload_curseforge.ps1 -ProjectId 1800719 [-Upload]` (sin `-Upload` es una prueba en seco). El token está en la variable de entorno de usuario `CURSEFORGE_API_TOKEN`; nunca lo escribas en archivos ni lo subas.
-6. La **descripción de la página se pone a mano** en CurseForge. La última está en `docs/descripcion-curseforge.html` (inglés, con la parte en español debajo). Las capturas las pone el autor: pendientes, ver abajo.
+1. Bump the number in `BonusRollPlus/BonusRollPlus.toc`, `README.md`, `BonusRollPlus/README.md` and `CHANGELOG.md`; add the entry to `CHANGES` in `Settings.lua` and the per-language notes in `LocalesText.lua`/`LocalesExtra.lua`.
+2. Write the English changelog in `tools/changelog-en.md` (sections New, Improvement, Fix).
+3. Run the tests. Commit as `sr.kitkat`, with no AI attribution, and `git push origin main`.
+4. Build the zip `Desktop\BonusRollPlus-X.Y.Z.zip` with **one `BonusRollPlus` folder** inside, entries with `/` and **without** the `.omc` folder (it sometimes appears inside the addon; delete it first).
+5. Upload with the API: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/upload_curseforge.ps1 -ProjectId 1800719 [-Upload]` (without `-Upload` it is a dry run). The token is in the user environment variable `CURSEFORGE_API_TOKEN`; never write it into files or commit it.
+6. The **page description is set by hand** on CurseForge. The latest is in `docs/descripcion-curseforge.html` (English, with the Spanish part underneath). The author adds the screenshots: pending, see below.
 
-## Entorno del autor (para no pisarlo)
+## Author's environment (don't break it)
 
-- La carpeta del addon en el juego es un **enlace** (`junction`) a `BonusRollPlus/` de este repo: lo que cambias aquí se ve en el juego tras `/reload` (o reiniciando si añades archivos nuevos).
-- Usa WoW Forever con muchos addons. **EllesmereUIBlizzardSkin** pone skin a las ventanas de tirada de Blizzard; **ForeverPlusPlus** (módulo Loot Rolls, desactivado por defecto) las recoloca. Ninguno crea ventanas de tirada propias.
-- Los errores de Lua de la sesión se ven en BugSack; el archivo de datos solo se escribe al recargar o salir.
-- Hay tareas programadas en su PC (vigilancia de otro addon, copia de configuración de WoW y la subida de Voidcore Advisor Reborn del 1 de diciembre). No son de este repo; no las toques.
-- El proyecto hermano **VoidcoreAdvisor Reborn** (repo `KingKhaax/VoidcoreAdvisorReborn`, CurseForge 1757601) comparte estas reglas.
+- On the author's home PC the addon folder in the game may be a **junction** to `BonusRollPlus/` in this repo: what you change here shows in game after `/reload` (or a restart if you add new files). On other PCs it is a plain copy.
+- He plays WoW Forever with many addons. **EllesmereUIBlizzardSkin** skins the Blizzard roll windows; **ForeverPlusPlus** (Loot Rolls module, off by default) repositions them. Neither creates roll windows of its own.
+- Lua errors from the session show in BugSack; the data file is only written on reload or logout.
+- There are scheduled tasks on his PC (watching another addon, backing up the WoW configuration and the Voidcore Advisor Reborn upload on 1 December). They don't belong to this repo; don't touch them.
+- The sister project **VoidcoreAdvisor Reborn** (repo `KingKhaax/VoidcoreAdvisorReborn`, CurseForge 1757601) shares these rules.
 
-## Trampas ya conocidas
+## Known traps
 
-- En PowerShell, `R` es un alias de `Invoke-History`: no lo uses de nombre de función.
-- Los *heredocs* de Bash pierden las barras invertidas de las cadenas de Lua: escribe los scripts con una herramienta de archivos y no con `cat <<EOF`.
-- `string.format` con `%d` falla con decimales; los valores de los controles se redondean antes.
-- Los textos con ruso, coreano y chino necesitan la fuente del cliente (`STANDARD_TEXT_FONT`); el código ya la usa.
-- No uses `HookScript` ni explores marcos de Blizzard desde código «manchado» (ver «Ventanas de Blizzard»).
-- Quitar un diseño exige tocar `Themes.lua`, `ns.ThemeNames` (11 arrays) y la prueba `smoke_test.lua`.
+- In PowerShell, `R` is an alias of `Invoke-History`: don't use it as a function name.
+- Bash heredocs lose the backslashes in Lua strings: write scripts with a file tool, not with `cat <<EOF`.
+- `string.format` with `%d` fails with decimals; control values are rounded first.
+- Russian, Korean and Chinese texts need the client font (`STANDARD_TEXT_FONT`); the code already uses it.
+- Don't use `HookScript` or explore Blizzard frames from "tainted" code (see "Blizzard windows").
+- Removing a design requires touching `Themes.lua`, `ns.ThemeNames` (11 arrays) and the `smoke_test.lua` test.
 
-## Pendiente
+## Pending
 
-1. **Capturas pendientes:** el tooltip del botón Necesidad con el aviso rojo (hay que quitar el círculo rosa del cursor de la captura original) y una captura nueva del historial con nivel de objeto. Guardarlas en `assets/screenshots/` y enlazarlas desde `docs/descripcion-curseforge.html`.
-2. Esperar a que CurseForge apruebe la 0.6.0 y poner la descripción nueva (`docs/descripcion-curseforge.html`, ya con las capturas de `assets/screenshots/`). La captura del historial (`07-history.png`) es anterior a mostrar el nivel de objeto y el tooltip: conviene repetirla.
-3. Decidir si se mejora el **aviso de actualización** (versión recordada, amigos de Battle.net).
-4. Verificar en el juego lo que solo se ha probado con la simulación, sobre todo: ventanas con varios objetos a la vez, el panel de tiradas, el valor y el `*` de apariencia, las filas compactas y la pestaña Historial.
-5. Decidir si se limpian del `.toc` las interfaces de Retail.
+1. **Pending screenshots:** the Need button tooltip with the red warning (the pink cursor circle must be removed from the original capture) and a new history screenshot with item level. Save them in `assets/screenshots/` and link them from `docs/descripcion-curseforge.html`.
+2. Wait for CurseForge to approve 0.6.0 and set the new description (`docs/descripcion-curseforge.html`, already with the screenshots from `assets/screenshots/`). The history screenshot (`07-history.png`) predates showing item level and the tooltip: it should be retaken.
+3. Decide whether to improve the **update notice** (remembered version, Battle.net friends).
+4. Verify in game what has only been tested with the simulation, especially: windows with several items at once, the rolls panel, the value and the appearance `*`, the compact rows and the History tab.
+5. Decide whether to remove the Retail interfaces from the `.toc`.
 
-Descartado por el autor: **atajos de teclado** para las tiradas y la **compatibilidad con otros clientes**.
+Rejected by the author: **keyboard shortcuts** for rolling and **support for other clients**.
