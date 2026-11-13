@@ -24,7 +24,7 @@ $base = "https://wow.curseforge.com/api"
 
 $toc = Get-Content (Join-Path $root "BonusRollPlus\BonusRollPlus.toc")
 $version = (($toc | Where-Object { $_ -match '^## Version:' }) -replace '^## Version:\s*', '').Trim()
-if (-not $Zip) { $Zip = Join-Path $env:USERPROFILE "Desktop\BonusRollPlus-$version.zip" }
+if (-not $Zip) { $Zip = Join-Path $env:USERPROFILE "Desktop\BonusRollPlus\BonusRollPlus-$version.zip" }
 if (-not $ChangelogFile) { $ChangelogFile = Join-Path $PSScriptRoot "changelog-en.md" }
 if (-not (Test-Path $Zip)) { throw "Zip not found: $Zip" }
 if (-not (Test-Path $ChangelogFile)) { throw "Changelog not found: $ChangelogFile" }
