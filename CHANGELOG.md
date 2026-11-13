@@ -8,7 +8,7 @@
 - Perfiles por especialización, además de por personaje.
 - De 20 a 10 diseños de ventana, los más cuidados: cristal esmerilado, pergamino arcano, forja de acero, vacío violeta, cofre dorado, piedra rúnica, escarcha, minimal oscuro, Alianza y Horda.
 - La ventana de ajustes carga las vistas previas poco a poco y abre más rápido.
-- Ajuste para elegir cu�ntos segundos se queda la ventana tras anunciarse el ganador (2 por defecto, de 0 a 15).
+- Ajuste para elegir cuántos segundos se queda la ventana tras anunciarse el ganador (2 por defecto, de 0 a 15).
 - El historial muestra el nivel de objeto de cada pieza, sigue el idioma del juego y enseña el tooltip al pasar el ratón o hacer clic.
 - El addon es exclusivo de WoW Forever.
 - Corregido: cuando caían dos o más objetos a la vez, podía faltar una de las ventanas de tirada.
