@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3 }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -19,7 +19,7 @@ local KINDS = {
     { key = "need", roll = 1, label = NEED or "Need", atlas = "lootroll-toast-icon-need-up", file = "Interface\\Buttons\\UI-GroupLoot-Dice-Up", wax = { 0.78, 0.17, 0.13 } },
     { key = "greed", roll = 2, label = GREED or "Greed", atlas = "lootroll-toast-icon-greed-up", file = "Interface\\Buttons\\UI-GroupLoot-Coin-Up", wax = { 0.82, 0.62, 0.17 } },
     { key = "de", roll = 3, label = ROLL_DISENCHANT or "Disenchant", atlas = "lootroll-toast-icon-disenchant-up", file = "Interface\\Buttons\\UI-GroupLoot-DE-Up", wax = { 0.5, 0.3, 0.7 } },
-    { key = "pass", roll = 0, label = PASS or "Pass", atlas = "lootroll-toast-icon-pass-up", file = "Interface\\Buttons\\UI-GroupLoot-Pass-Up", wax = { 0.33, 0.29, 0.26 } },
+    { key = "pass", roll = 0, label = ns.Strings[ns.locale].PASS or PASS or "Pass", atlas = "lootroll-toast-icon-pass-up", file = "Interface\\Buttons\\UI-GroupLoot-Pass-Up", wax = { 0.33, 0.29, 0.26 } },
 }
 local KIND = {}
 for _, k in ipairs(KINDS) do KIND[k.key] = k end
@@ -41,6 +41,7 @@ local SPECS = {
     { "LOOT_ROLL_PASSED", "chose", "pass", { "player", "link" } },
     { "LOOT_ROLL_YOU_WON", "won", nil, { "link" }, true },
     { "LOOT_ROLL_WON", "won", nil, { "player", "link" } },
+    { "LOOT_ROLL_ALL_PASSED", "allpassed", nil, { "link" } },
 }
 
 local function Escape(s)
@@ -108,11 +109,15 @@ end
 
 local function ShortName(name)
     if not name then return "?" end
+    name = tostring(name)
+    name = name:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|H.-|h%[?(.-)%]?|h", "%1")
+    name = name:match("^%s*(.-)%s*$")
     return Ambiguate and Ambiguate(name, "short") or name
 end
 
 local classCache = {}
-local function ClassColor(name)
+local TEST_CLASS = { Brannlor = "WARRIOR", Mirelle = "MAGE", Tuk = "SHAMAN", Zandri = "ROGUE", Lyssa = "PRIEST", Orwen = "DRUID", Ben = "HUNTER" }
+local function ClassOf(name)
     name = ShortName(name)
     if classCache[name] then return classCache[name] end
     local units = { "player" }
@@ -122,14 +127,24 @@ local function ClassColor(name)
     for _, u in ipairs(units) do
         if UnitExists(u) and ShortName(UnitName(u)) == name then
             local _, class = UnitClass(u)
-            local c = class and RAID_CLASS_COLORS and RAID_CLASS_COLORS[class]
-            if c then
-                classCache[name] = { c.r, c.g, c.b }
-                return classCache[name]
+            if class then
+                classCache[name] = class
+                return class
             end
         end
     end
-    return { 1, 1, 1 }
+    return TEST_CLASS[name]
+end
+
+local function SetClassIcon(tex, class)
+    local co = class and CLASS_ICON_TCOORDS and CLASS_ICON_TCOORDS[class]
+    if co then
+        tex:SetTexture("Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES")
+        tex:SetTexCoord(co[1], co[2], co[3], co[4])
+    else
+        tex:SetTexture("Interface/Icons/INV_Misc_QuestionMark")
+        tex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+    end
 end
 
 local function GroupNames()
@@ -142,6 +157,20 @@ local function GroupNames()
         if UnitExists(u) then names[#names + 1] = ShortName(UnitName(u)) end
     end
     return names
+end
+
+local function MatchGroupName(name)
+    local n = GetNumGroupMembers and GetNumGroupMembers() or 0
+    local prefix = IsInRaid and IsInRaid() and "raid" or "party"
+    local units = { "player" }
+    for i = 1, n do units[#units + 1] = prefix .. i end
+    for _, u in ipairs(units) do
+        if UnitExists(u) then
+            local member = ShortName(UnitName(u))
+            if name == member or name:sub(1, #member + 1) == member .. " " then return member end
+        end
+    end
+    return name
 end
 
 local function QualityColor(q)
@@ -170,6 +199,52 @@ local function ItemMeta(link)
         piece = slot or subType
     end
     return ilvl, piece
+end
+
+local SLOT_OF = {
+    INVTYPE_HEAD = { 1 }, INVTYPE_NECK = { 2 }, INVTYPE_SHOULDER = { 3 }, INVTYPE_CHEST = { 5 }, INVTYPE_ROBE = { 5 },
+    INVTYPE_WAIST = { 6 }, INVTYPE_LEGS = { 7 }, INVTYPE_FEET = { 8 }, INVTYPE_WRIST = { 9 }, INVTYPE_HAND = { 10 },
+    INVTYPE_FINGER = { 11, 12 }, INVTYPE_TRINKET = { 13, 14 }, INVTYPE_CLOAK = { 15 }, INVTYPE_WEAPON = { 16, 17 },
+    INVTYPE_2HWEAPON = { 16 }, INVTYPE_WEAPONMAINHAND = { 16 }, INVTYPE_WEAPONOFFHAND = { 17 }, INVTYPE_SHIELD = { 17 },
+    INVTYPE_HOLDABLE = { 17 }, INVTYPE_RANGED = { 16 }, INVTYPE_RANGEDRIGHT = { 16 },
+}
+
+local function EquippedLevel(slot)
+    local link = GetInventoryItemLink and GetInventoryItemLink("player", slot)
+    if not link then return nil end
+    if C_Item and C_Item.GetDetailedItemLevelInfo then
+        local detailed = C_Item.GetDetailedItemLevelInfo(link)
+        if detailed and detailed > 0 then return detailed end
+    end
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local _, _, _, level = get(link)
+    return level
+end
+
+local function UpgradeDelta(link, ilvl)
+    if not link or not ilvl then return nil end
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local _, _, _, _, _, _, _, _, equipLoc = get(link)
+    local slots = equipLoc and SLOT_OF[equipLoc]
+    if not slots then return nil end
+    local weapon = equipLoc:find("WEAPON") or equipLoc == "INVTYPE_SHIELD" or equipLoc == "INVTYPE_HOLDABLE"
+    local weakest
+    for _, slot in ipairs(slots) do
+        local level = EquippedLevel(slot)
+        if not level then
+            if not weapon then return ilvl end
+        elseif not weakest or level < weakest then
+            weakest = level
+        end
+    end
+    if not weakest then return nil end
+    return ilvl - weakest
+end
+
+local function DeltaText(d)
+    if d > 0 then return "|cff40ff40+" .. d .. "|r" end
+    if d < 0 then return "|cffff5050" .. d .. "|r" end
+    return "|cffaaaaaa=|r"
 end
 
 local function Hex(h, a)
@@ -253,7 +328,6 @@ local THEMES = {
             { op = "grad", x = 0, y = 0, w = 300, h = 90, dir = "VERTICAL", c1 = "#FFFFFF", a1 = 0, c2 = "#FFFFFF", a2 = 0.16 },
             { op = "outline", x = 0, y = 0, w = 300, h = 250, th = 1, c = "#FFFFFF", a = 0.32 },
             { op = "rect", x = 1, y = 1, w = 298, h = 1, c = "#FFFFFF", a = 0.5 },
-            { op = "circle", x = 270, y = 20, size = 120, c = "#8FB2FF", a = 0.12 },
         },
         icon = { x = 18, y = 18, size = 56, ring = 2, bgA = 0.35 },
         name = { x = 86, y = 20, w = 196, font = F_FRIZ, size = 16, color = "q", flags = "OUTLINE", lines = 2 },
@@ -270,33 +344,86 @@ local THEMES = {
     },
 }
 
+for _, t in ipairs(ns.ThemeDefs or {}) do THEMES[#THEMES + 1] = t end
 local THEME_BY_ID = {}
 for _, t in ipairs(THEMES) do THEME_BY_ID[t.id] = t end
 
 local anchor, stack
 local pools, active = {}, {}
+local rollToken = 0
+
+local BuildMini, MiniRefresh
+local MINI_H, MINI_MAX = 26, 8
 
 local function Layout()
-    local y, w = 0, FRAME_W
+    local MAX_VISIBLE = (db and db.maxVisible) or 3
+    local y, w, shown, minis = 0, FRAME_W, 0, 0
     for _, f in ipairs(active) do
-        f:ClearAllPoints()
-        f:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", 0, y)
-        y = y + f.h + 12
-        w = f.w
+        if shown < MAX_VISIBLE then
+            shown = shown + 1
+            f:ClearAllPoints()
+            f:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", 0, y)
+            y = y + f.h + 12
+            w = f.w
+            if f.mini then f.mini:Hide() end
+            if f.queued then
+                f.queued = nil
+                f:SetAlpha(1)
+                f:Show()
+                f.panel:SetShown(db.showRolls)
+                f.fade:Play()
+            end
+        else
+            f.queued = true
+            f:Hide()
+            f.panel:Hide()
+            if db.compact and minis < MINI_MAX then
+                minis = minis + 1
+                local m = f.mini or BuildMini(f)
+                m:ClearAllPoints()
+                m:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", 0, y)
+                y = y + MINI_H + 4
+                MiniRefresh(f)
+                m:Show()
+            elseif f.mini then
+                f.mini:Hide()
+            end
+        end
     end
     stack:SetWidth(w)
 end
 
-local function Release(f)
+local endBtn, Release
+local function UpdateEndBtn()
+    local any = false
+    for _, a in ipairs(active) do if a.fake then any = true break end end
+    if any and not endBtn then
+        endBtn = CreateFrame("Button", nil, UIParent, "UIPanelButtonTemplate")
+        endBtn:SetSize(150, 24)
+        endBtn:SetFrameStrata("HIGH")
+        endBtn:SetPoint("TOP", anchor, "BOTTOM", 0, -6)
+        endBtn:SetText(L.END_TEST)
+        endBtn:SetScript("OnClick", function()
+            for i = #active, 1, -1 do
+                if active[i].fake then Release(active[i]) end
+            end
+        end)
+    end
+    if endBtn then endBtn:SetShown(any) end
+end
+
+function Release(f)
     f:Hide()
+    if f.mini then f.mini:Hide() end
     f.panel:Hide()
-    f.rollID, f.fake, f.entries, f.chosen, f.closing = nil, nil, nil, nil, nil
+    f.rollID, f.fake, f.entries, f.chosen, f.closing, f.queued, f.closingSoon = nil, nil, nil, nil, nil, nil, nil
     for i, a in ipairs(active) do
         if a == f then table.remove(active, i) break end
     end
     local pool = pools[f.themeId]
     if pool then pool[#pool + 1] = f end
     Layout()
+    UpdateEndBtn()
 end
 
 local function RefreshPanel(f)
@@ -339,7 +466,8 @@ local function RefreshPanel(f)
             row.icon = p:CreateTexture(nil, "ARTWORK")
             row.icon:SetSize(16, 16)
             row.icon:SetPoint("TOPLEFT", p, "TOPLEFT", 12, y)
-            row.dot = Circle(p, "ARTWORK", 1, 9, 1, 1, 1, 1)
+            row.dot = p:CreateTexture(nil, "ARTWORK")
+            row.dot:SetSize(15, 15)
             row.dot:SetPoint("LEFT", row.icon, "RIGHT", 6, 0)
             row.name = p:CreateFontString(nil, "OVERLAY")
             Font(row.name, P.font or F_FRIZ, 12)
@@ -361,8 +489,7 @@ local function RefreshPanel(f)
         if e and i <= shown then
             SetKindIcon(row.icon, KIND[e.kind] or KIND.wait)
             row.icon:SetDesaturated(e.kind == "wait" or e.kind == "pass")
-            local c = ClassColor(e.name)
-            row.dot:SetVertexColor(c[1], c[2], c[3])
+            SetClassIcon(row.dot, ClassOf(ShortName(e.name)))
             row.name:SetText(e.name)
             row.name:SetTextColor(ir, ig, ib)
             if e.kind == "pass" then
@@ -412,13 +539,15 @@ local function Choose(f, kind)
     local me = ShortName(UnitName("player"))
     AddEntry(f, me, kind.key, f.fake and math.random(1, 100) or nil)
     for _, b in ipairs(f.buttons) do b:Mark(b.kind == kind) end
+    if f.mini then ns.MiniMark(f) end
     RefreshPanel(f)
 end
 
 local function ButtonTooltip(b)
     GameTooltip:SetOwner(b, "ANCHOR_TOP")
     GameTooltip:SetText(b.kind.label)
-    if not b.enabled and b.reason then
+    if b.warn then GameTooltip:AddLine(L.CANT_USE, 1, 0.45, 0.2, true) end
+    if (not b.enabled or b.warn) and b.reason then
         local msg = _G["LOOT_ROLL_INELIGIBLE_REASON" .. b.reason]
         if msg then GameTooltip:AddLine(msg, 1, 0.2, 0.2, true) end
     end
@@ -754,8 +883,98 @@ local function BuildGeneric(T)
     return f
 end
 
+function BuildMini(f)
+    local P = f.theme.panel
+    local m = CreateFrame("Frame", nil, stack)
+    m:SetSize(FRAME_W, MINI_H)
+    m.bg = Tex(m, "BACKGROUND", Hex(P.bg, 0.92))
+    m.bg:SetAllPoints()
+    Outline(m, "BORDER", 0, 0, 0, FRAME_W, MINI_H, 1, P.border, P.borderA)
+    m.ring = Tex(m, "ARTWORK", 1, 1, 1, 1)
+    m.ring:SetPoint("LEFT", 3, 0)
+    m.ring:SetSize(22, 22)
+    m.icon = m:CreateTexture(nil, "OVERLAY")
+    m.icon:SetSize(18, 18)
+    m.icon:SetPoint("CENTER", m.ring, "CENTER")
+    m.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    m.name = m:CreateFontString(nil, "OVERLAY")
+    Font(m.name, f.theme.name.font, 12)
+    m.name:SetPoint("LEFT", m.ring, "RIGHT", 6, 0)
+    m.name:SetWidth(FRAME_W - 40 - #KINDS * 22)
+    m.name:SetJustifyH("LEFT")
+    m.name:SetWordWrap(false)
+    m.bar = Tex(m, "ARTWORK", Hex(P.hi))
+    m.bar:SetPoint("BOTTOMLEFT", 1, 1)
+    m.bar:SetHeight(2)
+    m.btns = {}
+    for i, kind in ipairs(KINDS) do
+        local b = CreateFrame("Button", nil, m)
+        b:SetSize(20, 20)
+        b:SetPoint("RIGHT", m, "RIGHT", -4 - (#KINDS - i) * 22, 0)
+        b.kind = kind
+        b.icon = b:CreateTexture(nil, "ARTWORK")
+        b.icon:SetAllPoints()
+        SetKindIcon(b.icon, kind)
+        b.hl = b:CreateTexture(nil, "HIGHLIGHT")
+        b.hl:SetAllPoints()
+        b.hl:SetColorTexture(1, 1, 1, 0.2)
+        b:SetScript("OnClick", function(self)
+            local full = f.buttons[i]
+            if full and full.enabled then Choose(f, self.kind) end
+        end)
+        b:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_TOP")
+            GameTooltip:SetText(self.kind.label)
+            GameTooltip:Show()
+        end)
+        b:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        m.btns[i] = b
+    end
+    m:SetScript("OnUpdate", function(self)
+        local frac
+        if f.fake and f.expire then
+            frac = (f.expire - GetTime()) / (f.rollTime / 1000)
+        elseif f.rollID and GetLootRollTimeLeft then
+            frac = GetLootRollTimeLeft(f.rollID) / (f.rollTime or 60000)
+        end
+        if frac then
+            if frac < 0 then frac = 0 elseif frac > 1 then frac = 1 end
+            self.bar:SetWidth(math.max(1, (FRAME_W - 2) * frac))
+        end
+    end)
+    f.mini = m
+    return m
+end
+
+function ns.MiniMark(f)
+    local m = f.mini
+    if not m then return end
+    for i, b in ipairs(m.btns) do
+        local full = f.buttons[i]
+        local usable = full and full.enabled
+        b.icon:SetDesaturated(not usable)
+        if f.chosen then
+            b:SetAlpha(b.kind.key == f.chosen and 1 or 0.25)
+        else
+            b:SetAlpha(usable and 1 or 0.35)
+        end
+    end
+end
+
+function MiniRefresh(f)
+    local m = f.mini
+    if not m then return end
+    m.icon:SetTexture(f.icon:GetTexture())
+    local r, g, b = f.qr or 1, f.qg or 1, f.qb or 1
+    m.ring:SetColorTexture(r, g, b, 1)
+    m.name:SetTextColor(r, g, b)
+    local ilvl = ItemMeta(f.link)
+    m.name:SetText((f.itemName or "?") .. (ilvl and ("  |cffefdcb0(" .. ilvl .. ")|r") or ""))
+    ns.MiniMark(f)
+end
+
 local function Acquire()
-    local T = THEMES[1]
+    local T = THEME_BY_ID[db.theme] or THEMES[1]
     pools[T.id] = pools[T.id] or {}
     local f = table.remove(pools[T.id])
     if not f then f = BuildGeneric(T) end
@@ -766,12 +985,16 @@ end
 local function Setup(f, data)
     local T = f.theme
     f.rollID, f.fake, f.rollTime, f.link = data.rollID, data.fake, data.rollTime or 60000, data.link
+    rollToken = rollToken + 1
+    f.token = rollToken
+    f.deadline = GetTime() + (f.rollTime or 60000) / 1000 + 10
     f.chosen, f.entries = nil, nil
     f.itemID = ItemID(data.link)
     f.lastNames = GroupNames()
     if data.fake then f.expire = GetTime() + f.rollTime / 1000 end
     local r, g, b = QualityColor(data.quality)
     f.applyQuality(r, g, b, data.quality)
+    f.qr, f.qg, f.qb = r, g, b
     f.icon:SetTexture(data.texture)
     f.itemName = data.name or "?"
     local function Texts()
@@ -782,7 +1005,12 @@ local function Setup(f, data)
         local suffix = ""
         if ilvl and not spec.noIlvl then suffix = "  |cffefdcb0(" .. ilvl .. ")|r" end
         f.name:SetText(nm .. suffix)
-        f.piece:SetText(piece or "")
+        local pieceText = piece or ""
+        if db.showUpgrade then
+            local delta = UpgradeDelta(f.link, ilvl)
+            if delta then pieceText = pieceText .. "  " .. DeltaText(delta) end
+        end
+        f.piece:SetText(pieceText)
         if f.ilvl then
             local text = ""
             if ilvl then
@@ -793,14 +1021,22 @@ local function Setup(f, data)
     end
     f.refreshTexts = Texts
     Texts()
-    if f.bind then f.bind:SetText(data.bop and (ITEM_BIND_ON_PICKUP or "") or "") end
+    if f.bind then
+        if data.canNeed == false then
+            f.bind:SetText("|cffff5555" .. L.CANT_USE .. "|r")
+        else
+            f.bind:SetText(data.bop and (ITEM_BIND_ON_PICKUP or "") or "")
+        end
+    end
     for _, btn in ipairs(f.buttons) do
         btn:Mark(false)
         btn.reason = nil
         local k = btn.kind.key
         local ok = true
+        btn.warn = nil
         if k == "need" then
-            ok = data.canNeed
+            ok = true
+            btn.warn = data.canNeed == false
             btn.reason = data.reasonNeed
         elseif k == "greed" then
             ok = data.canGreed
@@ -828,43 +1064,164 @@ local function Setup(f, data)
     Layout()
 end
 
-local function FindFrame(itemID)
+local function FindFrame(itemID, link)
     for _, f in ipairs(active) do
-        if f.itemID == itemID then return f end
+        if itemID and f.itemID == itemID then return f end
+    end
+    local name = type(link) == "string" and link:match("|h%[(.-)%]|h")
+    if name then
+        for _, f in ipairs(active) do
+            if f.itemName and f.itemName:lower() == name:lower() then return f end
+        end
     end
 end
 
+local AFTER_AWARD = 5
+
+local function Readable(v)
+    if v == nil then return false end
+    return not (issecretvalue and issecretvalue(v))
+end
+
+local function MarkWon(f, name, link)
+    local e = AddEntry(f, name)
+    if e.won then return end
+    e.won = true
+    if db.history then
+        table.insert(db.history, {
+            t = time(), link = link, winner = name, kind = e.kind, value = e.value,
+            me = name == ShortName(UnitName("player")),
+        })
+        while #db.history > 100 do table.remove(db.history, 1) end
+    end
+    local token = f.token
+    f.closingSoon = true
+    C_Timer.After(AFTER_AWARD, function()
+        if f.token == token and f.closingSoon then Release(f) end
+    end)
+end
+
+local function ReleaseAfterAward(f)
+    if f.closingSoon then return end
+    f.closingSoon = true
+    local token = f.token
+    C_Timer.After(AFTER_AWARD, function()
+        if f.token == token and f.closingSoon then Release(f) end
+    end)
+end
+
+local debugOn = false
+
 local function OnLootMessage(text)
     local r = Parse(text)
+    if debugOn then
+        local ok, raw = pcall(tostring, text)
+        print("|cff55ccffBRP|r chat: " .. (ok and raw or "<unreadable>"))
+        print("|cff55ccffBRP|r parsed: " .. (r and (tostring(r.type) .. " / " .. tostring(r.kind) .. " / " .. tostring(r.player)) or "no match"))
+    end
     if not r then return end
-    local f = FindFrame(ItemID(r.link))
+    local f = FindFrame(ItemID(r.link), r.link)
+    if debugOn then
+        local ok, raw = pcall(tostring, text)
+        if ok then print("|cff55ccffBRP|r raw: " .. raw:gsub("|", "||")) end
+        print("|cff55ccffBRP|r player=" .. type(r.player) .. ":" .. tostring(r.player):gsub("|", "||") .. "  itemID=" .. tostring(ItemID(r.link)))
+        local ids = {}
+        for _, w in ipairs(active) do ids[#ids + 1] = tostring(w.itemID) .. "=" .. tostring(w.itemName) end
+        print("|cff55ccffBRP|r windows: " .. (#ids > 0 and table.concat(ids, ", ") or "none") .. "  found: " .. tostring(f ~= nil))
+    end
     if not f then return end
-    local name = ShortName(r.player)
+    if r.type == "allpassed" then
+        ReleaseAfterAward(f)
+        return
+    end
+    local name = MatchGroupName(ShortName(r.player))
     if r.type == "chose" then
         AddEntry(f, name, r.kind)
     elseif r.type == "rolled" then
         AddEntry(f, name, r.kind, r.value)
     elseif r.type == "won" then
-        local e = AddEntry(f, name)
-        e.won = true
-        C_Timer.After(4, function()
-            if f.itemID == ItemID(r.link) and f.entries and f.entries[name] and f.entries[name].won then Release(f) end
-        end)
+        MarkWon(f, name, r.link)
     end
     RefreshPanel(f)
 end
 
-local function HideBlizzard()
-    if GroupLootContainer then
-        GroupLootContainer:SetAlpha(0)
-        if not GroupLootContainer.brpHooked then
-            GroupLootContainer.brpHooked = true
-            GroupLootContainer:HookScript("OnShow", function(self) self:SetAlpha(0) end)
+local function RollKind(state)
+    local S = (Enum and Enum.EncounterLootDropRollState) or {}
+    if state == (S.NeedMainSpec or 0) or state == (S.NeedOffSpec or 1) then return "need" end
+    if state == (S.Greed or 3) or state == (S.Transmog or 2) then return "greed" end
+    if state == (S.Pass or 5) then return "pass" end
+end
+
+local function ApplyDrop(drop)
+    if type(drop) ~= "table" or not Readable(drop.itemHyperlink) then return end
+    local f = FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink)
+    if not f then return end
+    local winnerName
+    for _, roll in ipairs(drop.rollInfos or {}) do
+        if Readable(roll.playerName) and Readable(roll.state) then
+            local kind = RollKind(roll.state)
+            if kind then
+                local name = MatchGroupName(ShortName(roll.playerName))
+                AddEntry(f, name, kind, Readable(roll.roll) and roll.roll or nil)
+                if roll.isWinner == true then winnerName = name end
+            end
+        end
+    end
+    if winnerName then
+        MarkWon(f, winnerName, drop.itemHyperlink)
+    elseif drop.allPassed == true then
+        ReleaseAfterAward(f)
+    end
+    RefreshPanel(f)
+end
+
+local function OnHistoryDrop(encounterID, lootListID)
+    if C_LootHistory and C_LootHistory.GetSortedInfoForDrop and Readable(encounterID) and Readable(lootListID) then
+        ApplyDrop(C_LootHistory.GetSortedInfoForDrop(encounterID, lootListID))
+    end
+end
+
+local function SyncFromHistory(f)
+    if not (C_LootHistory and C_LootHistory.GetAllEncounterInfos and C_LootHistory.GetSortedDropsForEncounter) then return end
+    for _, encounter in ipairs(C_LootHistory.GetAllEncounterInfos() or {}) do
+        for _, drop in ipairs(C_LootHistory.GetSortedDropsForEncounter(encounter.encounterID) or {}) do
+            if type(drop) == "table" and Readable(drop.itemHyperlink) and FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink) == f then
+                ApplyDrop(drop)
+            end
         end
     end
 end
 
+local ROLL_BUTTONS = { "NeedButton", "GreedButton", "TransmogButton", "DisenchantButton", "PassButton" }
+
+local function Mute(f)
+    if type(f) ~= "table" or not f.SetAlpha then return end
+    if f.IsForbidden and f:IsForbidden() then return end
+    f:SetAlpha(0)
+    if f.EnableMouse then f:EnableMouse(false) end
+    for _, key in ipairs(ROLL_BUTTONS) do
+        local b = f[key]
+        if type(b) == "table" and b.EnableMouse and not (b.IsProtected and b:IsProtected()) then b:EnableMouse(false) end
+    end
+end
+
+local hooked
+local function HideBlizzard()
+    local c = _G.GroupLootContainer
+    for i = 1, 4 do Mute(_G["GroupLootFrame" .. i]) end
+    if c and type(c.rollFrames) == "table" then
+        for _, rf in pairs(c.rollFrames) do Mute(rf) end
+    end
+    if not hooked and hooksecurefunc then
+        hooked = true
+        local function later() C_Timer.After(0, HideBlizzard) end
+        if type(_G.GroupLootContainer_AddFrame) == "function" then hooksecurefunc("GroupLootContainer_AddFrame", later) end
+        if type(_G.GroupLootContainer_Update) == "function" then hooksecurefunc("GroupLootContainer_Update", later) end
+    end
+end
+
 local function OnStartRoll(rollID, rollTime)
+    for _, delay in ipairs({ 0, 0.2, 0.6, 1.5 }) do C_Timer.After(delay, HideBlizzard) end
     if not GetLootRollItemInfo then return end
     HideBlizzard()
     local texture, name, _, quality, bop, canNeed, canGreed, canDE, reasonNeed, reasonGreed, reasonDE = GetLootRollItemInfo(rollID)
@@ -877,15 +1234,29 @@ local function OnStartRoll(rollID, rollTime)
     })
     C_Timer.After(0.6, function()
         if f.rollID == rollID and f.refreshTexts then f.refreshTexts() end
+        if f.rollID == rollID then SyncFromHistory(f) end
     end)
 end
 
 local function OnCancelRoll(rollID)
     for _, f in ipairs(active) do
         if f.rollID == rollID and not f.fake then
-            C_Timer.After((f.chosen or f.entries and next(f.entries)) and 4 or 0, function()
-                if f.rollID == rollID then Release(f) end
-            end)
+            local hasWinner = false
+            for _, e in pairs(f.entries or {}) do
+                if e.won then hasWinner = true break end
+            end
+            if hasWinner or f.closingSoon then
+                -- the award already closes it a few seconds later
+            elseif f.chosen or (f.entries and next(f.entries)) then
+                -- the roll is over but the item has not been awarded yet: wait for the winner
+                local wait = math.max(1, (f.deadline or 0) - GetTime())
+                local token = f.token
+                C_Timer.After(wait, function()
+                    if f.token == token and not f.closingSoon then Release(f) end
+                end)
+            else
+                Release(f)
+            end
         end
     end
 end
@@ -901,13 +1272,13 @@ local function RunTest()
     local shown = 0
     for _, slot in ipairs(slots) do
         local link = GetInventoryItemLink("player", slot)
-        if link and shown < 3 then
+        if link and shown < 5 then
             local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
             local name, _, quality, _, _, _, _, _, _, tex = get(link)
             if name then
                 shown = shown + 1
                 local f = Acquire()
-                Setup(f, { fake = true, rollTime = 90000, link = link, texture = tex, name = name, quality = quality, bop = true, canNeed = true, canGreed = true, canDE = shown == 2 })
+                Setup(f, { fake = true, rollTime = 90000, link = link, texture = tex, name = name, quality = quality, bop = true, canNeed = shown ~= 3, reasonNeed = shown == 3 and 1 or nil, canGreed = true, canDE = shown == 2 })
                 for k, e in ipairs(FAKE_NAMES) do
                     C_Timer.After(1 + k * 1.2 + shown * 0.4, function()
                         if f.fake and f.entries then
@@ -922,6 +1293,127 @@ local function RunTest()
     if shown == 0 then
         print("|cffffd100BonusRoll Plus|r: " .. L.NO_ITEMS)
     end
+    UpdateEndBtn()
+end
+
+function ns.TestActive()
+    for _, a in ipairs(active) do if a.fake then return true end end
+    return false
+end
+
+function ns.EndTest()
+    for i = #active, 1, -1 do
+        if active[i].fake then Release(active[i]) end
+    end
+end
+
+function ns.ApplyTheme(id)
+    if not THEME_BY_ID[id] then return end
+    db.theme = id
+    local hadTest = false
+    for _, a in ipairs(active) do if a.fake then hadTest = true break end end
+    if hadTest then RunTest() end
+end
+
+function ns.SetScale(v)
+    db.scale = v
+    stack:SetScale(v)
+end
+
+function ns.SetAlpha(v)
+    db.alpha = v
+    stack:SetAlpha(v)
+end
+
+function ns.SetMaxVisible(n)
+    db.maxVisible = n
+    Layout()
+end
+
+function ns.SetShowRolls(v)
+    db.showRolls = v and true or false
+    for _, f in ipairs(active) do f.panel:SetShown(db.showRolls and not f.queued) end
+end
+
+function ns.SetCompact(v)
+    db.compact = v and true or false
+    Layout()
+end
+
+function ns.SetShowUpgrade(v)
+    db.showUpgrade = v and true or false
+    for _, f in ipairs(active) do
+        if f.refreshTexts then f.refreshTexts() end
+    end
+end
+
+function ns.SetPosition(x, y)
+    db.x, db.y = x, y
+    anchor:ClearAllPoints()
+    if x and y then
+        anchor:SetPoint("BOTTOM", UIParent, "BOTTOM", x, y)
+    else
+        anchor:SetPoint("BOTTOM", UIParent, "BOTTOM", -100, 190)
+    end
+end
+
+function ns.PrintHistory(n)
+    local list = db.history or {}
+    print("|cffffd100BonusRoll Plus|r: " .. L.HISTORY_TITLE)
+    if #list == 0 then
+        print(L.HISTORY_EMPTY)
+        return
+    end
+    for i = math.max(1, #list - (n or 10) + 1), #list do
+        local h = list[i]
+        local who = h.me and ("|cff40ff40" .. h.winner .. "|r") or h.winner
+        local roll = h.value and (" (" .. h.value .. ")") or ""
+        print(string.format("%s  %s  >  %s%s", date("%d/%m %H:%M", h.t), h.link or "?", who, roll))
+    end
+end
+
+function ns.ClearHistory()
+    if db.history then wipe(db.history) end
+    print("|cffffd100BonusRoll Plus|r: " .. L.HISTORY_CLEARED)
+end
+
+function ns.ResetPosition()
+    db.x, db.y = nil, nil
+    anchor:ClearAllPoints()
+    anchor:SetPoint("BOTTOM", UIParent, "BOTTOM", -100, 190)
+end
+
+function ns.RunTest() RunTest() end
+function ns.GetDB() return db end
+function ns.GetDefaults() return DEFAULTS end
+ns.ThemeList = THEMES
+
+function ns.BuildPreview(T, parent)
+    local f = BuildGeneric(T)
+    f:SetParent(parent)
+    f:SetFrameStrata(parent:GetFrameStrata())
+    f:SetScript("OnDragStart", nil)
+    f:SetScript("OnUpdate", nil)
+    f:EnableMouse(false)
+    f.lock:Hide()
+    f.iconHit:EnableMouse(false)
+    f.panel:Hide()
+    local r, g, b = QualityColor(3)
+    f.applyQuality(r, g, b, 3)
+    local tex = GetInventoryItemTexture and GetInventoryItemTexture("player", 5)
+    f.icon:SetTexture(tex or "Interface\\Icons\\INV_Misc_QuestionMark")
+    local slot = INVTYPE_CHEST or "Chest"
+    local sub = C_Item and C_Item.GetItemSubClassInfo and C_Item.GetItemSubClassInfo(4, 3)
+    f.name:SetText(L.SAMPLE_ITEM .. "  |cffefdcb0(27)|r")
+    f.piece:SetText(sub and (slot .. " · " .. sub) or slot)
+    if f.bind then f.bind:SetText(ITEM_BIND_ON_PICKUP or "") end
+    for _, btn in ipairs(f.buttons) do
+        btn:EnableMouse(false)
+        btn:Paint(true)
+        btn:Mark(btn.kind.key == "need")
+    end
+    if f.setFrac then f.setFrac(0.65) end
+    return f
 end
 
 local PREFIX = "BRPLUS"
@@ -992,16 +1484,21 @@ local function Slash(msg)
         end
     elseif cmd == "rolls" then
         db.showRolls = not db.showRolls
-        for _, f in ipairs(active) do f.panel:SetShown(db.showRolls) end
+        for _, f in ipairs(active) do f.panel:SetShown(db.showRolls and not f.queued) end
+    elseif cmd == "open" or cmd == "options" or cmd == "settings" then
+        if ns.OpenSettings then ns.OpenSettings() end
+    elseif cmd == "debug" then
+        debugOn = not debugOn
+        print("|cffffd100BonusRoll Plus|r: debug " .. (debugOn and "ON" or "OFF"))
+    elseif cmd == "history" then
+        if arg:lower() == "clear" then ns.ClearHistory() else ns.PrintHistory(tonumber(arg) or 10) end
     elseif cmd == "version" then
         print("|cffffd100BonusRoll Plus|r: " .. MyVersion())
     elseif cmd == "lock" then
         ns.SetLocked(not db.locked)
         print("|cffffd100BonusRoll Plus|r: " .. (db.locked and L.LOCKED_TIP or L.UNLOCKED_TIP))
     elseif cmd == "reset" then
-        db.x, db.y = nil, nil
-        anchor:ClearAllPoints()
-        anchor:SetPoint("BOTTOM", UIParent, "BOTTOM", -100, 190)
+        ns.ResetPosition()
     else
         print("|cffffd100BonusRoll Plus|r: " .. L.HELP)
     end
@@ -1013,6 +1510,9 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
     if event == "ADDON_LOADED" and a == ADDON then
         BonusRollPlusDB = BonusRollPlusDB or {}
         db = BonusRollPlusDB
+        db.history = db.history or {}
+        db.profiles = db.profiles or {}
+        db.charProfile = db.charProfile or {}
         if db.v ~= DEFAULTS.v then
             db.scale = DEFAULTS.scale
             db.style = nil
@@ -1034,10 +1534,12 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         stack:SetSize(FRAME_W, 1)
         stack:SetPoint("BOTTOM", anchor, "BOTTOM", 0, 0)
         stack:SetScale(db.scale)
+        stack:SetAlpha(db.alpha)
         self:UnregisterEvent("ADDON_LOADED")
         self:RegisterEvent("START_LOOT_ROLL")
         self:RegisterEvent("CANCEL_LOOT_ROLL")
         self:RegisterEvent("CHAT_MSG_LOOT")
+        pcall(self.RegisterEvent, self, "LOOT_HISTORY_UPDATE_DROP")
         self:RegisterEvent("PLAYER_LOGIN")
         self:RegisterEvent("PLAYER_ENTERING_WORLD")
         self:RegisterEvent("GROUP_ROSTER_UPDATE")
@@ -1048,12 +1550,15 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         SlashCmdList.BONUSROLLPLUS = Slash
     elseif event == "PLAYER_LOGIN" then
         HideBlizzard()
+        if ns.Profiles then ns.Profiles.AutoLoad() end
     elseif event == "START_LOOT_ROLL" then
         OnStartRoll(a, b)
     elseif event == "CANCEL_LOOT_ROLL" then
         OnCancelRoll(a)
     elseif event == "CHAT_MSG_LOOT" then
         OnLootMessage(a)
+    elseif event == "LOOT_HISTORY_UPDATE_DROP" then
+        OnHistoryDrop(a, b)
     elseif event == "CHAT_MSG_ADDON" then
         OnAddonMessage(a, b, c, d)
     elseif event == "PLAYER_ENTERING_WORLD" then

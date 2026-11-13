@@ -56,6 +56,7 @@ Los textos del addon están en `Locales.lua`, en los 11 idiomas del cliente: `en
 | Comando | Qué hace |
 |---|---|
 | `/br` | Muestra la ayuda |
+| `/br open` | Abre la ventana de ajustes (también desde Opciones > AddOns > BonusRoll Plus > Abrir ajustes) |
 | `/br test` | Tres ventanas de prueba con tus objetos equipados (cabeza, hombros, pecho, cintura, piernas, anillo o arma, el primero que tengas). Tiempo de 90 s. Las tiradas de los demás son de ejemplo y aparecen poco a poco |
 | `/br scale 0.5-1.5` | Tamaño. Por defecto 1 |
 | `/br rolls` | Muestra u oculta la ventanita de tiradas |
@@ -93,32 +94,19 @@ Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
 
-### 0.5.0 (12/11/2026)
+### 0.5.0 (13/11/2026)
 
-- **Candado** en cada ventana y comando `/br lock`: desbloqueada se arrastra sin Mayús; fija no se mueve. Se recuerda entre sesiones.
-- Cuando termina la tirada y sale el ganador, el objeto se queda 4 segundos en pantalla y desaparece.
+- **Ventana de ajustes** (`/br open` o «Abrir ajustes» en las opciones de AddOns): 20 diseños con vista previa, tamaño, opacidad, ventanas visibles, lista de tiradas y posición bloqueable. Acerca de con el changelog.
+- Máximo de 3 ventanas a la vez; las demás esperan y aparecen al cerrarse una.
+- Diferencia de nivel de objeto con lo que llevas puesto, aviso de «no lo puedes usar», filas compactas para las tiradas en espera, historial (`/br history`) y perfiles con exportar e importar.
+- **Candado** en cada ventana y `/br lock`.
+- Icono de clase junto al nombre de cada jugador.
+- **Aviso de actualización** entre jugadores y **traducción a los 11 idiomas**.
+- Dato curioso aleatorio de World of Warcraft en el pie de la ventana de ajustes.
 
 ### 0.4.0 (12/11/2026)
 
-- **Logo e icono**: el engranaje con la galaxia aparece en la lista de AddOns, y el logo grande en el README.
-- **Aviso de actualización** entre jugadores con el addon (ver arriba).
-- **Traducción a los 11 idiomas** del cliente y uso de la fuente del cliente en ruso, coreano y chino.
-- Comando nuevo: `/br version`.
-- El `.toc` incluye la descripción traducida.
-- Pruebas: comprueban que los 11 idiomas tienen todas las claves y los mismos marcadores de texto, y la lógica de comparación de versiones.
-
-### 0.3.0 (12/11/2026)
-
-- **Estilo definitivo: Cristal Esmerilado**, elegido entre diez propuestas (cinco con UI UX Pro Max y cinco con Taste Skill).
-- Eliminados el selector de estilos, el comando `/br style`, los otros nueve estilos y las fuentes que usaban.
-- El addon queda en dos archivos: `BonusRollPlus.toc` y `Core.lua`.
-
-### 0.2.0 (12/11/2026)
-
-- Diez estilos de ventana con selector en `/br test`.
-- El nombre admite dos líneas y ya no se corta.
-- La corona de la ventanita de tiradas usa el icono de líder del grupo.
-- El tamaño por defecto pasa a 1.
+- Primera versión publicada en CurseForge.
 
 ### 0.1.0 (12/11/2026)
 

@@ -5,12 +5,17 @@ local function proxy()
         if k == "SetScript" or k == "HookScript" then
             return function(self, name, fn) scripts[self] = scripts[self] or {}; scripts[self][name] = fn end
         end
+        if k == "GetThumbTexture" then return function() return proxy() end end
         if type(k) == "string" and k:find("^%l") then return nil end
         if type(k) == "string" and k:find("^Get") then return function() return 100 end end
         return function() return proxy() end
     end })
 end
 local timers = {}
+_G.hooksecurefunc = function() end
+_G.time = os.time
+_G.date = os.date
+_G.wipe = function(t) for k in pairs(t) do t[k] = nil end end
 _G.CreateFrame = function() return proxy() end
 _G.UIParent = proxy()
 _G.GameTooltip = proxy()
@@ -41,10 +46,18 @@ _G.GetLocale = function() return "esES" end
 
 local ns = {}
 assert(loadfile("BonusRollPlus/Locales.lua"))("BonusRollPlus", ns)
+assert(loadfile("BonusRollPlus/LocalesSettings.lua"))("BonusRollPlus", ns)
+assert(loadfile("BonusRollPlus/Themes.lua"))("BonusRollPlus", ns)
 assert(loadfile("BonusRollPlus/Core.lua"))("BonusRollPlus", ns)
+_G.tinsert = table.insert
+_G.UISpecialFrames = {}
+for _, f in ipairs({ "LocalesText", "LocalesExtra", "Facts", "FactsDEFR", "FactsITPT", "FactsRUKO", "FactsZH", "Profiles" }) do assert(loadfile("BonusRollPlus/" .. f .. ".lua"))("BonusRollPlus", ns) end
+assert(loadfile("BonusRollPlus/Settings.lua"))("BonusRollPlus", ns)
 
 local handler
-for obj, s in pairs(scripts) do if s.OnEvent then handler = s.OnEvent end end
+local handlers = {}
+for obj, s in pairs(scripts) do if s.OnEvent then handlers[#handlers + 1] = s.OnEvent end end
+handler = function(...) for _, h in ipairs(handlers) do h(...) end end
 assert(handler, "no OnEvent handler registered")
 handler({ UnregisterEvent = function() end, RegisterEvent = function() end }, "ADDON_LOADED", "BonusRollPlus")
 local self = { UnregisterEvent = function() end, RegisterEvent = function() end }
@@ -64,6 +77,18 @@ handler(self, "START_LOOT_ROLL", 7, 45000)
 local link = "|cff0070dd|Hitem:2000::::::::|h[Elder Headpiece]|h|r"
 handler(self, "CHAT_MSG_LOOT", "Brannlor has selected Need for: " .. link)
 handler(self, "CHAT_MSG_LOOT", "Need Roll - 91 for " .. link .. " by Brannlor")
+_G.Enum = { EncounterLootDropRollState = { NeedMainSpec = 0, NeedOffSpec = 1, Transmog = 2, Greed = 3, NoRoll = 4, Pass = 5 } }
+local dropInfo = { itemHyperlink = link, rollInfos = {
+    { playerName = "Zed-Realm", state = 3, roll = 44, isWinner = false },
+    { playerName = "Lyra", state = 0, roll = 71, isWinner = true },
+    { playerName = "Tuk", state = 5, isWinner = false },
+} }
+_G.C_LootHistory = {
+    GetSortedInfoForDrop = function() return dropInfo end,
+    GetAllEncounterInfos = function() return { { encounterID = 1 } } end,
+    GetSortedDropsForEncounter = function() return { dropInfo } end,
+}
+handler(self, "LOOT_HISTORY_UPDATE_DROP", 1, 1)
 
 local clicked = 0
 for obj, s in pairs(scripts) do
@@ -79,7 +104,7 @@ handler(self, "CANCEL_LOOT_ROLL", 7)
 for _, fn in ipairs(timers) do fn() end
 SlashCmdList.BONUSROLLPLUS("test")
 for _, fn in ipairs(timers) do fn() end
-assert(#ns.Themes == 1, "expected 1 theme")
+assert(#ns.Themes == 20, "expected 20 themes")
 SlashCmdList.BONUSROLLPLUS("scale 0.8")
 SlashCmdList.BONUSROLLPLUS("rolls")
 SlashCmdList.BONUSROLLPLUS("reset")
@@ -87,3 +112,64 @@ SlashCmdList.BONUSROLLPLUS("version")
 SlashCmdList.BONUSROLLPLUS("")
 assert(#sent >= 2, "version announce was not sent")
 print("smoke test passed, rolled:", _G.__rolled and (_G.__rolled[1] .. "/" .. _G.__rolled[2]) or "none")
+
+assert(#ns.ThemeList == 20, "expected 20 designs, got " .. #ns.ThemeList)
+for _, T in ipairs(ns.ThemeList) do
+    ns.ApplyTheme(T.id)
+    ns.RunTest()
+    ns.EndTest()
+    ns.BuildPreview(T, proxy())
+end
+ns.OpenSettings()
+SlashCmdList.BONUSROLLPLUS("open")
+print("themes and settings ok")
+
+for loc, list in pairs(ns.FactsL) do assert(#list == #ns.Facts, "facts count " .. loc) end
+for loc, names in pairs(ns.ThemeNames) do assert(#names == #ns.ThemeList, "theme names " .. loc) end
+for ver, byLoc in pairs(ns.ChangelogL) do
+    for loc, items in pairs(byLoc) do assert(#items >= 1, "changelog " .. ver .. loc) end
+end
+for loc in pairs(ns.Strings) do
+    if loc ~= "esMX" and loc ~= "esES" and loc ~= "enUS" then
+        assert(ns.FactsL[loc] and ns.ThemeNames[loc] and ns.ChangelogL["0.5.0"][loc], "missing translation: " .. loc)
+    end
+    for _, key in ipairs({ "SAMPLE_ITEM", "OPEN_SETTINGS", "SET_TITLE", "FACT_PREFIX", "END_TEST", "HIDE_TEST_BTN", "PASS", "SHOW_UPGRADE", "COMPACT_ROWS", "HISTORY_BTN", "HISTORY_TITLE", "TAB_PROFILES", "PROFILE_NEW", "PROFILE_SAVED", "IMPORT_BAD", "CLOSE", "CANT_USE" }) do
+        if key ~= "PASS" then assert(ns.Strings[loc][key], loc .. " lacks " .. key) end
+    end
+end
+print("translations complete")
+
+local function placeholders(str)
+    local out = {}
+    for p in str:gmatch("%%[sd]") do out[#out + 1] = p end
+    return table.concat(out)
+end
+for loc, strings in pairs(ns.Strings) do
+    for _, key in ipairs({ "PROFILE_NAME", "PROFILE_SAVED", "PROFILE_LOADED", "PROFILE_DELETED" }) do
+        assert(placeholders(strings[key]) == placeholders(ns.Strings.enUS[key]), "placeholder mismatch " .. loc .. " " .. key)
+    end
+end
+
+local P = ns.Profiles
+local exported = P.Export()
+assert(exported:sub(1, 5) == "BRP1;", "export prefix")
+local parsed = P.Parse(exported)
+assert(parsed and parsed.theme and parsed.scale and parsed.maxVisible, "round trip")
+assert(P.Parse("hello") == nil and P.Parse("BRP1;junk") == nil, "invalid text rejected")
+assert(P.Parse("BRP1;scale=99;maxVisible=77;theme=nope;").scale == 1.5, "scale clamped")
+assert(P.Parse("BRP1;maxVisible=77;theme=nope;").maxVisible == 5, "windows clamped")
+assert(P.Parse("BRP1;theme=nope;scale=1;").theme == "glass", "unknown theme replaced")
+local name = P.Save(P.NewName())
+assert(#P.Names() >= 1 and P.Load(name), "save and load")
+P.UseOnThisCharacter(name)
+assert(P.AssignedHere() == name, "assigned")
+P.Delete(name)
+assert(P.AssignedHere() == nil, "delete clears assignment")
+assert(P.Import(exported), "import")
+
+for i = 1, 6 do handler(self, "START_LOOT_ROLL", 20 + i, 45000) end
+ns.SetCompact(false)
+ns.SetCompact(true)
+ns.PrintHistory(5)
+ns.ClearHistory()
+print("extras ok")

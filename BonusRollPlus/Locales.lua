@@ -3,6 +3,7 @@ local ADDON, ns = ...
 local STRINGS = {
     enUS = {
         TITLE = "Rolls",
+        END_TEST = "End test",
         NO_ITEMS = "no equipped items were found to preview.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Drag a window to move it; the padlock fixes it.",
@@ -12,6 +13,8 @@ local STRINGS = {
     },
     esES = {
         TITLE = "Tiradas",
+        END_TEST = "Terminar prueba",
+        PASS = "Pasar",
         NO_ITEMS = "no se encontraron objetos equipados para la vista previa.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Arrastra una ventana para moverla; el candado la fija.",
@@ -21,6 +24,8 @@ local STRINGS = {
     },
     esMX = {
         TITLE = "Tiradas",
+        END_TEST = "Terminar prueba",
+        PASS = "Pasar",
         NO_ITEMS = "no se encontraron objetos equipados para la vista previa.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Arrastra una ventana para moverla; el candado la fija.",
@@ -30,6 +35,7 @@ local STRINGS = {
     },
     deDE = {
         TITLE = "Würfe",
+        END_TEST = "Test beenden",
         NO_ITEMS = "Keine angelegten Gegenstände für die Vorschau gefunden.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Ziehe ein Fenster, um es zu verschieben; das Schloss fixiert es.",
@@ -39,6 +45,7 @@ local STRINGS = {
     },
     frFR = {
         TITLE = "Jets",
+        END_TEST = "Terminer le test",
         NO_ITEMS = "aucun objet équipé trouvé pour l'aperçu.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Faites glisser une fenêtre pour la déplacer ; le cadenas la fixe.",
@@ -48,6 +55,7 @@ local STRINGS = {
     },
     itIT = {
         TITLE = "Tiri",
+        END_TEST = "Termina test",
         NO_ITEMS = "nessun oggetto equipaggiato trovato per l'anteprima.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Trascina una finestra per spostarla; il lucchetto la blocca.",
@@ -57,6 +65,7 @@ local STRINGS = {
     },
     ptBR = {
         TITLE = "Rolagens",
+        END_TEST = "Encerrar teste",
         NO_ITEMS = "nenhum item equipado foi encontrado para a pré-visualização.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Arraste uma janela para movê-la; o cadeado a fixa.",
@@ -66,6 +75,7 @@ local STRINGS = {
     },
     ruRU = {
         TITLE = "Броски",
+        END_TEST = "Завершить тест",
         NO_ITEMS = "для предпросмотра не найдено экипированных предметов.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. Перетащите окно, чтобы переместить его; замок закрепляет его.",
@@ -75,6 +85,7 @@ local STRINGS = {
     },
     koKR = {
         TITLE = "주사위",
+        END_TEST = "테스트 종료",
         NO_ITEMS = "미리 볼 장착 아이템을 찾을 수 없습니다.",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version. 창을 드래그해 이동하고, 자물쇠로 고정합니다.",
@@ -84,6 +95,7 @@ local STRINGS = {
     },
     zhCN = {
         TITLE = "掷骰",
+        END_TEST = "结束测试",
         NO_ITEMS = "未找到可用于预览的已装备物品。",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version。拖动窗口可移动它，挂锁可将其固定。",
@@ -93,6 +105,7 @@ local STRINGS = {
     },
     zhTW = {
         TITLE = "擲骰",
+        END_TEST = "結束測試",
         NO_ITEMS = "找不到可預覽的已裝備物品。",
         SCALE_USAGE = "/br scale 0.5 - 1.5",
         HELP = "/br test | scale <0.5-1.5> | rolls | lock | reset | version。拖曳視窗可移動它，掛鎖可將其固定。",

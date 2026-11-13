@@ -40,6 +40,7 @@ Si el juego ya estaba abierto, escribe `/reload` antes.
 
 | Comando | Qué hace |
 |---|---|
+| `/br open` | Abre la ventana de ajustes: 20 diseños con vista previa, tamaño, opacidad, ventanas visibles y Acerca de |
 | `/br test` | Muestra tres ventanas de prueba con tus objetos equipados |
 | `/br scale 0.5-1.5` | Cambia el tamaño (por defecto 1) |
 | `/br rolls` | Muestra u oculta la ventanita de tiradas |
@@ -52,7 +53,7 @@ Arrastra una ventana para moverla. El candado de su esquina la fija; otro clic l
 
 ## Estado
 
-Versión **0.5.0**. El estilo es **Cristal Esmerilado**, elegido entre diez propuestas hechas con UI UX Pro Max y Taste Skill. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
+Versión **0.5.0**. El estilo por defecto es **Cristal Esmerilado** y hay 20 diseños para elegir en `/br open`. La lógica está probada con LuaJIT y con una simulación del juego, pero **todavía no se ha comprobado dentro del cliente**. Todos los detalles, los límites conocidos y lo que falta están en [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
 
 ## Qué hay en este repositorio
 

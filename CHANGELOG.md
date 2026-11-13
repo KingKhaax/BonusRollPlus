@@ -1,15 +1,22 @@
 # Cambios
 
-## 0.5.0 (12/11/2026)
+## 0.5.0 (13/11/2026)
 
-- Candado en cada ventana (esquina superior derecha) y comando `/br lock`. Desbloqueada se arrastra sin Mayús; fija no se mueve. Se guarda en `BonusRollPlusDB.locked` (por defecto desbloqueada).
-- Al salir el ganador, o al terminar la tirada con tiradas ya en el panel, el objeto se queda 4 segundos y desaparece (antes 6).
-- Textos nuevos `LOCKED_TIP` y `UNLOCKED_TIP` en los 11 idiomas; el texto de `/br` incluye `lock`.
-- El panel lateral sigue leyendo las tiradas del chat (`CHAT_MSG_LOOT`) con los textos globales del cliente.
+- Ventana de ajustes (`/br open` o «Abrir ajustes» en las opciones de AddOns): 20 diseños con vista previa, el cristal esmerilado por defecto, tamaño, opacidad, ventanas visibles, lista de tiradas y posición bloqueable.
+- Máximo de 3 ventanas a la vez; las demás esperan y aparecen al cerrarse una.
+- Diferencia de nivel de objeto con lo que llevas puesto, aviso de «no lo puedes usar», filas compactas para las tiradas en espera, historial (`/br history`) y perfiles con exportar e importar.
+- Candado en cada ventana y `/br lock`.
+- Icono de clase junto al nombre de cada jugador.
+- Aviso de actualización entre jugadores y traducción a los 11 idiomas.
+- Dato curioso aleatorio de World of Warcraft en el pie de la ventana de ajustes.
 
 ## 0.4.0 (12/11/2026)
 
-- Logo e icono, aviso de actualización entre jugadores, traducción a 11 idiomas y `/br version`.
+- Primera versión publicada en CurseForge.
+
+## 0.1.0 (12/11/2026)
+
+- Primera versión: ventana de tirada con nivel de objeto, pieza de armadura y lista de tiradas de todos.
 
 ## En otro PC
 

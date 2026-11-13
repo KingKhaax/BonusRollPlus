@@ -17,4 +17,15 @@
 ## IconTexture: Interface\AddOns\BonusRollPlus\Media\icon
 
 Locales.lua
+LocalesSettings.lua
+LocalesText.lua
+LocalesExtra.lua
+Themes.lua
 Core.lua
+Facts.lua
+FactsDEFR.lua
+FactsITPT.lua
+FactsRUKO.lua
+FactsZH.lua
+Profiles.lua
+Settings.lua
