@@ -81,7 +81,7 @@ Este apartado resume todo lo hecho hasta el 2026-11-13, cómo está montado el a
 |---|---|
 | **0.5.0** | Publicada en CurseForge el 2026-11-13 (proyecto **1800719**, id de archivo 9589441). Commit `290c683`. Pendiente de la revisión de CurseForge. |
 | **0.4.0** | Primera versión subida a mano por el autor el 2026-11-12. |
-| **0.6.0** | **En desarrollo, sin publicar.** El `.toc` sigue en 0.5.0 a propósito. No subirla hasta que la 0.5.0 esté aprobada y el autor lo pida. |
+| **0.6.0** | Publicada en CurseForge el 2026-11-13 (id de archivo 9590891), a petición del autor. Commit `11c610a`. El `.toc` y el changelog ya están en 0.6.0. |
 | Pruebas en el juego | **Casi nada está verificado en el cliente.** Todo se prueba con una simulación (ver «Pruebas»). Lo que el autor ha confirmado a mano: la ventana de tirada, que se oculta la de Blizzard (con ajustes posteriores) y el panel de tiradas tras varias correcciones. |
 
 Contenido de la 0.5.0 (ya publicada): ventana de ajustes con 20 diseños, perfiles, historial `/br history`, diferencia de nivel de objeto, aviso de «no puedes usar este objeto», filas compactas, máximo de ventanas visibles, candado, icono de clase, aviso de actualización entre jugadores, textos en 11 idiomas y dato curioso en el pie de los ajustes.
@@ -190,8 +190,8 @@ Consejos: lanza la prueba 40 veces seguidas para detectar fallos intermitentes (
 
 ## Pendiente
 
-1. **Capturas para la descripción de la 0.6.0.** Las tiene que hacer el autor en el juego. Lista acordada: `01-ventana`, `02-mejora-valor`, `03-no-usable`, `04-filas-compactas`, `05-diseños`, `06-ajustes`, `07-perfiles`, `08-historial`, `09-galeria` y, opcional, `10-exportar`. Cuando las entregue: guardarlas en `assets/`, subirlas y enlazarlas desde `docs/descripcion-curseforge.html`.
-2. **Publicar la 0.6.0** cuando la 0.5.0 esté aprobada (seguir «Cómo publicar una versión» y actualizar el `.toc`).
+1. **Capturas pendientes:** el tooltip del botón Necesidad con el aviso rojo (hay que quitar el círculo rosa del cursor de la captura original) y una captura nueva del historial con nivel de objeto. Guardarlas en `assets/screenshots/` y enlazarlas desde `docs/descripcion-curseforge.html`.
+2. Esperar a que CurseForge apruebe la 0.6.0 y poner la descripción nueva (`docs/descripcion-curseforge.html`, ya con las capturas de `assets/screenshots/`). La captura del historial (`07-history.png`) es anterior a mostrar el nivel de objeto y el tooltip: conviene repetirla.
 3. Decidir si se mejora el **aviso de actualización** (versión recordada, amigos de Battle.net).
 4. Verificar en el juego lo que solo se ha probado con la simulación, sobre todo: ventanas con varios objetos a la vez, el panel de tiradas, el valor y el `*` de apariencia, las filas compactas y la pestaña Historial.
 5. Decidir si se limpian del `.toc` las interfaces de Retail.
