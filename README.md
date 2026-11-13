@@ -190,7 +190,7 @@ Tips: run the test 40 times in a row to catch intermittent failures (there was o
 1. Bump the number in `BonusRollPlus/BonusRollPlus.toc`, `README.md`, `BonusRollPlus/README.md` and `CHANGELOG.md`; add the entry to `CHANGES` in `Settings.lua` and the per-language notes in `LocalesText.lua`/`LocalesExtra.lua`.
 2. Write the English changelog in `tools/changelog-en.md` (sections New, Improvement, Fix).
 3. Run the tests. Commit as `sr.kitkat`, with no attribution lines, and `git push origin main`.
-4. Build the zip `Desktop\BonusRollPlus-X.Y.Z.zip` with **one `BonusRollPlus` folder** inside, entries with `/` and **without** the `.omc` folder (it sometimes appears inside the addon; delete it first).
+4. Build the zip `Desktop\BonusRollPlus\BonusRollPlus-X.Y.Z.zip` with **one `BonusRollPlus` folder** inside, entries with `/` and **without** the `.omc` folder (it sometimes appears inside the addon; delete it first).
 5. Upload with the API: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/upload_curseforge.ps1 -ProjectId 1800719 [-Upload]` (without `-Upload` it is a dry run). The token is in the user environment variable `CURSEFORGE_API_TOKEN`; never write it into files or commit it.
 6. The **page description is set by hand** on CurseForge. The latest is in `docs/descripcion-curseforge.html` (English, with the Spanish part underneath). The author adds the screenshots: pending, see below.
 
