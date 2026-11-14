@@ -296,3 +296,12 @@ for loc, text in pairs(HISTORY_NOTE) do
     local list = ns.ChangelogL["0.6.0"] and ns.ChangelogL["0.6.0"][loc]
     if list then table.insert(list, 3, text) end
 end
+
+local NOSELL = {
+    enUS = "Cannot be sold", esES = "No se puede vender", deDE = "Nicht verkaufbar", frFR = "Invendable", itIT = "Non vendibile",
+    ptBR = "Não pode ser vendido", ruRU = "Нельзя продать", koKR = "판매 불가", zhCN = "无法出售", zhTW = "無法出售",
+}
+NOSELL.esMX = NOSELL.esES
+for loc, text in pairs(NOSELL) do
+    if ns.Strings[loc] then ns.Strings[loc].NO_SELL = text end
+end

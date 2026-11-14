@@ -281,9 +281,14 @@ local function ValueInfo(link)
     end
     if not price and type(sell) == "number" and sell > 0 then price = sell end
     local newLook = equipLoc and equipLoc ~= "" and UnknownAppearance(link)
-    if not price and not newLook then return nil end
+    local noSale = not price and type(sell) == "number" and sell == 0
+    if not price and not newLook and not noSale then return nil end
     local text = ""
-    if price then text = FormatMoney(price) end
+    if price then
+        text = FormatMoney(price)
+    elseif noSale then
+        text = "|cff9a9a9a" .. L.NO_SELL .. "|r"
+    end
     if newLook then text = "|cffd070ff*|r " .. text end
     return text
 end

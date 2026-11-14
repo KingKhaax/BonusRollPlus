@@ -135,7 +135,7 @@ for loc in pairs(ns.Strings) do
     if loc ~= "esMX" and loc ~= "esES" and loc ~= "enUS" then
         assert(ns.FactsL[loc] and ns.ThemeNames[loc] and ns.ChangelogL["0.5.0"][loc], "missing translation: " .. loc)
     end
-    for _, key in ipairs({ "SAMPLE_ITEM", "OPEN_SETTINGS", "SET_TITLE", "FACT_PREFIX", "END_TEST", "HIDE_TEST_BTN", "PASS", "SHOW_UPGRADE", "COMPACT_ROWS", "HISTORY_BTN", "HISTORY_TITLE", "TAB_PROFILES", "PROFILE_NEW", "PROFILE_SAVED", "IMPORT_BAD", "CLOSE", "CANT_USE", "SHOW_VALUE", "SOUND_ALERT", "FLASH_ALERT", "PROFILE_THISSPEC", "TAB_HISTORY", "STATS_WON", "HISTORY_CLEAR_BTN", "CLOSE_DELAY" }) do
+    for _, key in ipairs({ "SAMPLE_ITEM", "OPEN_SETTINGS", "SET_TITLE", "FACT_PREFIX", "END_TEST", "HIDE_TEST_BTN", "PASS", "SHOW_UPGRADE", "COMPACT_ROWS", "HISTORY_BTN", "HISTORY_TITLE", "TAB_PROFILES", "PROFILE_NEW", "PROFILE_SAVED", "IMPORT_BAD", "CLOSE", "CANT_USE", "SHOW_VALUE", "SOUND_ALERT", "FLASH_ALERT", "PROFILE_THISSPEC", "TAB_HISTORY", "STATS_WON", "HISTORY_CLEAR_BTN", "CLOSE_DELAY", "NO_SELL" }) do
         if key ~= "PASS" then assert(ns.Strings[loc][key], loc .. " lacks " .. key) end
     end
 end
