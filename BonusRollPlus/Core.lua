@@ -255,6 +255,16 @@ local function UnknownAppearance(link)
     return ok2 and known == false
 end
 
+local function FormatMoney(copper)
+    copper = math.floor(copper)
+    local gold, silver, rest = math.floor(copper / 10000), math.floor((copper % 10000) / 100), copper % 100
+    local parts = {}
+    if gold > 0 then parts[#parts + 1] = "|cffffd700" .. gold .. "g|r" end
+    if silver > 0 then parts[#parts + 1] = "|cffc7c7cf" .. silver .. "s|r" end
+    if rest > 0 or #parts == 0 then parts[#parts + 1] = "|cffeda55f" .. rest .. "c|r" end
+    return table.concat(parts, " ")
+end
+
 local function ValueInfo(link)
     if not (db.showValue and link) then return nil end
     local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
@@ -269,7 +279,7 @@ local function ValueInfo(link)
     local newLook = equipLoc and equipLoc ~= "" and UnknownAppearance(link)
     if not price and not newLook then return nil end
     local text = ""
-    if price then text = GetCoinTextureString and GetCoinTextureString(price) or tostring(price) end
+    if price then text = FormatMoney(price) end
     if newLook then text = "|cffd070ff*|r " .. text end
     return text
 end
