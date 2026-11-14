@@ -1,6 +1,6 @@
 # Cambios
 
-## 0.7.0 (pendiente de publicar)
+## 0.7.0
 
 - Reglas automáticas (apagadas por defecto): pasar automáticamente objetos que bajan tu nivel de objeto y codicia automática en BoE baratos. Siempre te lo dicen en el chat y nunca piden Necesidad.
 - Valor de venta, de la casa de subastas y de desencantar (TradeSkillMaster) en cada tirada, cada uno con su icono y con las monedas del juego; «No se puede vender» si el objeto no vale nada.
@@ -11,7 +11,7 @@
 - Historial: resumen de la sesión con el valor total, filtro por calidad y exportar como texto.
 - La ventana de ajustes se organiza en secciones y tiene scroll.
 
-## 0.7.0 (pendiente de publicar)
+## 0.7.0
 
 - Reglas automáticas (apagadas por defecto): pasar automáticamente objetos que bajan tu nivel de objeto y codicia automática en BoE baratos. Siempre te lo dicen en el chat y nunca piden Necesidad.
 - Valor de venta, de la casa de subastas y de desencantar (TradeSkillMaster) en cada tirada, cada uno con su icono y con las monedas del juego; «No se puede vender» si el objeto no vale nada.

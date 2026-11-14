@@ -103,14 +103,14 @@ Use this when you pick the project up on another PC or in a new working session.
 | **0.4.0** | First version, uploaded by hand by the author on 2026-11-12. |
 | **0.5.0** | Published on CurseForge on 2026-11-13 (project **1800719**, file id 9589441). Commit `290c683`. |
 | **0.6.0** | Published on CurseForge on 2026-11-13 (file id 9590891), at the author's request. Commit `11c610a`. Pending CurseForge review. |
-| **0.7.0** | **In development, not published.** The `.toc` stays at 0.6.0 on purpose. It is implemented and tested only with the simulation; publish it only when the author asks (steps in "How to publish a version"). |
+| **0.7.0** | **Published on CurseForge on 2026-11-14 (file 9603587).** |
 | In-game testing | **Almost nothing is verified in the client.** Everything is tested with a simulation (see "Tests"). Confirmed by hand by the author: the roll window, hiding the Blizzard window (after some fixes) and the rolls panel after several fixes. |
 
 0.5.0 contents: settings window with 20 designs, profiles, `/br history`, item level difference, "you can't use this item" warning, compact rows, maximum visible windows, padlock, class icon, update notice between players, texts in 11 languages and a random fact in the settings footer.
 
 0.6.0 contents (see `CHANGELOG.md` and `tools/changelog-en.md`): sale or auction value with a purple `*` for an uncollected appearance, History tab with statistics, per-specialization profiles, sound and flash alerts, setting for how many seconds the window stays after the winner (2 by default), designs cut from 20 to 10, previews loaded gradually, fix for missing windows when several items drop at once.
 
-0.7.0 contents (pending, see `CHANGELOG.md` and `tools/changelog-en.md`): automatic rules (auto-pass downgrades, auto-greed cheap BoE; off by default, they say what they did in the chat and never roll Need), value line with vendor, auction (TSM `DBMarket`) and disenchant (TSM `Destroy`) values with their icons and the game's coin icons plus "Cannot be sold", a gold BiS tag read from `NaowhForever.BiS.Alerts` when that addon is installed, seconds left on the time bar, stack direction and gap, text size, always-compact rows, profiles by content type (raid, dungeon, open world), session summary, quality filter and text export in the History tab, and a settings tab organized in scrolling sections.
+0.7.0 contents (see `CHANGELOG.md` and `tools/changelog-en.md`): automatic rules (auto-pass downgrades, auto-greed cheap BoE; off by default, they say what they did in the chat and never roll Need), value line with vendor, auction (TSM `DBMarket`) and disenchant (TSM `Destroy`) values with their icons and the game's coin icons plus "Cannot be sold", a gold BiS tag read from `NaowhForever.BiS.Alerts` when that addon is installed, seconds left on the time bar, stack direction and gap, text size, always-compact rows, profiles by content type (raid, dungeon, open world), session summary, quality filter and text export in the History tab, and a settings tab organized in scrolling sections.
 
 > **The repository has been public since 2026-11-13** (the screenshots in the description load from raw.githubusercontent.com and returned 404 while the repo was private). Never commit tokens, keys or personal data.
 
