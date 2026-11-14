@@ -255,13 +255,17 @@ local function UnknownAppearance(link)
     return ok2 and known == false
 end
 
+local COIN_GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:12:12:2:0|t"
+local COIN_SILVER = "|TInterface\\MoneyFrame\\UI-SilverIcon:12:12:2:0|t"
+local COIN_COPPER = "|TInterface\\MoneyFrame\\UI-CopperIcon:12:12:2:0|t"
+
 local function FormatMoney(copper)
     copper = math.floor(copper)
     local gold, silver, rest = math.floor(copper / 10000), math.floor((copper % 10000) / 100), copper % 100
     local parts = {}
-    if gold > 0 then parts[#parts + 1] = "|cffffd700" .. gold .. "g|r" end
-    if silver > 0 then parts[#parts + 1] = "|cffc7c7cf" .. silver .. "s|r" end
-    if rest > 0 or #parts == 0 then parts[#parts + 1] = "|cffeda55f" .. rest .. "c|r" end
+    if gold > 0 then parts[#parts + 1] = gold .. COIN_GOLD end
+    if silver > 0 then parts[#parts + 1] = silver .. COIN_SILVER end
+    if rest > 0 or #parts == 0 then parts[#parts + 1] = rest .. COIN_COPPER end
     return table.concat(parts, " ")
 end
 
