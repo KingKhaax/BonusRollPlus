@@ -255,9 +255,9 @@ local function UnknownAppearance(link)
     return ok2 and known == false
 end
 
-local COIN_GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:12:12:2:0|t"
-local COIN_SILVER = "|TInterface\\MoneyFrame\\UI-SilverIcon:12:12:2:0|t"
-local COIN_COPPER = "|TInterface\\MoneyFrame\\UI-CopperIcon:12:12:2:0|t"
+local COIN_GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:12:12:0:0|t"
+local COIN_SILVER = "|TInterface\\MoneyFrame\\UI-SilverIcon:12:12:0:0|t"
+local COIN_COPPER = "|TInterface\\MoneyFrame\\UI-CopperIcon:12:12:0:0|t"
 
 local function FormatMoney(copper)
     copper = math.floor(copper)
@@ -266,7 +266,7 @@ local function FormatMoney(copper)
     if gold > 0 then parts[#parts + 1] = gold .. COIN_GOLD end
     if silver > 0 then parts[#parts + 1] = silver .. COIN_SILVER end
     if rest > 0 or #parts == 0 then parts[#parts + 1] = rest .. COIN_COPPER end
-    return table.concat(parts, " ")
+    return table.concat(parts, "  ")
 end
 
 local AH_ICON = "|TInterface\\MINIMAP\\TRACKING\\Auctioneer:14:14:0:0|t"
@@ -321,13 +321,13 @@ local function ValueInfo(link, f)
     local auction = TsmValue("DBMarket", id)
     local destroy = f and f.canDE and TsmValue("Destroy", id) or nil
     if vendor then parts[#parts + 1] = FormatMoney(vendor) end
-    if auction then parts[#parts + 1] = AH_ICON .. " " .. FormatMoney(auction) end
-    if destroy then parts[#parts + 1] = DE_ICON .. " " .. FormatMoney(destroy) end
+    if auction then parts[#parts + 1] = AH_ICON .. "  " .. FormatMoney(auction) end
+    if destroy then parts[#parts + 1] = DE_ICON .. "  " .. FormatMoney(destroy) end
     if not vendor and not auction and not destroy and type(sell) == "number" and sell == 0 then
         parts[#parts + 1] = "|cff9a9a9a" .. L.NO_SELL .. "|r"
     end
     if #parts == 0 then return nil end
-    return table.concat(parts, "   ")
+    return table.concat(parts, "     ")
 end
 
 local function UpdateValue(f)
