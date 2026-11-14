@@ -51,7 +51,7 @@ assert(loadfile("BonusRollPlus/Themes.lua"))("BonusRollPlus", ns)
 assert(loadfile("BonusRollPlus/Core.lua"))("BonusRollPlus", ns)
 _G.tinsert = table.insert
 _G.UISpecialFrames = {}
-for _, f in ipairs({ "LocalesText", "LocalesExtra", "Facts", "FactsDEFR", "FactsITPT", "FactsRUKO", "FactsZH", "Profiles" }) do assert(loadfile("BonusRollPlus/" .. f .. ".lua"))("BonusRollPlus", ns) end
+for _, f in ipairs({ "LocalesText", "LocalesExtra", "LocalesV07", "LocalesNotes07", "Facts", "FactsDEFR", "FactsITPT", "FactsRUKO", "FactsZH", "Profiles" }) do assert(loadfile("BonusRollPlus/" .. f .. ".lua"))("BonusRollPlus", ns) end
 assert(loadfile("BonusRollPlus/Settings.lua"))("BonusRollPlus", ns)
 
 local handler
@@ -190,3 +190,13 @@ print("0.6.0 extras ok")
 
 for loc, items in pairs(ns.ChangelogL["0.6.0"]) do assert(#items == 7, "0.6.0 notes " .. loc) end
 print("0.6.0 notes ok")
+
+for loc, items in pairs(ns.ChangelogL["0.7.0"]) do assert(#items == 6, "0.7.0 notes " .. loc) end
+local new07 = { "SEC_WINDOWS", "SEC_AUTO", "STACK_DIR_FMT", "DIR_LEFT", "STACK_GAP", "FONT_SCALE", "ULTRA_COMPACT", "COUNTDOWN", "AUTO_NOTE", "AUTO_PASS", "AUTO_PASS_MIN", "AUTO_GREED", "AUTO_GREED_GOLD", "AUTO_PASS_MSG", "AUTO_GREED_MSG", "PROFILE_RAID", "PROFILE_DUNGEON", "PROFILE_WORLD", "STATS_SESSION", "HISTORY_EXPORT_BTN", "HISTORY_FILTER", "FILTER_ALL", "FILTER_GREEN", "FILTER_BLUE", "FILTER_EPIC" }
+for loc, strings in pairs(ns.Strings) do
+    for _, key in ipairs(new07) do assert(strings[key], loc .. " lacks " .. key) end
+    for _, key in ipairs({ "STACK_DIR_FMT", "AUTO_PASS_MSG", "AUTO_GREED_MSG", "STATS_SESSION", "HISTORY_FILTER" }) do
+        assert(placeholders(strings[key]) == placeholders(ns.Strings.enUS[key]), "placeholder mismatch " .. loc .. " " .. key)
+    end
+end
+print("0.7.0 ok")

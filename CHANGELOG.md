@@ -1,5 +1,27 @@
 # Cambios
 
+## 0.7.0 (pendiente de publicar)
+
+- Reglas automáticas (apagadas por defecto): pasar automáticamente objetos que bajan tu nivel de objeto y codicia automática en BoE baratos. Siempre te lo dicen en el chat y nunca piden Necesidad.
+- Valor de venta, de la casa de subastas y de desencantar (TradeSkillMaster) en cada tirada, cada uno con su icono y con las monedas del juego; «No se puede vender» si el objeto no vale nada.
+- Etiqueta BiS dorada junto al valor cuando el objeto es una de tus elecciones en NaowhForever_BiS.
+- Segundos restantes sobre la barra de tiempo, con colores.
+- Dirección de apilado y espacio entre ventanas, tamaño del texto y modo de filas compactas siempre activas.
+- Perfiles por tipo de contenido: bandas, mazmorras y mundo abierto.
+- Historial: resumen de la sesión con el valor total, filtro por calidad y exportar como texto.
+- La ventana de ajustes se organiza en secciones y tiene scroll.
+
+## 0.7.0 (pendiente de publicar)
+
+- Reglas automáticas (apagadas por defecto): pasar automáticamente objetos que bajan tu nivel de objeto y codicia automática en BoE baratos. Siempre te lo dicen en el chat y nunca piden Necesidad.
+- Valor de venta, de la casa de subastas y de desencantar (TradeSkillMaster) en cada tirada, cada uno con su icono y con las monedas del juego; «No se puede vender» si el objeto no vale nada.
+- Etiqueta BiS dorada junto al valor cuando el objeto es una de tus elecciones en NaowhForever_BiS.
+- Segundos restantes sobre la barra de tiempo, con colores.
+- Dirección de apilado y espacio entre ventanas, tamaño del texto y modo de filas compactas siempre activas.
+- Perfiles por tipo de contenido: bandas, mazmorras y mundo abierto.
+- Historial: resumen de la sesión con el valor total, filtro por calidad y exportar como texto.
+- La ventana de ajustes se organiza en secciones y tiene scroll.
+
 ## 0.6.0 (13/11/2026)
 
 - Valor de venta o de subasta (precio de TradeSkillMaster si lo tienes) en cada tirada, con un * morado cuando el objeto tiene una apariencia que no posees.

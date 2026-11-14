@@ -20,6 +20,8 @@ Locales.lua
 LocalesSettings.lua
 LocalesText.lua
 LocalesExtra.lua
+LocalesV07.lua
+LocalesNotes07.lua
 Themes.lua
 Core.lua
 Facts.lua

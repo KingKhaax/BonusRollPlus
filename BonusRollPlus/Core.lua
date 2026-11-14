@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2 }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5 }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -269,33 +269,70 @@ local function FormatMoney(copper)
     return table.concat(parts, " ")
 end
 
-local function ValueInfo(link)
+local AH_ICON = "|TInterface\\MINIMAP\\TRACKING\\Auctioneer:14:14:0:0|t"
+local DE_ICON = "|TInterface\\Buttons\\UI-GroupLoot-DE-Up:14:14:0:0|t"
+
+local function TsmValue(source, id)
+    if not (id and _G.TSM_API and _G.TSM_API.GetCustomPriceValue) then return nil end
+    local ok, value = pcall(_G.TSM_API.GetCustomPriceValue, source, "i:" .. id)
+    if ok and type(value) == "number" and value > 0 then return value end
+    return nil
+end
+
+local function BisRank(link)
+    local naowh = _G.NaowhForever
+    local alerts = naowh and naowh.BiS and naowh.BiS.Alerts
+    if not (alerts and alerts.Rank) then return nil end
+    if alerts.On then
+        local ok, on = pcall(alerts.On)
+        if ok and not on then return nil end
+    end
+    local ok, rank = pcall(alerts.Rank, link)
+    if not ok or type(rank) ~= "number" then return nil end
+    if alerts.Wanted then
+        local ok2, wanted = pcall(alerts.Wanted, rank)
+        if ok2 and not wanted then return nil end
+    end
+    return rank
+end
+
+local function ItemQuality(link)
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local ok, _, _, quality = pcall(get, link)
+    return ok and quality or nil
+end
+
+local function ItemSell(link)
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local ok, _, _, _, _, _, _, _, _, _, _, sell = pcall(get, link)
+    return ok and type(sell) == "number" and sell or nil
+end
+
+local function ValueInfo(link, f)
     if not (db.showValue and link) then return nil end
     local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
     local _, _, _, _, _, _, _, _, equipLoc, _, sell = get(link)
-    local price
     local id = ItemID(link)
-    if _G.TSM_API and _G.TSM_API.GetCustomPriceValue and id then
-        local ok, value = pcall(_G.TSM_API.GetCustomPriceValue, "DBMarket", "i:" .. id)
-        if ok and type(value) == "number" and value > 0 then price = value end
+    local parts = {}
+    local bis = BisRank(link)
+    if bis then parts[#parts + 1] = "|cffffd100" .. (bis == 1 and "BiS" or ("BiS #" .. bis)) .. "|r" end
+    if equipLoc and equipLoc ~= "" and UnknownAppearance(link) then parts[#parts + 1] = "|cffd070ff*|r" end
+    local vendor = type(sell) == "number" and sell > 0 and sell or nil
+    local auction = TsmValue("DBMarket", id)
+    local destroy = f and f.canDE and TsmValue("Destroy", id) or nil
+    if vendor then parts[#parts + 1] = FormatMoney(vendor) end
+    if auction then parts[#parts + 1] = AH_ICON .. " " .. FormatMoney(auction) end
+    if destroy then parts[#parts + 1] = DE_ICON .. " " .. FormatMoney(destroy) end
+    if not vendor and not auction and not destroy and type(sell) == "number" and sell == 0 then
+        parts[#parts + 1] = "|cff9a9a9a" .. L.NO_SELL .. "|r"
     end
-    if not price and type(sell) == "number" and sell > 0 then price = sell end
-    local newLook = equipLoc and equipLoc ~= "" and UnknownAppearance(link)
-    local noSale = not price and type(sell) == "number" and sell == 0
-    if not price and not newLook and not noSale then return nil end
-    local text = ""
-    if price then
-        text = FormatMoney(price)
-    elseif noSale then
-        text = "|cff9a9a9a" .. L.NO_SELL .. "|r"
-    end
-    if newLook then text = "|cffd070ff*|r " .. text end
-    return text
+    if #parts == 0 then return nil end
+    return table.concat(parts, "   ")
 end
 
 local function UpdateValue(f)
     if not f.value then return end
-    f.value:SetText((not f.hasWarn and ValueInfo(f.link)) or "")
+    f.value:SetText(ValueInfo(f.link, f) or "")
 end
 
 local function Hex(h, a)
@@ -322,9 +359,30 @@ end
 
 local function Font(fs, path, size, flags)
     if LOCALE_FONT[ns.locale] then path = STANDARD_TEXT_FONT end
-    if not fs:SetFont(path, size, flags) then
-        fs:SetFont(STANDARD_TEXT_FONT, size, flags)
+    fs.brpBase = { path, size, flags }
+    local scale = (db and tonumber(db.fontScale)) or 1
+    local shown = math.max(6, math.floor(size * scale + 0.5))
+    if not fs:SetFont(path, shown, flags) then
+        fs:SetFont(STANDARD_TEXT_FONT, shown, flags)
     end
+end
+
+local function Rescale(fs)
+    local base = fs and fs.brpBase
+    if base then Font(fs, base[1], base[2], base[3]) end
+end
+
+local function ApplyFontScale(f)
+    for _, key in ipairs({ "name", "piece", "bind", "value", "ilvl", "timeText" }) do Rescale(f[key]) end
+    if f.panel then
+        Rescale(f.panel.title)
+        for _, row in ipairs(f.panel.rows or {}) do
+            Rescale(row.name)
+            Rescale(row.num)
+        end
+    end
+    for _, b in ipairs(f.buttons or {}) do Rescale(b.label) end
+    if f.mini then Rescale(f.mini.name) end
 end
 
 local function SetKindIcon(tex, kind)
@@ -408,13 +466,23 @@ local MINI_H, MINI_MAX = 26, 8
 
 local function Layout()
     local MAX_VISIBLE = (db and db.maxVisible) or 3
-    local y, w, shown, minis = 0, FRAME_W, 0, 0
+    if db and db.ultra then MAX_VISIBLE = 0 end
+    local dir = (db and db.stackDir) or "up"
+    local gap = (db and tonumber(db.stackGap)) or 12
+    local horizontal = dir == "left" or dir == "right"
+    local panelW = (db and db.showRolls) and (PANEL_W + 8) or 0
+    local offset, w, shown, minis = 0, FRAME_W, 0, 0
+    local function put(frame, off)
+        local x, y = 0, 0
+        if dir == "up" then y = off elseif dir == "down" then y = -off elseif dir == "right" then x = off else x = -off end
+        frame:ClearAllPoints()
+        frame:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", x, y)
+    end
     for _, f in ipairs(active) do
         if shown < MAX_VISIBLE then
             shown = shown + 1
-            f:ClearAllPoints()
-            f:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", 0, y)
-            y = y + f.h + 12
+            put(f, offset)
+            offset = offset + (horizontal and (f.w + panelW + gap) or (f.h + gap))
             w = f.w
             if f.mini then f.mini:Hide() end
             if f.queued then
@@ -428,12 +496,11 @@ local function Layout()
             f.queued = true
             f:Hide()
             f.panel:Hide()
-            if db.compact and minis < MINI_MAX then
+            if (db.compact or db.ultra) and minis < MINI_MAX then
                 minis = minis + 1
                 local m = f.mini or BuildMini(f)
-                m:ClearAllPoints()
-                m:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", 0, y)
-                y = y + MINI_H + 4
+                put(m, offset)
+                offset = offset + (horizontal and (FRAME_W + gap) or (MINI_H + math.min(gap, 6)))
                 MiniRefresh(f)
                 m:Show()
             elseif f.mini then
@@ -673,6 +740,14 @@ local function NewFrame(T)
         if not frac then return end
         if frac < 0 then frac = 0 elseif frac > 1 then frac = 1 end
         if self.setFrac then self.setFrac(frac) end
+        if self.timeText then
+            if db.countdown and frac > 0 then
+                local color = frac > 0.5 and "|cffffffff" or (frac > 0.2 and "|cffffcc33" or "|cffff5555")
+                self.timeText:SetText(color .. math.ceil(frac * (self.rollTime or 60000) / 1000) .. "s|r")
+            else
+                self.timeText:SetText("")
+            end
+        end
         if self.ring then
             if db.flash and not self.chosen and frac > 0 and frac < 0.2 then
                 self.ring:SetAlpha(0.35 + 0.65 * math.abs(math.sin(GetTime() * 5)))
@@ -934,12 +1009,13 @@ local function BuildGeneric(T)
     f.piece = Text(f, T.piece)
     if T.bind then
         f.bind = Text(f, T.bind)
-        f.value = Text(f, { x = T.bind.x + T.bind.w - 150, y = T.bind.y, w = 150, font = T.bind.font, size = T.bind.size, justify = "RIGHT", color = T.bind.color })
+        f.value = Text(f, { x = 18, y = 76, w = 264, font = T.bind.font, size = T.bind.size, justify = "LEFT", color = T.bind.color })
     end
     if T.ilvl then f.ilvl = Text(f, T.ilvl) end
     f.buttons = {}
     for i, kind in ipairs(KINDS) do f.buttons[i] = BuildGenericButton(f, T, i, kind) end
     BuildTimer(f, T)
+    f.timeText = Text(f, { x = T.timer.x, y = T.timer.y - 14, w = T.timer.w, font = T.piece.font, size = 10, justify = "RIGHT", color = "#FFFFFF" })
     f.panel = BuildPanel(f, T)
     f.applyQuality = function(r, g, b)
         f.ring:SetColorTexture(r, g, b, 1)
@@ -1066,6 +1142,9 @@ local function Setup(f, data)
     rollToken = rollToken + 1
     f.token = rollToken
     f.deadline = GetTime() + (f.rollTime or 60000) / 1000 + 10
+    f.canDE, f.canGreed = data.canDE, data.canGreed
+    f.autoDone = nil
+    ApplyFontScale(f)
     f.chosen, f.entries = nil, nil
     f.itemID = ItemID(data.link)
     f.lastNames = GroupNames()
@@ -1106,7 +1185,7 @@ local function Setup(f, data)
             f.bind:SetWidth(T.bind.w)
             f.bind:SetText("|cffff5555" .. L.CANT_USE .. "|r")
         else
-            f.bind:SetWidth(T.bind.w - 150)
+            f.bind:SetWidth(T.bind.w)
             f.bind:SetText(data.bop and (ITEM_BIND_ON_PICKUP or "") or "")
         end
     end
@@ -1181,7 +1260,7 @@ local function MarkWon(f, name, link)
     end
     if db.history then
         table.insert(db.history, {
-            t = time(), link = link, id = ItemID(link), ilvl = (ItemMeta(link)), winner = name, kind = e.kind, value = e.value,
+            t = time(), link = link, id = ItemID(link), ilvl = (ItemMeta(link)), q = ItemQuality(link), price = ItemSell(link), winner = name, kind = e.kind, value = e.value,
             me = name == ShortName(UnitName("player")),
         })
         while #db.history > 100 do table.remove(db.history, 1) end
@@ -1312,6 +1391,34 @@ local function HideBlizzard()
     end
 end
 
+local function AutoDecide(f)
+    if f.fake or f.chosen or f.autoDone then return true end
+    if not (db.autoPass or db.autoGreed) then return true end
+    local link = f.link
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local name, _, _, _, _, _, _, _, _, _, sell, _, _, bindType = get(link)
+    if not name then return false end
+    f.autoDone = true
+    if db.autoPass then
+        local delta = UpgradeDelta(link, (ItemMeta(link)))
+        if delta and delta <= -(tonumber(db.autoPassMin) or 10) then
+            Choose(f, KIND.pass)
+            print("|cffffd100BonusRoll Plus|r: " .. string.format(L.AUTO_PASS_MSG, link, -delta))
+            return true
+        end
+    end
+    if db.autoGreed and bindType == 2 and f.canGreed ~= false then
+        local value = TsmValue("DBMarket", ItemID(link)) or (type(sell) == "number" and sell) or nil
+        local limit = (tonumber(db.autoGreedGold) or 5) * 10000
+        if value and value < limit then
+            Choose(f, KIND.greed)
+            print("|cffffd100BonusRoll Plus|r: " .. string.format(L.AUTO_GREED_MSG, link, tonumber(db.autoGreedGold) or 5))
+            return true
+        end
+    end
+    return true
+end
+
 local function OnStartRoll(rollID, rollTime)
     for _, delay in ipairs({ 0, 0.2, 0.6, 1.5 }) do C_Timer.After(delay, HideBlizzard) end
     if not GetLootRollItemInfo then return end
@@ -1336,6 +1443,12 @@ local function OnStartRoll(rollID, rollTime)
     C_Timer.After(0.6, function()
         if f.rollID == rollID and f.refreshTexts then f.refreshTexts() end
         if f.rollID == rollID then SyncFromHistory(f) end
+        if f.rollID == rollID and AutoDecide(f) == false then
+            local token = f.token
+            C_Timer.After(1.5, function()
+                if f.token == token and f.rollID == rollID then AutoDecide(f) end
+            end)
+        end
     end)
 end
 
@@ -1462,6 +1575,17 @@ function ns.SetCloseDelay(v)
     db.closeDelay = v
 end
 
+function ns.SetValue(key, v)
+    db[key] = v
+    if key == "fontScale" then
+        for _, f in ipairs(active) do ApplyFontScale(f) end
+        for _, pool in pairs(pools) do
+            for _, f in ipairs(pool) do ApplyFontScale(f) end
+        end
+    end
+    Layout()
+end
+
 function ns.SetCompact(v)
     db.compact = v and true or false
     Layout()
@@ -1499,20 +1623,48 @@ local function HistoryItem(h)
     return link, ilvl
 end
 
-function ns.GetHistoryEntries(n)
+function ns.GetHistoryEntries(n, minQuality)
     local out, list = {}, db.history or {}
-    for i = #list, math.max(1, #list - (n or 30) + 1), -1 do
+    for i = #list, 1, -1 do
+        if #out >= (n or 30) then break end
         local h = list[i]
-        local link, ilvl = HistoryItem(h)
-        local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
-        local level = ilvl and ("  |cffefdcb0(" .. ilvl .. ")|r") or ""
-        local roll = h.value and (" (" .. h.value .. ")") or ""
-        out[#out + 1] = {
-            link = link,
-            text = string.format("%s  %s%s  >  %s%s", date("%d/%m %H:%M", h.t), link or "?", level, who, roll),
-        }
+        if not minQuality or minQuality <= 0 or (h.q or 0) >= minQuality then
+            local link, ilvl = HistoryItem(h)
+            local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
+            local level = ilvl and ("  |cffefdcb0(" .. ilvl .. ")|r") or ""
+            local roll = h.value and (" (" .. h.value .. ")") or ""
+            out[#out + 1] = {
+                link = link,
+                text = string.format("%s  %s%s  >  %s%s", date("%d/%m %H:%M", h.t), link or "?", level, who, roll),
+            }
+        end
     end
     return out
+end
+
+function ns.GetHistoryPlain(minQuality)
+    local lines = {}
+    for _, entry in ipairs(ns.GetHistoryEntries(100, minQuality)) do
+        local text = entry.text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|T.-|t", ""):gsub("|H.-|h(.-)|h", "%1")
+        lines[#lines + 1] = text
+    end
+    return table.concat(lines, "\n")
+end
+
+function ns.GetSession()
+    local count, total = 0, 0
+    local since = db.sessionStart or 0
+    for _, h in ipairs(db.history or {}) do
+        if h.me and h.t and h.t >= since then
+            count = count + 1
+            total = total + (h.price or 0)
+        end
+    end
+    return count, total
+end
+
+function ns.FormatMoney(copper)
+    return FormatMoney(copper or 0)
 end
 
 function ns.PrintHistory(n)
@@ -1666,6 +1818,7 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         db.history = db.history or {}
         db.profiles = db.profiles or {}
         db.charProfile = db.charProfile or {}
+        db.contentProfile = db.contentProfile or {}
         db.specProfile = db.specProfile or {}
         db.stats = db.stats or { rolled = 0, won = 0, needWon = 0, greedWon = 0 }
         if db.v ~= DEFAULTS.v then
@@ -1707,6 +1860,7 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         SlashCmdList.BONUSROLLPLUS = Slash
     elseif event == "PLAYER_LOGIN" then
         HideBlizzard()
+        db.sessionStart = time()
         if ns.Profiles then ns.Profiles.AutoLoad() end
     elseif event == "START_LOOT_ROLL" then
         OnStartRoll(a, b)
@@ -1723,6 +1877,9 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
     elseif event == "CHAT_MSG_ADDON" then
         OnAddonMessage(a, b, c, d)
     elseif event == "PLAYER_ENTERING_WORLD" then
+        C_Timer.After(2, function()
+            if ns.Profiles then ns.Profiles.OnContentChange() end
+        end)
         C_Timer.After(10, Announce)
     elseif event == "GROUP_ROSTER_UPDATE" then
         C_Timer.After(3, Announce)

@@ -1,9 +1,9 @@
 local ADDON, ns = ...
 local L = ns.L
 
-local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "closeDelay", "x", "y" }
+local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "closeDelay", "countdown", "stackDir", "stackGap", "fontScale", "ultra", "autoPass", "autoPassMin", "autoGreed", "autoGreedGold", "x", "y" }
 local KIND = {
-    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", showValue = "b", sound = "b", flash = "b", closeDelay = "n", x = "n", y = "n",
+    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", showValue = "b", sound = "b", flash = "b", closeDelay = "n", countdown = "b", stackDir = "s", stackGap = "n", fontScale = "n", ultra = "b", autoPass = "b", autoPassMin = "n", autoGreed = "b", autoGreedGold = "n", x = "n", y = "n",
 }
 local PREFIX = "BRP1;"
 
@@ -49,10 +49,16 @@ function P.Sanitize(t)
     out.scale = clamp(t.scale, 0.5, 1.5, def.scale)
     out.alpha = clamp(t.alpha, 0.3, 1, def.alpha)
     out.maxVisible = math.floor(clamp(t.maxVisible, 1, 5, def.maxVisible))
-    for _, k in ipairs({ "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash" }) do
+    for _, k in ipairs({ "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "countdown", "ultra", "autoPass", "autoGreed" }) do
         if t[k] == nil then out[k] = def[k] else out[k] = t[k] and true or false end
     end
     out.closeDelay = math.floor(clamp(t.closeDelay, 0, 15, def.closeDelay))
+    local dirs = { up = true, down = true, left = true, right = true }
+    out.stackDir = dirs[t.stackDir] and t.stackDir or def.stackDir
+    out.stackGap = math.floor(clamp(t.stackGap, 0, 30, def.stackGap))
+    out.fontScale = clamp(t.fontScale, 0.8, 1.4, def.fontScale)
+    out.autoPassMin = math.floor(clamp(t.autoPassMin, 1, 50, def.autoPassMin))
+    out.autoGreedGold = math.floor(clamp(t.autoGreedGold, 1, 500, def.autoGreedGold))
     out.x = tonumber(t.x)
     out.y = tonumber(t.y)
     if not (out.x and out.y) then out.x, out.y = nil, nil end
@@ -79,6 +85,10 @@ function P.Apply(snapshot)
     ns.SetShowUpgrade(d.showUpgrade)
     ns.SetCloseDelay(d.closeDelay)
     ns.SetOption("showValue", d.showValue)
+    ns.SetValue("stackDir", d.stackDir)
+    ns.SetValue("stackGap", d.stackGap)
+    ns.SetValue("fontScale", d.fontScale)
+    ns.SetValue("ultra", d.ultra)
     ns.SetLocked(d.locked)
     ns.SetPosition(d.x, d.y)
     ns.ApplyTheme(d.theme)
@@ -120,6 +130,9 @@ function P.Delete(name)
     for key, assigned in pairs(d.specProfile) do
         if assigned == name then d.specProfile[key] = nil end
     end
+    for key, assigned in pairs(d.contentProfile) do
+        if assigned == name then d.contentProfile[key] = nil end
+    end
 end
 
 function P.UseOnThisCharacter(name)
@@ -150,8 +163,34 @@ function P.UseOnThisSpec(name)
     if key then db().specProfile[key] = name end
 end
 
+local function contentKey()
+    local inInstance, kind = false, nil
+    if IsInInstance then inInstance, kind = IsInInstance() end
+    if not inInstance then return "world" end
+    if kind == "raid" then return "raid" end
+    if kind == "party" or kind == "scenario" then return "dungeon" end
+    return "world"
+end
+
+function P.ContentAssigned(key)
+    return db().contentProfile[key]
+end
+
+function P.UseInContent(key, name)
+    db().contentProfile[key] = name
+end
+
+function P.OnContentChange()
+    local key = contentKey()
+    if key == P.lastContent then return end
+    P.lastContent = key
+    local name = db().contentProfile[key]
+    if name and db().profiles[name] then P.Load(name) end
+end
+
 function P.AutoLoad()
-    local name = P.AssignedForSpec() or P.AssignedHere()
+    P.lastContent = contentKey()
+    local name = db().contentProfile[P.lastContent] or P.AssignedForSpec() or P.AssignedHere()
     if name and db().profiles[name] then P.Load(name) end
 end
 

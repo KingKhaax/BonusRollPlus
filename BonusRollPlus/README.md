@@ -94,6 +94,14 @@ Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
 
+### 0.7.0 (pendiente de publicar)
+
+- Reglas automáticas (apagadas por defecto), valor de subasta y de desencantar con sus iconos, etiqueta BiS, segundos restantes, dirección y espacio de las ventanas, tamaño del texto, filas compactas siempre activas, perfiles por tipo de contenido y resumen, filtro y exportación del historial.
+
+### 0.7.0 (pendiente de publicar)
+
+- Reglas automáticas (apagadas por defecto), valor de subasta y de desencantar con sus iconos, etiqueta BiS, segundos restantes, dirección y espacio de las ventanas, tamaño del texto, filas compactas siempre activas, perfiles por tipo de contenido y resumen, filtro y exportación del historial.
+
 ### 0.6.0 (13/11/2026)
 
 - Valor de venta o de subasta en cada tirada, con * morado si la apariencia es nueva.

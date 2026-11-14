@@ -6,11 +6,13 @@
 <ul>
 <li><b>The item</b> with the color of its quality and the item level in brackets.</li>
 <li><b>The slot and armor type</b> (for example "Chest · Mail"), followed by the item level difference against what you currently wear: green <b>+12</b> for an upgrade, red <b>-5</b> for a downgrade.</li>
-<li><b>The vendor or auction value</b> of the item (TradeSkillMaster prices when you have it), with a purple <b>*</b> when the item has an appearance you do not own yet.</li>
+<li><b>The value</b> of the item: vendor price, auction house price and disenchant value (TradeSkillMaster prices when you have it), each with its icon and the game's coin icons, a purple <b>*</b> when you do not own the appearance yet, and a gold <b>BiS</b> tag when the item is one of your picks in NaowhForever_BiS. Items with no value say "Cannot be sold".</li>
 <li><b>A warning in red when you cannot use the item.</b> Need is never blocked: you can still roll Need to sell the item, as many players do with BoE items.</li>
 <li><b>The four buttons</b>: Need, Greed, Disenchant and Pass, with a time bar.</li>
 <li><b>A rolls list next to the window</b> with each player's class icon, their choice, their roll and a crown for the leader. The winner is marked, and the window closes a few seconds after the item is awarded (2 by default, you choose).</li>
+<li><b>Seconds left</b> on the time bar, with colors as time runs out.</li>
 <li><b>Optional alerts</b>: a sound when a roll appears and a flashing frame when time is running out.</li>
+<li><b>Automatic rules</b> (off by default): auto-pass items that lower your item level and auto-greed cheap BoE items. They always tell you in the chat what they did and they never roll Need.</li>
 </ul>
 
 <h3>When many items drop</h3>
@@ -27,19 +29,19 @@
 <h4>Options</h4>
 <ul>
 <li><b>Size, opacity and number of visible windows</b> (up to 5, 3 by default), and how many seconds the window stays after the winner is announced.</li>
-<li><b>Show or hide the rolls list</b> next to each window.</li>
+<li><b>Show or hide the rolls list</b> next to each window, choose the <b>stack direction</b> and the space between windows, change the <b>text size</b> and use always-compact one-line rows.</li>
 <li><b>Position</b>: show the test windows, drag them where you want and lock the position. They stay there for future loot. Every window also has its own padlock.</li>
 <li><b>Item level difference</b>, <b>compact rows</b>, <b>value</b>, <b>sound</b> and <b>flash</b> can each be switched on or off.</li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/KingKhaax/BonusRollPlus/main/assets/screenshots/04-settings.png" alt="The settings tab" width="628"></p>
 
 <h4>Profiles</h4>
-<p>Save your settings as a profile, switch between profiles, load one automatically on a given character or specialization, and export or import a profile as a short text to share it.</p>
+<p>Save your settings as a profile, switch between profiles, load one automatically on a given character, specialization or kind of content (raids, dungeons, open world), and export or import a profile as a short text to share it.</p>
 <p><img src="https://raw.githubusercontent.com/KingKhaax/BonusRollPlus/main/assets/screenshots/05-profiles.png" alt="The profiles tab" width="630"></p>
 <p><img src="https://raw.githubusercontent.com/KingKhaax/BonusRollPlus/main/assets/screenshots/06-profile-export.png" alt="Exporting a profile as text" width="627"></p>
 
 <h4>History and statistics</h4>
-<p>The History tab shows how many rolls you took part in, how many you won (with Need and with Greed) and your wins in the last 7 days, plus your last rolls won. Items show their item level, follow the game's language and open their tooltip when you hover or click them. <code>/br history</code> prints the same list in the chat with clickable links.</p>
+<p>The History tab shows how many rolls you took part in, how many you won (with Need and with Greed) and your wins in the last 7 days, a summary of the session with the total value of what you won, a filter by quality, an export as text and your last rolls won. Items show their item level, follow the game's language and open their tooltip when you hover or click them. <code>/br history</code> prints the same list in the chat with clickable links.</p>
 <p><img src="https://raw.githubusercontent.com/KingKhaax/BonusRollPlus/main/assets/screenshots/07-history.png" alt="The history tab" width="632"></p>
 
 <h4>About</h4>
@@ -79,11 +81,13 @@
 <ul>
 <li><b>El objeto</b> con el color de su calidad y el nivel de objeto entre paréntesis.</li>
 <li><b>La pieza y el tipo de armadura</b> (por ejemplo «Pecho · Mallas») y la diferencia de nivel de objeto con lo que llevas: <b>+12</b> en verde si es mejora, <b>-5</b> en rojo si es peor.</li>
-<li><b>El valor de venta o de subasta</b> del objeto (precios de TradeSkillMaster si lo tienes), con un <b>*</b> morado cuando la apariencia es nueva para ti.</li>
+<li><b>El valor</b> del objeto: precio de vendedor, de la casa de subastas y valor de desencantar (precios de TradeSkillMaster si lo tienes), cada uno con su icono y las monedas del juego, un <b>*</b> morado cuando la apariencia es nueva para ti y una etiqueta <b>BiS</b> dorada si es una de tus elecciones en NaowhForever_BiS. Si no vale nada, pone «No se puede vender».</li>
 <li><b>Un aviso en rojo cuando no puedes usar el objeto.</b> Necesidad nunca se bloquea: puedes pedirla igualmente para vender el objeto, como se hace con los BoE.</li>
 <li><b>Los cuatro botones</b>: Necesidad, Codicia, Desencantar y Pasar, con barra de tiempo.</li>
 <li><b>Una lista de tiradas al lado</b> con el icono de clase de cada jugador, su elección, su tirada y una corona para quien va ganando. Se marca al ganador y la ventana se cierra unos segundos después de entregarse el objeto (2 por defecto, tú eliges).</li>
+<li><b>Segundos restantes</b> sobre la barra de tiempo, con colores.</li>
 <li><b>Avisos opcionales</b>: sonido al aparecer una tirada y marco parpadeante cuando queda poco tiempo.</li>
+<li><b>Reglas automáticas</b> (apagadas por defecto): pasar automáticamente objetos que bajan tu nivel de objeto y codicia automática en BoE baratos. Siempre te lo dicen en el chat y nunca piden Necesidad.</li>
 </ul>
 
 <h3>Cuando caen muchos objetos</h3>
@@ -93,11 +97,11 @@
 <ul>
 <li><b>10 diseños de ventana</b> con vista previa de cada uno: cristal esmerilado (el predeterminado), pergamino arcano, forja de acero, vacío violeta, cofre dorado, piedra rúnica, escarcha, minimal oscuro, Alianza y Horda.</li>
 <li><b>Tamaño, opacidad y número de ventanas visibles</b> (hasta 5, 3 por defecto), y cuántos segundos se queda la ventana tras anunciarse el ganador.</li>
-<li><b>Mostrar u ocultar la lista de tiradas</b> junto a cada ventana.</li>
+<li><b>Mostrar u ocultar la lista de tiradas</b> junto a cada ventana, elegir la <b>dirección de apilado</b> y el espacio entre ventanas, cambiar el <b>tamaño del texto</b> y usar filas compactas siempre activas.</li>
 <li><b>Posición</b>: muestra las ventanas de prueba, arrástralas donde quieras y bloquea la posición; se quedan ahí para el botín futuro. Cada ventana tiene además su propio candado.</li>
 <li><b>Diferencia de nivel de objeto</b>, <b>filas compactas</b>, <b>valor</b>, <b>sonido</b> y <b>parpadeo</b>, cada uno con su interruptor.</li>
-<li><b>Perfiles</b>: guarda tus ajustes, cambia entre perfiles, cárgalos automáticamente en cada personaje o especialización y expórtalos o impórtalos como un texto corto para compartirlos.</li>
-<li>Pestaña <b>Historial</b>: tiradas en las que has participado, ganadas (con Necesidad y con Codicia) y ganadas en los últimos 7 días, más tus últimas tiradas ganadas. Los objetos muestran su nivel, siguen el idioma del juego y enseñan su tooltip al pasar el ratón o hacer clic. <code>/br history</code> escribe la misma lista en el chat con enlaces.</li>
+<li><b>Perfiles</b>: guarda tus ajustes, cambia entre perfiles, cárgalos automáticamente en cada personaje, especialización o tipo de contenido (bandas, mazmorras, mundo abierto) y expórtalos o impórtalos como un texto corto para compartirlos.</li>
+<li>Pestaña <b>Historial</b>: tiradas en las que has participado, ganadas (con Necesidad y con Codicia) y ganadas en los últimos 7 días, un resumen de la sesión con el valor total de lo ganado, un filtro por calidad, exportar como texto y tus últimas tiradas ganadas. Los objetos muestran su nivel, siguen el idioma del juego y enseñan su tooltip al pasar el ratón o hacer clic. <code>/br history</code> escribe la misma lista en el chat con enlaces.</li>
 <li>Pestaña <b>Acerca de</b> con el changelog de cada versión.</li>
 </ul>
 

@@ -11,6 +11,25 @@ local PANEL, DARK, LINE = "#262626", "#0F0F0F", "#3A3A3A"
 
 local CHANGES = {
     {
+        v = "0.7.0", d = "14/11/2026",
+        en = {
+            "Automatic rules (off by default): auto-pass items that lower your item level and auto-greed cheap BoE items. They always tell you in the chat and never roll Need.",
+            "The value line now shows the vendor price, the auction house price and the disenchant value (TradeSkillMaster), each with its icon, the game's coin icons, \"Cannot be sold\" and a gold BiS tag when NaowhForever_BiS is installed.",
+            "Seconds left on the time bar with colors, stack direction and space between windows, text size and always-compact one-line rows.",
+            "Profiles can also load automatically in raids, dungeons and the open world.",
+            "History: session summary with the total value, filter by quality and export as text.",
+            "The settings window is organized in sections and scrolls.",
+        },
+        es = {
+            "Reglas automáticas (apagadas por defecto): pasar automáticamente objetos que bajan tu nivel de objeto y codicia automática en BoE baratos. Siempre te lo dicen en el chat y nunca piden Necesidad.",
+            "La línea de valor muestra ahora el precio de vendedor, el de la casa de subastas y el valor de desencantar (TradeSkillMaster), cada uno con su icono, las monedas del juego, «No se puede vender» y una etiqueta BiS dorada si tienes NaowhForever_BiS.",
+            "Segundos restantes sobre la barra de tiempo con colores, dirección de apilado y espacio entre ventanas, tamaño del texto y filas compactas siempre activas.",
+            "Los perfiles también se pueden cargar automáticamente en bandas, mazmorras y mundo abierto.",
+            "Historial: resumen de la sesión con el valor total, filtro por calidad y exportar como texto.",
+            "La ventana de ajustes se organiza en secciones y tiene scroll.",
+        },
+    },
+    {
         v = "0.6.0", d = "13/11/2026",
         en = {
             "Vendor or auction value on every roll (TradeSkillMaster prices when you have it), with a purple * when the item has an appearance you do not own.",
@@ -192,6 +211,27 @@ local function MakeSlider(parent, text, min, max, step, get, set, fmt)
     return holder
 end
 
+local function MakeCycle(parent, w, h, values, get, set, fmt)
+    local b
+    b = MakeButton(parent, "", w, h, function()
+        local current = get()
+        local nextIndex = 1
+        for i, v in ipairs(values) do
+            if v.key == current then nextIndex = i % #values + 1 end
+        end
+        set(values[nextIndex].key)
+        b:Refresh()
+    end)
+    function b:Refresh()
+        local current = get()
+        for _, v in ipairs(values) do
+            if v.key == current then self.fs:SetText(string.format(fmt, v.label)) end
+        end
+    end
+    b:SetScript("OnShow", b.Refresh)
+    return b
+end
+
 local function MakeTestToggle(parent, w, h, onStart)
     local b
     b = MakeButton(parent, L.TEST_BTN, w, h, function()
@@ -340,70 +380,87 @@ end
 
 local function BuildSettings(tab)
     local db = ns.GetDB
-    local y = 0
-    local function Place(w, gap)
-        w:SetPoint("TOPLEFT", tab, "TOPLEFT", 8, -y)
-        y = y + (gap or 42)
-    end
+    local sf, child = MakeScroll(tab, 584, 458)
+    sf:SetPoint("TOPLEFT", 0, 0)
+    local y = 4
     tab.widgets = {}
     local function Add(w, gap)
-        Place(w, gap)
+        w:SetPoint("TOPLEFT", child, "TOPLEFT", 8, -y)
+        y = y + (gap or 42)
         tab.widgets[#tab.widgets + 1] = w
         return w
     end
-    Add(MakeSlider(tab, L.SCALE, 0.5, 1.5, 0.05,
-        function() return db().scale end,
-        function(v) ns.SetScale(v) end,
-        function(v) return string.format("%d%%", math.floor(v * 100 + 0.5)) end))
-    Add(MakeSlider(tab, L.OPACITY, 0.3, 1, 0.05,
-        function() return db().alpha end,
-        function(v) ns.SetAlpha(v) end,
-        function(v) return string.format("%d%%", math.floor(v * 100 + 0.5)) end))
-    Add(MakeSlider(tab, L.MAX_WINDOWS, 1, 5, 1,
-        function() return db().maxVisible end,
-        function(v) ns.SetMaxVisible(v) end))
-    Add(MakeSlider(tab, L.CLOSE_DELAY, 0, 15, 1,
-        function() return db().closeDelay end,
-        function(v) ns.SetCloseDelay(v) end,
+    local function Section(text)
+        y = y + 8
+        local fs = Label(child, text, 14, ACCENT)
+        fs:SetPoint("TOPLEFT", 8, -y)
+        local line = Solid(child, "BORDER", LINE, 1)
+        line:SetPoint("TOPLEFT", 8, -(y + 20))
+        line:SetSize(560, 1)
+        y = y + 30
+    end
+    local function pct(v) return string.format("%d%%", math.floor(v * 100 + 0.5)) end
+    local function check(label, key, setter, gap)
+        return Add(MakeCheck(child, label, function() return db()[key] end, setter), gap or 24)
+    end
+    local function option(key) return function(v) ns.SetOption(key, v) end end
+    local GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:12:12:2:0|t"
+
+    Section(L.SEC_WINDOWS)
+    Add(MakeSlider(child, L.SCALE, 0.5, 1.5, 0.05, function() return db().scale end, function(v) ns.SetScale(v) end, pct))
+    Add(MakeSlider(child, L.OPACITY, 0.3, 1, 0.05, function() return db().alpha end, function(v) ns.SetAlpha(v) end, pct))
+    Add(MakeSlider(child, L.MAX_WINDOWS, 1, 5, 1, function() return db().maxVisible end, function(v) ns.SetMaxVisible(v) end))
+    Add(MakeSlider(child, L.STACK_GAP, 0, 30, 2, function() return db().stackGap end, function(v) ns.SetValue("stackGap", v) end,
+        function(v) return v .. " px" end))
+    Add(MakeSlider(child, L.FONT_SCALE, 0.8, 1.4, 0.05, function() return db().fontScale end, function(v) ns.SetValue("fontScale", v) end, pct))
+    local dirs = {
+        { key = "up", label = L.DIR_UP }, { key = "down", label = L.DIR_DOWN },
+        { key = "left", label = L.DIR_LEFT }, { key = "right", label = L.DIR_RIGHT },
+    }
+    Add(MakeCycle(child, 280, 26, dirs, function() return db().stackDir end, function(v) ns.SetValue("stackDir", v) end, L.STACK_DIR_FMT), 36)
+    check(L.SHOW_ROLLS, "showRolls", function(v) ns.SetShowRolls(v) end)
+    check(L.ULTRA_COMPACT, "ultra", function(v) ns.SetValue("ultra", v) end)
+    check(L.COMPACT_ROWS, "compact", function(v) ns.SetCompact(v) end)
+    check(L.SHOW_UPGRADE, "showUpgrade", function(v) ns.SetShowUpgrade(v) end)
+    check(L.SHOW_VALUE, "showValue", option("showValue"))
+    check(L.COUNTDOWN, "countdown", option("countdown"))
+    local lock = check(L.LOCK, "locked", function(v) ns.SetLocked(v) end, 30)
+
+    Section(L.SEC_ALERTS)
+    check(L.SOUND_ALERT, "sound", option("sound"))
+    check(L.FLASH_ALERT, "flash", option("flash"), 34)
+    Add(MakeSlider(child, L.CLOSE_DELAY, 0, 15, 1, function() return db().closeDelay end, function(v) ns.SetCloseDelay(v) end,
         function(v) return string.format("%ds", v) end))
-    Add(MakeCheck(tab, L.SHOW_ROLLS,
-        function() return db().showRolls end,
-        function(v) ns.SetShowRolls(v) end), 24)
-    local lock
-    lock = Add(MakeCheck(tab, L.LOCK,
-        function() return db().locked end,
-        function(v) ns.SetLocked(v) end), 24)
-    Add(MakeCheck(tab, L.SHOW_UPGRADE,
-        function() return db().showUpgrade end,
-        function(v) ns.SetShowUpgrade(v) end), 24)
-    Add(MakeCheck(tab, L.COMPACT_ROWS,
-        function() return db().compact end,
-        function(v) ns.SetCompact(v) end), 24)
-    Add(MakeCheck(tab, L.SHOW_VALUE,
-        function() return db().showValue end,
-        function(v) ns.SetOption("showValue", v) end), 24)
-    Add(MakeCheck(tab, L.SOUND_ALERT,
-        function() return db().sound end,
-        function(v) ns.SetOption("sound", v) end), 24)
-    Add(MakeCheck(tab, L.FLASH_ALERT,
-        function() return db().flash end,
-        function(v) ns.SetOption("flash", v) end), 34)
-    local b1 = MakeTestToggle(tab, 230, 26, function()
+
+    Section(L.SEC_AUTO)
+    local note = Label(child, L.AUTO_NOTE, 12, SOFT)
+    note:SetPoint("TOPLEFT", 8, -y)
+    note:SetWidth(560)
+    note:SetWordWrap(true)
+    y = y + 44
+    check(L.AUTO_PASS, "autoPass", option("autoPass"), 30)
+    Add(MakeSlider(child, L.AUTO_PASS_MIN, 1, 50, 1, function() return db().autoPassMin end, function(v) ns.SetValue("autoPassMin", v) end))
+    check(L.AUTO_GREED, "autoGreed", option("autoGreed"), 30)
+    Add(MakeSlider(child, L.AUTO_GREED_GOLD, 1, 500, 1, function() return db().autoGreedGold end, function(v) ns.SetValue("autoGreedGold", v) end,
+        function(v) return v .. GOLD end))
+
+    Section(L.SEC_TOOLS)
+    local b1 = MakeTestToggle(child, 230, 26, function()
         ns.SetLocked(false)
         lock:Refresh()
     end)
-    local b3 = MakeButton(tab, L.RESET_POS, 150, 26, function() ns.ResetPosition() end)
-    local b4 = MakeButton(tab, L.HISTORY_BTN, 170, 26, function() ns.PrintHistory(10) end)
+    local b3 = MakeButton(child, L.RESET_POS, 150, 26, function() ns.ResetPosition() end)
+    local b4 = MakeButton(child, L.HISTORY_BTN, 170, 26, function() ns.PrintHistory(10) end)
     b1:SetPoint("TOPLEFT", 8, -y)
     b3:SetPoint("LEFT", b1, "RIGHT", 8, 0)
     b4:SetPoint("LEFT", b3, "RIGHT", 8, 0)
     y = y + 36
-    local hint = Label(tab, L.MOVE_HINT, 12, SOFT)
+    local hint = Label(child, L.MOVE_HINT, 12, SOFT)
     hint:SetPoint("TOPLEFT", 8, -y)
     hint:SetWidth(560)
     hint:SetWordWrap(true)
     y = y + 44
-    local reset = MakeButton(tab, L.RESET_ALL, 200, 26, function()
+    local reset = MakeButton(child, L.RESET_ALL, 200, 26, function()
         local d, def = ns.GetDB(), ns.GetDefaults()
         for k, v in pairs(def) do d[k] = v end
         ns.ResetPosition()
@@ -415,11 +472,15 @@ local function BuildSettings(tab)
         ns.SetCompact(d.compact)
         ns.SetShowUpgrade(d.showUpgrade)
         ns.SetOption("showValue", d.showValue)
+        ns.SetValue("fontScale", d.fontScale)
+        ns.SetValue("stackDir", d.stackDir)
         ns.ApplyTheme(d.theme)
         for _, w in ipairs(tab.widgets) do w:Refresh() end
         RefreshCells()
     end)
     reset:SetPoint("TOPLEFT", 8, -y)
+    y = y + 40
+    sf:Sync(y)
     tab.Refresh = function()
         for _, w in ipairs(tab.widgets) do w:Refresh() end
     end
@@ -452,11 +513,13 @@ local function BuildProfiles(tab)
 
     local nameText
     local useCheck, specCheck
+    local extraChecks = {}
     local function Refresh()
         Rebuild()
         nameText:SetText(entries[index] or L.PROFILE_NONE)
         useCheck:Refresh()
         if specCheck then specCheck:Refresh() end
+        for _, c in ipairs(extraChecks) do c:Refresh() end
         tab.update:SetAlpha(entries[index] and 1 or 0.4)
         tab.delete:SetAlpha(entries[index] and 1 or 0.4)
     end
@@ -472,6 +535,7 @@ local function BuildProfiles(tab)
         nameText:SetText(name or L.PROFILE_NONE)
         useCheck:Refresh()
         if specCheck then specCheck:Refresh() end
+        for _, c in ipairs(extraChecks) do c:Refresh() end
         tab.update:SetAlpha(name and 1 or 0.4)
         tab.delete:SetAlpha(name and 1 or 0.4)
     end
@@ -539,6 +603,23 @@ local function BuildProfiles(tab)
     specCheck:SetSize(560, 22)
     specCheck:SetPoint("TOPLEFT", 8, -148)
     specCheck:SetShown(P.SpecAvailable())
+    local function contentCheck(key, label, top)
+        local c = MakeCheck(tab, label,
+            function()
+                local name = entries[index]
+                return name and P.ContentAssigned(key) == name
+            end,
+            function(v)
+                local name = entries[index]
+                if name then P.UseInContent(key, v and name or nil) end
+            end)
+        c:SetSize(560, 22)
+        c:SetPoint("TOPLEFT", 8, top)
+        extraChecks[#extraChecks + 1] = c
+    end
+    contentCheck("raid", L.PROFILE_RAID, -174)
+    contentCheck("dungeon", L.PROFILE_DUNGEON, -200)
+    contentCheck("world", L.PROFILE_WORLD, -226)
 
     local dlg
     local function Dialog(mode)
@@ -606,27 +687,89 @@ local function BuildProfiles(tab)
     end
 
     local exp = MakeButton(tab, L.PROFILE_EXPORT, 150, 26, function() Dialog("export") end)
-    exp:SetPoint("TOPLEFT", 8, -190)
+    exp:SetPoint("TOPLEFT", 8, -266)
     local imp = MakeButton(tab, L.PROFILE_IMPORT, 150, 26, function() Dialog("import") end)
     imp:SetPoint("LEFT", exp, "RIGHT", 8, 0)
 
     status = Label(tab, "", 13, "#4FE3C1")
-    status:SetPoint("TOPLEFT", 8, -238)
+    status:SetPoint("TOPLEFT", 8, -314)
     status:SetWidth(560)
     tab.Refresh = Refresh
 end
 
 local HISTORY_ROWS, ROW_H = 30, 20
+local textBox
+
+local function ShowTextBox(help, text)
+    if not textBox then
+        local dlg = CreateFrame("Frame", nil, win)
+        dlg:SetSize(560, 300)
+        dlg:SetPoint("CENTER", win, "CENTER", 0, 0)
+        dlg:SetFrameLevel(win:GetFrameLevel() + 60)
+        dlg:EnableMouse(true)
+        Solid(dlg, "BACKGROUND", BG, 1):SetAllPoints()
+        Edges(dlg, EDGE, 1)
+        local ring = CreateFrame("Frame", nil, dlg)
+        ring:SetPoint("TOPLEFT", -1, 1)
+        ring:SetPoint("BOTTOMRIGHT", 1, -1)
+        Edges(ring, LINE, 1)
+        dlg.help = Label(dlg, "", 14, "#FFFFFF")
+        dlg.help:SetPoint("TOPLEFT", 22, -18)
+        dlg.help:SetWidth(516)
+        local back = CreateFrame("Frame", nil, dlg)
+        back:SetPoint("TOPLEFT", 20, -48)
+        back:SetSize(520, 190)
+        Solid(back, "BACKGROUND", DARK, 1):SetAllPoints()
+        Edges(back, EDGE, 1)
+        local sf, scrollChild = MakeScroll(dlg, 500, 182)
+        sf:SetPoint("TOPLEFT", 26, -52)
+        sf.bar:ClearAllPoints()
+        sf.bar:SetPoint("TOPLEFT", sf, "TOPRIGHT", 12, 0)
+        local eb = CreateFrame("EditBox", nil, scrollChild)
+        eb:SetMultiLine(true)
+        eb:SetAutoFocus(false)
+        eb:SetWidth(496)
+        eb:SetHeight(182)
+        eb:SetPoint("TOPLEFT", 0, 0)
+        eb:SetTextInsets(2, 2, 2, 2)
+        eb:SetFont(LOCALE_FONT[ns.locale] and STANDARD_TEXT_FONT or "Fonts/ARIALN.TTF", 13, "")
+        eb:SetTextColor(Hex("#E8E8E8"))
+        eb:SetScript("OnEscapePressed", function() dlg:Hide() end)
+        dlg.edit, dlg.scroll = eb, sf
+        dlg.close = MakeButton(dlg, L.CLOSE, 120, 26, function() dlg:Hide() end)
+        dlg.close:SetPoint("BOTTOMRIGHT", -20, 14)
+        textBox = dlg
+    end
+    textBox.help:SetText(help)
+    textBox.edit:SetText(text)
+    local _, newlines = text:gsub("\n", "\n")
+    local height = math.max(182, (newlines + 1) * 15 + 8)
+    textBox.edit:SetHeight(height)
+    textBox.scroll:Sync(height)
+    textBox:Show()
+    textBox.edit:SetFocus()
+    textBox.edit:HighlightText()
+end
 
 local function BuildHistory(tab)
     local lines = {}
-    for i = 1, 4 do
+    for i = 1, 5 do
         lines[i] = Label(tab, "", 14, i == 1 and "#FFFFFF" or "#E8E8E8")
         lines[i]:SetPoint("TOPLEFT", 8, -(4 + (i - 1) * 22))
-        lines[i]:SetWidth(560)
+        lines[i]:SetWidth(360)
     end
-    local sf, child = MakeScroll(tab, 584, 280)
-    sf:SetPoint("TOPLEFT", 0, -104)
+    local qualities = {
+        { key = 0, label = L.FILTER_ALL }, { key = 2, label = L.FILTER_GREEN },
+        { key = 3, label = L.FILTER_BLUE }, { key = 4, label = L.FILTER_EPIC },
+    }
+    tab.minQ = 0
+    local filter = MakeCycle(tab, 210, 26, qualities, function() return tab.minQ end, function(v)
+        tab.minQ = v
+        tab.Refresh()
+    end, L.HISTORY_FILTER)
+    filter:SetPoint("TOPRIGHT", -2, -4)
+    local sf, child = MakeScroll(tab, 584, 262)
+    sf:SetPoint("TOPLEFT", 0, -126)
     local rows = {}
     for i = 1, HISTORY_ROWS do
         local row = CreateFrame("Button", nil, child)
@@ -656,21 +799,28 @@ local function BuildHistory(tab)
     end
     local empty = Label(child, "", 13, "#E8E8E8")
     empty:SetPoint("TOPLEFT", 8, -8)
-    local show = MakeButton(tab, L.HISTORY_BTN, 220, 26, function() ns.PrintHistory(10) end)
+    local show = MakeButton(tab, L.HISTORY_BTN, 200, 26, function() ns.PrintHistory(10) end)
     show:SetPoint("BOTTOMLEFT", 8, 4)
-    local clear = MakeButton(tab, L.HISTORY_CLEAR_BTN, 170, 26, function()
+    local export = MakeButton(tab, L.HISTORY_EXPORT_BTN, 190, 26, function()
+        ShowTextBox(L.EXPORT_HELP, ns.GetHistoryPlain(tab.minQ))
+    end)
+    export:SetPoint("LEFT", show, "RIGHT", 8, 0)
+    local clear = MakeButton(tab, L.HISTORY_CLEAR_BTN, 150, 26, function()
         ns.ClearHistory()
         tab.Refresh()
     end)
-    clear:SetPoint("LEFT", show, "RIGHT", 8, 0)
+    clear:SetPoint("LEFT", export, "RIGHT", 8, 0)
     tab.Refresh = function()
+        filter:Refresh()
         local rolled, won, needWon, greedWon, week = ns.GetStats()
         local pct = rolled > 0 and math.floor(won / rolled * 100 + 0.5) or 0
+        local count, total = ns.GetSession()
         lines[1]:SetText(string.format(L.STATS_ROLLED, rolled))
         lines[2]:SetText(string.format(L.STATS_WON, won, pct))
         lines[3]:SetText(string.format(L.STATS_KINDS, needWon, greedWon))
         lines[4]:SetText(string.format(L.STATS_WEEK, week))
-        local entries = ns.GetHistoryEntries(HISTORY_ROWS)
+        lines[5]:SetText(string.format(L.STATS_SESSION, count, ns.FormatMoney(total)))
+        local entries = ns.GetHistoryEntries(HISTORY_ROWS, tab.minQ)
         for i, row in ipairs(rows) do
             local entry = entries[i]
             if entry then
@@ -684,9 +834,6 @@ local function BuildHistory(tab)
         end
         empty:SetText(#entries == 0 and L.HISTORY_EMPTY or "")
         sf:Sync(math.max(#entries, 1) * ROW_H + 16)
-    end
-    tab.Retry = function()
-        if tab:IsShown() then tab.Refresh() end
     end
 end
 
