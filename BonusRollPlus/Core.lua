@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5 }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -464,6 +464,46 @@ local rollToken = 0
 local BuildMini, MiniRefresh
 local MINI_H, MINI_MAX = 26, 8
 
+local function BlizzFrameFor(f)
+    local id = f.rollID
+    if not id then return end
+    local list = {}
+    for i = 1, 4 do list[#list + 1] = _G["GroupLootFrame" .. i] end
+    local c = _G.GroupLootContainer
+    if c and type(c.rollFrames) == "table" then
+        for _, rf in pairs(c.rollFrames) do list[#list + 1] = rf end
+    end
+    for _, bf in ipairs(list) do
+        if type(bf) == "table" and bf.rollID == id and bf.IsShown and bf:IsShown() then return bf end
+    end
+end
+
+local function AttachPanel(f)
+    local p = f.panel
+    local bf = BlizzFrameFor(f)
+    if p:GetParent() ~= UIParent then p:SetParent(UIParent) end
+    p:SetFrameStrata("HIGH")
+    p:SetScale((db and db.scale) or 1)
+    p:ClearAllPoints()
+    if bf then
+        p:SetPoint("TOPLEFT", bf, "TOPRIGHT", 6, 0)
+    else
+        p:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", 0, 0)
+    end
+    p:SetShown(db and db.showRolls and true or false)
+end
+
+local function DetachPanel(f)
+    local p = f.panel
+    if p:GetParent() == f then return end
+    p:SetParent(f)
+    p:SetScale(1)
+    p:SetFrameStrata(f:GetFrameStrata())
+    local P = f.theme.panel
+    p:ClearAllPoints()
+    p:SetPoint("TOPLEFT", f, "TOPRIGHT", P.dx or 8, -(P.y or 0))
+end
+
 local function Layout()
     local MAX_VISIBLE = (db and db.maxVisible) or 3
     if db and db.ultra then MAX_VISIBLE = 0 end
@@ -479,7 +519,12 @@ local function Layout()
         frame:SetPoint("BOTTOMLEFT", stack, "BOTTOMLEFT", x, y)
     end
     for _, f in ipairs(active) do
-        if shown < MAX_VISIBLE then
+        if f.hostBlizz then
+            f:Hide()
+            if f.mini then f.mini:Hide() end
+            AttachPanel(f)
+        elseif shown < MAX_VISIBLE then
+            DetachPanel(f)
             shown = shown + 1
             put(f, offset)
             offset = offset + (horizontal and (f.w + panelW + gap) or (f.h + gap))
@@ -493,6 +538,7 @@ local function Layout()
                 f.fade:Play()
             end
         else
+            DetachPanel(f)
             f.queued = true
             f:Hide()
             f.panel:Hide()
@@ -536,6 +582,8 @@ function Release(f)
     f:Hide()
     if f.mini then f.mini:Hide() end
     f.panel:Hide()
+    DetachPanel(f)
+    f.hostBlizz = nil
     f.rollID, f.fake, f.entries, f.chosen, f.closing, f.queued, f.closingSoon = nil, nil, nil, nil, nil, nil, nil
     for i, a in ipairs(active) do
         if a == f then table.remove(active, i) break end
@@ -1142,7 +1190,7 @@ local function Setup(f, data)
     rollToken = rollToken + 1
     f.token = rollToken
     f.deadline = GetTime() + (f.rollTime or 60000) / 1000 + 10
-    f.canDE, f.canGreed = data.canDE, data.canGreed
+    f.canDE, f.canGreed, f.canNeed = data.canDE, data.canGreed, data.canNeed
     f.autoDone = nil
     ApplyFontScale(f)
     f.chosen, f.entries = nil, nil
@@ -1219,9 +1267,14 @@ local function Setup(f, data)
         row.lead:Hide()
     end
     RefreshPanel(f)
-    f:SetAlpha(1)
-    f:Show()
-    f.fade:Play()
+    f.hostBlizz = (db.useBlizzard and not data.fake) or nil
+    if f.hostBlizz then
+        f:Hide()
+    else
+        f:SetAlpha(1)
+        f:Show()
+        f.fade:Play()
+    end
     active[#active + 1] = f
     Layout()
 end
@@ -1377,7 +1430,27 @@ local function Mute(f)
 end
 
 local hooked
+local function Unmute(f)
+    if type(f) ~= "table" or not f.SetAlpha then return end
+    if f.IsForbidden and f:IsForbidden() then return end
+    f:SetAlpha(1)
+    if f.EnableMouse then f:EnableMouse(true) end
+    for _, key in ipairs(ROLL_BUTTONS) do
+        local b = f[key]
+        if type(b) == "table" and b.EnableMouse and not (b.IsProtected and b:IsProtected()) then b:EnableMouse(true) end
+    end
+end
+
+local function ShowBlizzard()
+    local c = _G.GroupLootContainer
+    for i = 1, 4 do Unmute(_G["GroupLootFrame" .. i]) end
+    if c and type(c.rollFrames) == "table" then
+        for _, rf in pairs(c.rollFrames) do Unmute(rf) end
+    end
+end
+
 local function HideBlizzard()
+    if db and db.useBlizzard then return end
     local c = _G.GroupLootContainer
     for i = 1, 4 do Mute(_G["GroupLootFrame" .. i]) end
     if c and type(c.rollFrames) == "table" then
@@ -1391,14 +1464,79 @@ local function HideBlizzard()
     end
 end
 
+local scanTip
+local function RecipeKnown(f)
+    if not CreateFrame then return nil end
+    scanTip = scanTip or CreateFrame("GameTooltip", "BonusRollPlusScan", UIParent, "GameTooltipTemplate")
+    scanTip:SetOwner(UIParent, "ANCHOR_NONE")
+    scanTip:ClearLines()
+    local ok = f.rollID and pcall(scanTip.SetLootRollItem, scanTip, f.rollID)
+    if not ok or (scanTip:NumLines() or 0) < 2 then
+        scanTip:ClearLines()
+        pcall(scanTip.SetHyperlink, scanTip, f.link)
+    end
+    local lines = scanTip:NumLines() or 0
+    if lines < 2 then return nil end
+    for i = 1, lines do
+        local fs = _G["BonusRollPlusScanTextLeft" .. i]
+        local text = fs and fs.GetText and fs:GetText()
+        if type(text) == "string" then
+            local okFind, pos = pcall(string.find, text, ITEM_SPELL_KNOWN or "Already known", 1, true)
+            if okFind and pos then return true end
+            local okWait, wait = pcall(string.find, text, RETRIEVING_ITEM_INFO or "Retrieving item information", 1, true)
+            if okWait and wait then return nil end
+        end
+    end
+    return false
+end
+
+local function MyProfessionFor(subType)
+    if type(subType) ~= "string" or subType == "" then return nil end
+    local st = subType:lower()
+    local names = {}
+    if GetProfessions and GetProfessionInfo then
+        for _, idx in pairs({ GetProfessions() }) do
+            local n = GetProfessionInfo(idx)
+            if n then names[#names + 1] = n end
+        end
+    end
+    if #names == 0 and GetNumSkillLines and GetSkillLineInfo then
+        for i = 1, GetNumSkillLines() do
+            local n, header = GetSkillLineInfo(i)
+            if n and not header then names[#names + 1] = n end
+        end
+    end
+    for _, n in ipairs(names) do
+        local pn = n:lower()
+        if st == pn or st:find(pn, 1, true) then return n end
+    end
+end
+
+local RECIPE_CLASS = 9
+
 local function AutoDecide(f)
     if f.fake or f.chosen or f.autoDone then return true end
-    if not (db.autoPass or db.autoGreed) then return true end
+    if not (db.autoPass or db.autoGreed or db.autoRecipe) then return true end
     local link = f.link
     local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
-    local name, _, _, _, _, _, _, _, _, _, sell, _, _, bindType = get(link)
+    local name, _, _, _, _, _, subType, _, _, _, sell, classID, _, bindType = get(link)
     if not name then return false end
     f.autoDone = true
+    if db.autoRecipe and classID == RECIPE_CLASS and f.canNeed ~= false then
+        local prof = MyProfessionFor(subType)
+        if prof then
+            local known = RecipeKnown(f)
+            if known == nil then
+                f.autoDone = nil
+                return false
+            end
+            if known == false then
+                Choose(f, KIND.need)
+                print("|cffffd100BonusRoll Plus|r: " .. string.format(L.AUTO_RECIPE_MSG, link, prof))
+                return true
+            end
+        end
+    end
     if db.autoPass then
         local delta = UpgradeDelta(link, (ItemMeta(link)))
         if delta and delta <= -(tonumber(db.autoPassMin) or 10) then
@@ -1439,6 +1577,14 @@ local function OnStartRoll(rollID, rollTime)
         if handler then handler(err) end
         print("|cffff5555BonusRoll Plus|r: " .. tostring(err))
         return
+    end
+    if f.hostBlizz then
+        local token = f.token
+        for _, delay in ipairs({ 0.1, 0.4, 1, 2.5 }) do
+            C_Timer.After(delay, function()
+                if f.token == token and f.hostBlizz then Layout() end
+            end)
+        end
     end
     C_Timer.After(0.6, function()
         if f.rollID == rollID and f.refreshTexts then f.refreshTexts() end
@@ -1577,6 +1723,18 @@ end
 
 function ns.SetValue(key, v)
     db[key] = v
+    if key == "useBlizzard" then
+        if v then ShowBlizzard() else HideBlizzard() end
+        for _, f in ipairs(active) do
+            if not f.fake then
+                f.hostBlizz = v and true or nil
+                if not v then
+                    f:SetAlpha(1)
+                    f:Show()
+                end
+            end
+        end
+    end
     if key == "fontScale" then
         for _, f in ipairs(active) do ApplyFontScale(f) end
         for _, pool in pairs(pools) do

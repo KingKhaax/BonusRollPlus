@@ -1,9 +1,9 @@
 local ADDON, ns = ...
 local L = ns.L
 
-local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "closeDelay", "countdown", "stackDir", "stackGap", "fontScale", "ultra", "autoPass", "autoPassMin", "autoGreed", "autoGreedGold", "x", "y" }
+local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "closeDelay", "countdown", "stackDir", "stackGap", "fontScale", "ultra", "autoPass", "autoPassMin", "autoGreed", "autoGreedGold", "useBlizzard", "autoRecipe", "x", "y" }
 local KIND = {
-    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", showValue = "b", sound = "b", flash = "b", closeDelay = "n", countdown = "b", stackDir = "s", stackGap = "n", fontScale = "n", ultra = "b", autoPass = "b", autoPassMin = "n", autoGreed = "b", autoGreedGold = "n", x = "n", y = "n",
+    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", showValue = "b", sound = "b", flash = "b", closeDelay = "n", countdown = "b", stackDir = "s", stackGap = "n", fontScale = "n", ultra = "b", autoPass = "b", autoPassMin = "n", autoGreed = "b", autoGreedGold = "n", useBlizzard = "b", autoRecipe = "b", x = "n", y = "n",
 }
 local PREFIX = "BRP1;"
 
@@ -49,7 +49,7 @@ function P.Sanitize(t)
     out.scale = clamp(t.scale, 0.5, 1.5, def.scale)
     out.alpha = clamp(t.alpha, 0.3, 1, def.alpha)
     out.maxVisible = math.floor(clamp(t.maxVisible, 1, 5, def.maxVisible))
-    for _, k in ipairs({ "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "countdown", "ultra", "autoPass", "autoGreed" }) do
+    for _, k in ipairs({ "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "countdown", "ultra", "autoPass", "autoGreed", "useBlizzard", "autoRecipe" }) do
         if t[k] == nil then out[k] = def[k] else out[k] = t[k] and true or false end
     end
     out.closeDelay = math.floor(clamp(t.closeDelay, 0, 15, def.closeDelay))
@@ -89,6 +89,7 @@ function P.Apply(snapshot)
     ns.SetValue("stackGap", d.stackGap)
     ns.SetValue("fontScale", d.fontScale)
     ns.SetValue("ultra", d.ultra)
+    ns.SetValue("useBlizzard", d.useBlizzard)
     ns.SetLocked(d.locked)
     ns.SetPosition(d.x, d.y)
     ns.ApplyTheme(d.theme)

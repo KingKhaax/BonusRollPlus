@@ -11,6 +11,17 @@ local PANEL, DARK, LINE = "#262626", "#0F0F0F", "#3A3A3A"
 
 local CHANGES = {
     {
+        v = "0.8.0", d = "15/11/2026",
+        en = {
+            "New option to use the game's own loot window: BonusRoll Plus keeps the list with everyone's rolls and shows it to the right of it.",
+            "New automatic rule (off by default): roll Need on recipes of your professions that you have not learned yet. It tells you in the chat what it did.",
+        },
+        es = {
+            "Nueva opción para usar la ventana de tirada del propio juego: BonusRoll Plus mantiene la lista con las tiradas de todos y la muestra a su derecha.",
+            "Nueva regla automática (apagada por defecto): pedir Necesidad en las recetas de tus profesiones que aún no has aprendido. Te dice en el chat lo que ha hecho.",
+        },
+    },
+    {
         v = "0.7.0", d = "14/11/2026",
         en = {
             "Automatic rules (off by default): auto-pass items that lower your item level and auto-greed cheap BoE items. They always tell you in the chat and never roll Need.",
@@ -418,6 +429,7 @@ local function BuildSettings(tab)
         { key = "left", label = L.DIR_LEFT }, { key = "right", label = L.DIR_RIGHT },
     }
     Add(MakeCycle(child, 280, 26, dirs, function() return db().stackDir end, function(v) ns.SetValue("stackDir", v) end, L.STACK_DIR_FMT), 36)
+    check(L.USE_BLIZZARD, "useBlizzard", function(v) ns.SetValue("useBlizzard", v) end)
     check(L.SHOW_ROLLS, "showRolls", function(v) ns.SetShowRolls(v) end)
     check(L.ULTRA_COMPACT, "ultra", function(v) ns.SetValue("ultra", v) end)
     check(L.COMPACT_ROWS, "compact", function(v) ns.SetCompact(v) end)
@@ -440,6 +452,7 @@ local function BuildSettings(tab)
     y = y + 44
     check(L.AUTO_PASS, "autoPass", option("autoPass"), 30)
     Add(MakeSlider(child, L.AUTO_PASS_MIN, 1, 50, 1, function() return db().autoPassMin end, function(v) ns.SetValue("autoPassMin", v) end))
+    check(L.AUTO_RECIPE, "autoRecipe", option("autoRecipe"), 30)
     check(L.AUTO_GREED, "autoGreed", option("autoGreed"), 30)
     Add(MakeSlider(child, L.AUTO_GREED_GOLD, 1, 500, 1, function() return db().autoGreedGold end, function(v) ns.SetValue("autoGreedGold", v) end,
         function(v) return v .. GOLD end))

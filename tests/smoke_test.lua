@@ -51,7 +51,7 @@ assert(loadfile("BonusRollPlus/Themes.lua"))("BonusRollPlus", ns)
 assert(loadfile("BonusRollPlus/Core.lua"))("BonusRollPlus", ns)
 _G.tinsert = table.insert
 _G.UISpecialFrames = {}
-for _, f in ipairs({ "LocalesText", "LocalesExtra", "LocalesV07", "LocalesNotes07", "Facts", "FactsDEFR", "FactsITPT", "FactsRUKO", "FactsZH", "Profiles" }) do assert(loadfile("BonusRollPlus/" .. f .. ".lua"))("BonusRollPlus", ns) end
+for _, f in ipairs({ "LocalesText", "LocalesExtra", "LocalesV07", "LocalesNotes07", "LocalesV08", "Facts", "FactsDEFR", "FactsITPT", "FactsRUKO", "FactsZH", "Profiles" }) do assert(loadfile("BonusRollPlus/" .. f .. ".lua"))("BonusRollPlus", ns) end
 assert(loadfile("BonusRollPlus/Settings.lua"))("BonusRollPlus", ns)
 
 local handler
@@ -200,3 +200,66 @@ for loc, strings in pairs(ns.Strings) do
     end
 end
 print("0.7.0 ok")
+
+for loc, items in pairs(ns.ChangelogL["0.8.0"]) do assert(#items == 2, "0.8.0 notes " .. loc) end
+for loc, strings in pairs(ns.Strings) do
+    for _, key in ipairs({ "USE_BLIZZARD", "AUTO_RECIPE", "AUTO_RECIPE_MSG", "AUTO_NOTE" }) do assert(strings[key], loc .. " lacks " .. key) end
+    assert(placeholders(strings.AUTO_RECIPE_MSG) == placeholders(ns.Strings.enUS.AUTO_RECIPE_MSG), "placeholder mismatch " .. loc .. " AUTO_RECIPE_MSG")
+end
+
+local db08 = ns.GetDB()
+for _, fn in ipairs(timers) do fn() end
+for i = #timers, 1, -1 do timers[i] = nil end
+local rolls08 = {}
+_G.RollOnLoot = function(id, r) rolls08[#rolls08 + 1] = id .. "/" .. r end
+local function startRoll(id)
+    rolls08 = {}
+    handler(self, "START_LOOT_ROLL", id, 45000)
+    for _, fn in ipairs(timers) do fn() end
+end
+local tipLines = {}
+local tip = {
+    SetOwner = function() end,
+    ClearLines = function() end,
+    NumLines = function() return #tipLines end,
+    SetLootRollItem = function() end,
+    SetHyperlink = function() end,
+}
+for i = 1, 6 do _G["BonusRollPlusScanTextLeft" .. i] = { GetText = function() return tipLines[i] end } end
+local realCreate = _G.CreateFrame
+_G.CreateFrame = function(kind) if kind == "GameTooltip" then return tip end return realCreate() end
+_G.GetProfessions = function() return 1, 2 end
+_G.GetProfessionInfo = function(i) return i == 1 and "Alchemy" or "Mining" end
+_G.ITEM_SPELL_KNOWN = "Already known"
+local realInfo = _G.C_Item.GetItemInfo
+local function recipe(sub) _G.C_Item.GetItemInfo = function() return "Recipe: Elixir", "link", 1, 1, 0, "Recipe", sub, 1, "", 1, 0, 9, 6, 1 end end
+
+db08.autoRecipe = true
+recipe("Alchemy")
+tipLines = { "Recipe: Elixir", "Requires Alchemy (50)" }
+startRoll(21)
+assert(#rolls08 == 1 and rolls08[1] == "21/1", "unlearned recipe of my profession should roll Need once, got " .. table.concat(rolls08, ","))
+
+tipLines = { "Recipe: Elixir", "Already known" }
+startRoll(22)
+assert(#rolls08 == 0, "learned recipe must not roll")
+
+recipe("Tailoring")
+tipLines = { "Recipe: Pattern", "Requires Tailoring (50)" }
+startRoll(23)
+assert(#rolls08 == 0, "recipe of another profession must not roll")
+
+recipe("Alchemy")
+db08.autoRecipe = false
+tipLines = { "Recipe: Elixir", "Requires Alchemy (50)" }
+startRoll(24)
+assert(#rolls08 == 0, "rule off must not roll")
+_G.C_Item.GetItemInfo = realInfo
+_G.CreateFrame = realCreate
+
+_G.GroupLootFrame1 = { rollID = 25, IsShown = function() return true end }
+ns.SetValue("useBlizzard", true)
+startRoll(25)
+ns.SetValue("useBlizzard", false)
+startRoll(26)
+print("0.8.0 ok")

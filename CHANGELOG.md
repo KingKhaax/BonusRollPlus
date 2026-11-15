@@ -1,5 +1,10 @@
 # Cambios
 
+## 0.8.0
+
+- Nueva opción para usar la ventana de tirada del propio juego: BonusRoll Plus oculta la suya pero mantiene a la derecha la lista con lo que ha tirado cada jugador.
+- Nueva regla automática (apagada por defecto): pedir Necesidad en las recetas de tus profesiones que aún no has aprendido. Te dice en el chat lo que ha hecho.
+
 ## 0.7.0
 
 - Reglas automáticas (apagadas por defecto): pasar automáticamente objetos que bajan tu nivel de objeto y codicia automática en BoE baratos. Siempre te lo dicen en el chat y nunca piden Necesidad.

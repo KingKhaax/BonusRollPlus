@@ -54,7 +54,7 @@ Drag a window to move it. The padlock in its corner locks it; click again to unl
 
 ## Status
 
-Version **0.6.0**. The default style is **Frosted Glass**, and there are 10 designs to choose from in `/br open`. The logic is tested with Lua and a simulation of the game, but **most of it has not yet been checked inside the client**. All the details, known limits and what is missing are in [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
+Version **0.8.0**. The default style is **Frosted Glass**, and there are 10 designs to choose from in `/br open`. The logic is tested with Lua and a simulation of the game, but **most of it has not yet been checked inside the client**. All the details, known limits and what is missing are in [`BonusRollPlus/README.md`](BonusRollPlus/README.md).
 
 ## What's in this repository
 
@@ -104,11 +104,14 @@ Use this when you pick the project up on another PC or in a new working session.
 | **0.5.0** | Published on CurseForge on 2026-11-13 (project **1800719**, file id 9589441). Commit `290c683`. |
 | **0.6.0** | Published on CurseForge on 2026-11-13 (file id 9590891), at the author's request. Commit `11c610a`. Pending CurseForge review. |
 | **0.7.0** | **Published on CurseForge on 2026-11-14 (file 9603587).** |
+| **0.8.0** | Written and tested with the simulation on 2026-11-15. **Not published yet.** |
 | In-game testing | **Almost nothing is verified in the client.** Everything is tested with a simulation (see "Tests"). Confirmed by hand by the author: the roll window, hiding the Blizzard window (after some fixes) and the rolls panel after several fixes. |
 
 0.5.0 contents: settings window with 20 designs, profiles, `/br history`, item level difference, "you can't use this item" warning, compact rows, maximum visible windows, padlock, class icon, update notice between players, texts in 11 languages and a random fact in the settings footer.
 
 0.6.0 contents (see `CHANGELOG.md` and `tools/changelog-en.md`): sale or auction value with a purple `*` for an uncollected appearance, History tab with statistics, per-specialization profiles, sound and flash alerts, setting for how many seconds the window stays after the winner (2 by default), designs cut from 20 to 10, previews loaded gradually, fix for missing windows when several items drop at once.
+
+0.8.0 contents (see `CHANGELOG.md` and `tools/changelog-en.md`): option to use the game's own loot window while keeping the rolls list at its right (`useBlizzard`), and an automatic rule (off by default) that rolls Need on recipes of your professions you have not learned (`autoRecipe`). The recipe rule reads the item tooltip ("Already known"), matches the recipe type with your professions, tells you in the chat and is the only automatic rule that ever rolls Need.
 
 0.7.0 contents (see `CHANGELOG.md` and `tools/changelog-en.md`): automatic rules (auto-pass downgrades, auto-greed cheap BoE; off by default, they say what they did in the chat and never roll Need), value line with vendor, auction (TSM `DBMarket`) and disenchant (TSM `Destroy`) values with their icons and the game's coin icons plus "Cannot be sold", a gold BiS tag read from `NaowhForever.BiS.Alerts` when that addon is installed, seconds left on the time bar, stack direction and gap, text size, always-compact rows, profiles by content type (raid, dungeon, open world), session summary, quality filter and text export in the History tab, and a settings tab organized in scrolling sections.
 
@@ -138,6 +141,7 @@ Load order is the one in the `.toc`:
 | `LocalesExtra.lua` | More texts (profiles, history, statistics, values, alerts) and release notes per language. |
 | `LocalesV07.lua` | Texts of the 0.7.0 settings (sections, stack direction, text size, automatic rules, content profiles, history filter and export), in 11 languages. |
 | `LocalesNotes07.lua` | 0.7.0 release notes for the About tab in the 8 languages other than es/en. |
+| `LocalesV08.lua` | Texts of the 0.8.0 settings (Blizzard window option, recipe rule, new automatic rules note) and the 0.8.0 release notes for the 8 other languages. |
 | `Themes.lua` | The window designs (added to the ones in Core). Each design is a data table, not code. |
 | `Core.lua` | The whole engine: message parsing, windows, layout, closing, live settings, commands and events. |
 | `Facts.lua`, `FactsDEFR.lua`, `FactsITPT.lua`, `FactsRUKO.lua`, `FactsZH.lua` | 200 WoW facts; the first two languages are in `Facts.lua` (es, en) and the rest in tables aligned by position. |
@@ -174,7 +178,7 @@ Open ideas (not decided by the author yet): remember the newest version seen and
 
 ## Saved data (`BonusRollPlusDB`)
 
-`scale`, `alpha`, `theme`, `maxVisible`, `showRolls`, `showUpgrade`, `compact`, `showValue`, `sound`, `flash`, `closeDelay`, `countdown`, `stackDir`, `stackGap`, `fontScale`, `ultra`, `autoPass`, `autoPassMin`, `autoGreed`, `autoGreedGold`, `locked`, `x`, `y`, `v`, `history`, `profiles`, `charProfile`, `specProfile`, `contentProfile`, `activeProfile`, `stats`, `sessionStart`. Defaults are in `DEFAULTS` (`Core.lua`); profiles save only the keys of `ORDER` in `Profiles.lua`.
+`scale`, `alpha`, `theme`, `maxVisible`, `showRolls`, `showUpgrade`, `compact`, `showValue`, `sound`, `flash`, `closeDelay`, `countdown`, `stackDir`, `stackGap`, `fontScale`, `ultra`, `autoPass`, `autoPassMin`, `autoGreed`, `autoGreedGold`, `useBlizzard`, `autoRecipe`, `locked`, `x`, `y`, `v`, `history`, `profiles`, `charProfile`, `specProfile`, `contentProfile`, `activeProfile`, `stats`, `sessionStart`. Defaults are in `DEFAULTS` (`Core.lua`); profiles save only the keys of `ORDER` in `Profiles.lua`.
 
 Commands: `/br open`, `/br test`, `/br scale`, `/br rolls`, `/br lock`, `/br reset`, `/br history [n|clear]`, `/br version`, `/br debug` (prints what the addon reads from chat, the raw text and the open windows; useful for diagnosing the rolls panel).
 

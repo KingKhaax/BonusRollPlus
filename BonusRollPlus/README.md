@@ -1,6 +1,6 @@
 <p align="center"><img src="../assets/logo.png" width="360" alt="BonusRoll Plus"></p>
 
-# BonusRoll Plus 0.6.0
+# BonusRoll Plus 0.8.0
 
 Documentación completa del addon: qué hace, cómo funciona por dentro, comandos, historial de cambios, lo que falta y cómo llevarlo a otro ordenador.
 
@@ -93,6 +93,12 @@ Arrastrar una ventana mueve toda la pila mientras esté desbloqueada. El candado
 Se guardan en `WTF\Account\<tu cuenta>\SavedVariables\BonusRollPlus.lua`.
 
 ## <img src="https://wow.zamimg.com/images/wow/icons/large/inv_letter_15.jpg" width="28" height="28" align="absmiddle"> Historial de cambios
+
+### 0.8.0 (15/11/2026)
+
+- **Ventana del juego con la lista de tiradas**: nueva opción para usar la ventana de tirada original de Blizzard. BonusRoll Plus no muestra la suya, pero mantiene a la derecha de la del juego la lista con lo que ha tirado cada jugador.
+- **Necesidad automática en recetas** (regla apagada por defecto): si tienes una profesión y cae una receta de ella que no has aprendido, pide Necesidad sola. Lee el tooltip («Ya la conoces»), comprueba que la receta es de una de tus profesiones y te lo dice en el chat. Es la única regla automática que pide Necesidad.
+- Los dos ajustes se activan y desactivan desde `/br open` y entran en los perfiles.
 
 ### 0.7.0
 
