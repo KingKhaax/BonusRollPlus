@@ -122,6 +122,7 @@ Use this when you pick the project up on another PC or in a new working session.
 - **Single client: WoW Forever.** The addon is exclusive to that client (game version 1.60.1 on CurseForge, id 17053). Retail and Classic don't need to be supported. The `.toc` still lists Retail interfaces (16001, 11601, 120107, 120105); only clean them up if the author asks.
 - **Language:** always talk to the author in Spanish. Any message he is going to publish has its translation underneath.
 - **Commits:** author and committer `sr.kitkat <180756772+KingKhaax@users.noreply.github.com>`. **No attribution lines** of any kind and no `Co-Authored-By` lines.
+- **CurseForge uploads only with the author's explicit permission, every time.** Preparing, testing and pushing to GitHub is fine; uploading is not.
 - **Versions:** one at a time. While one is unpublished, don't number another. If the author says he already uploaded one, the pending one becomes the next.
 - **Changelog:** important changes only. No minor fixes or loose text tweaks.
 - **New texts:** every new key goes into **all 11 languages** (esES, esMX, enUS, deDE, frFR, itIT, ptBR, ruRU, koKR, zhCN, zhTW), with the same `%s`/`%d` placeholders as English. A test checks this.
