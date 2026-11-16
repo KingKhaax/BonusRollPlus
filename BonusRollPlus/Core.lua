@@ -255,9 +255,9 @@ local function UnknownAppearance(link)
     return ok2 and known == false
 end
 
-local COIN_GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:12:12:0:-2|t"
-local COIN_SILVER = "|TInterface\\MoneyFrame\\UI-SilverIcon:12:12:0:-2|t"
-local COIN_COPPER = "|TInterface\\MoneyFrame\\UI-CopperIcon:12:12:0:-2|t"
+local COIN_GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:11:11:0:-4|t"
+local COIN_SILVER = "|TInterface\\MoneyFrame\\UI-SilverIcon:11:11:0:-4|t"
+local COIN_COPPER = "|TInterface\\MoneyFrame\\UI-CopperIcon:11:11:0:-4|t"
 
 local function FormatMoney(copper)
     copper = math.floor(copper)
@@ -269,8 +269,8 @@ local function FormatMoney(copper)
     return table.concat(parts, "  ")
 end
 
-local AH_ICON = "|TInterface\\MINIMAP\\TRACKING\\Auctioneer:14:14:0:0|t"
-local DE_ICON = "|TInterface\\Buttons\\UI-GroupLoot-DE-Up:14:14:0:0|t"
+local AH_ICON = "|TInterface\\MINIMAP\\TRACKING\\Auctioneer:14:14:0:-4|t"
+local DE_ICON = "|TInterface\\Buttons\\UI-GroupLoot-DE-Up:14:14:0:-4|t"
 
 local function TsmValue(source, id)
     if not (id and _G.TSM_API and _G.TSM_API.GetCustomPriceValue) then return nil end
