@@ -1053,6 +1053,11 @@ local function BuildGeneric(T)
         GameTooltip:Show()
     end)
     f.iconHit:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    f.iconHit:SetScript("OnMouseUp", function()
+        if not (f.link and IsControlKeyDown()) then return end
+        local dress = _G.DressUpItemLink or _G.DressUpLink
+        if dress then dress(f.link) end
+    end)
     f.name = Text(f, T.name)
     f.piece = Text(f, T.piece)
     if T.bind then
