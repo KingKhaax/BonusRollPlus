@@ -105,6 +105,7 @@ Use this when you pick the project up on another PC or in a new working session.
 | **0.6.0** | Published on CurseForge on 2026-11-13 (file id 9590891), at the author's request. Commit `11c610a`. Pending CurseForge review. |
 | **0.7.0** | **Published on CurseForge on 2026-11-14 (file 9603587).** |
 | **0.8.0** | **Published on CurseForge on 2026-11-15 (file 9632037).** Tested only with the simulation; the Blizzard-window mode and the recipe rule still need checking in game. |
+| **0.9.0** | **In development, not published.** The `.toc` stays at 0.8.0 on purpose. Publish it only when the author asks. Contents: Ctrl+click on the item icon opens the dressing room (`DressUpItemLink`), option `hideWon` (default on, in profiles) that unregisters `SHOW_LOOT_TOAST` and `LOOT_ITEM_ROLL_WON` from `AlertFrame`, and the value-line coins spaced and lowered so they do not overlap the auction and disenchant icons. |
 | In-game testing | **Almost nothing is verified in the client.** Everything is tested with a simulation (see "Tests"). Confirmed by hand by the author: the roll window, hiding the Blizzard window (after some fixes) and the rolls panel after several fixes. |
 
 0.5.0 contents: settings window with 20 designs, profiles, `/br history`, item level difference, "you can't use this item" warning, compact rows, maximum visible windows, padlock, class icon, update notice between players, texts in 11 languages and a random fact in the settings footer.
