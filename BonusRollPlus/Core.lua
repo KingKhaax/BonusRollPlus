@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false, hideWon = true }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -1721,8 +1721,18 @@ function ns.SetCloseDelay(v)
     db.closeDelay = v
 end
 
+local function ApplyWonToast()
+    local af = _G.AlertFrame
+    if not (af and af.RegisterEvent) then return end
+    for _, e in ipairs({ "SHOW_LOOT_TOAST", "LOOT_ITEM_ROLL_WON" }) do
+        pcall(db.hideWon and af.UnregisterEvent or af.RegisterEvent, af, e)
+    end
+end
+ns.ApplyWonToast = ApplyWonToast
+
 function ns.SetValue(key, v)
     db[key] = v
+    if key == "hideWon" then ApplyWonToast() end
     if key == "useBlizzard" then
         if v then ShowBlizzard() else HideBlizzard() end
         for _, f in ipairs(active) do
@@ -2018,6 +2028,7 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         SlashCmdList.BONUSROLLPLUS = Slash
     elseif event == "PLAYER_LOGIN" then
         HideBlizzard()
+        ApplyWonToast()
         db.sessionStart = time()
         if ns.Profiles then ns.Profiles.AutoLoad() end
     elseif event == "START_LOOT_ROLL" then

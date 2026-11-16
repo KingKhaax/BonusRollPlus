@@ -436,6 +436,7 @@ local function BuildSettings(tab)
     check(L.SHOW_UPGRADE, "showUpgrade", function(v) ns.SetShowUpgrade(v) end)
     check(L.SHOW_VALUE, "showValue", option("showValue"))
     check(L.COUNTDOWN, "countdown", option("countdown"))
+    check(L.HIDE_WON, "hideWon", function(v) ns.SetValue("hideWon", v) end, 30)
     local lock = check(L.LOCK, "locked", function(v) ns.SetLocked(v) end, 30)
 
     Section(L.SEC_ALERTS)
