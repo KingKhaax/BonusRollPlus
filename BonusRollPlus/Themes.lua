@@ -88,9 +88,6 @@ Add("void", "Violet Void", "Vacío violeta", {
     layout = "row", font = F_FRIZ, bg = "#1A0A38", border = "#8F4BFF", borderA = 0.9, ink = "#FFFFFF", sub = "#CBB2FF",
     bfill = "#8F4BFF", bfa = 0.14, bborder = "#B478FF", bba = 0.45, sel = "#8F4BFF", sela = 0.85, selInk = "#FFFFFF",
     bar = "#A45CFF", track = "#8F4BFF", tracka = 0.2, shine = 0.06, spark = true,
-    orn = function(w, h) return {
-        { op = "circle", x = 262, y = 28, size = 150, c = "#C88CFF", a = 0.16 }, { op = "circle", x = 30, y = h - 20, size = 100, c = "#6A2CD8", a = 0.2 },
-    } end,
 })
 Add("goldchest", "Gold Chest", "Cofre dorado", {
     layout = "split", font = F_MORPH, bg = "#2A1D0B", border = "#E3B341", bth = 2, ink = "#F4E3B0", sub = "#E8CF8F",
