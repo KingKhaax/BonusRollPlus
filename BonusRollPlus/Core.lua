@@ -255,8 +255,8 @@ local function UnknownAppearance(link)
     return ok2 and known == false
 end
 
-local function Tag(path, size)
-    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:-3|t"
+local function Tag(path, size, y)
+    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:" .. (y or -3) .. "|t"
 end
 
 local function FormatMoney(copper)
@@ -319,8 +319,8 @@ local function ValueInfo(link, f)
     local auction = TsmValue("DBMarket", id)
     local destroy = f and f.canDE and TsmValue("Destroy", id) or nil
     if vendor then parts[#parts + 1] = FormatMoney(vendor) end
-    if auction then parts[#parts + 1] = Tag("Interface\\MINIMAP\\TRACKING\\Auctioneer", 12) .. "  " .. FormatMoney(auction) end
-    if destroy then parts[#parts + 1] = Tag("Interface\\Buttons\\UI-GroupLoot-DE-Up", 12) .. "  " .. FormatMoney(destroy) end
+    if auction then parts[#parts + 1] = Tag("Interface\\MINIMAP\\TRACKING\\Auctioneer", 12, -5) .. " " .. FormatMoney(auction) end
+    if destroy then parts[#parts + 1] = Tag("Interface\\Buttons\\UI-GroupLoot-DE-Up", 12, -5) .. " " .. FormatMoney(destroy) end
     if not vendor and not auction and not destroy and type(sell) == "number" and sell == 0 then
         parts[#parts + 1] = "|cff9a9a9a" .. L.NO_SELL .. "|r"
     end
