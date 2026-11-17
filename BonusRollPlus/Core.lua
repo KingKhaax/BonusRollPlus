@@ -256,16 +256,16 @@ local function UnknownAppearance(link)
 end
 
 local function Tag(path, size)
-    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:-8|t"
+    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:-3|t"
 end
 
 local function FormatMoney(copper)
     copper = math.floor(copper)
     local gold, silver, rest = math.floor(copper / 10000), math.floor((copper % 10000) / 100), copper % 100
     local parts = {}
-    if gold > 0 then parts[#parts + 1] = gold .. Tag("Interface\\MoneyFrame\\UI-GoldIcon", 11) end
-    if silver > 0 then parts[#parts + 1] = silver .. Tag("Interface\\MoneyFrame\\UI-SilverIcon", 11) end
-    if rest > 0 or #parts == 0 then parts[#parts + 1] = rest .. Tag("Interface\\MoneyFrame\\UI-CopperIcon", 11) end
+    if gold > 0 then parts[#parts + 1] = gold .. Tag("Interface\\MoneyFrame\\UI-GoldIcon", 12) end
+    if silver > 0 then parts[#parts + 1] = silver .. Tag("Interface\\MoneyFrame\\UI-SilverIcon", 12) end
+    if rest > 0 or #parts == 0 then parts[#parts + 1] = rest .. Tag("Interface\\MoneyFrame\\UI-CopperIcon", 12) end
     return table.concat(parts, "  ")
 end
 
@@ -319,8 +319,8 @@ local function ValueInfo(link, f)
     local auction = TsmValue("DBMarket", id)
     local destroy = f and f.canDE and TsmValue("Destroy", id) or nil
     if vendor then parts[#parts + 1] = FormatMoney(vendor) end
-    if auction then parts[#parts + 1] = Tag("Interface\\MINIMAP\\TRACKING\\Auctioneer", 14) .. "  " .. FormatMoney(auction) end
-    if destroy then parts[#parts + 1] = Tag("Interface\\Buttons\\UI-GroupLoot-DE-Up", 14) .. "  " .. FormatMoney(destroy) end
+    if auction then parts[#parts + 1] = Tag("Interface\\MINIMAP\\TRACKING\\Auctioneer", 12) .. "  " .. FormatMoney(auction) end
+    if destroy then parts[#parts + 1] = Tag("Interface\\Buttons\\UI-GroupLoot-DE-Up", 12) .. "  " .. FormatMoney(destroy) end
     if not vendor and not auction and not destroy and type(sell) == "number" and sell == 0 then
         parts[#parts + 1] = "|cff9a9a9a" .. L.NO_SELL .. "|r"
     end
