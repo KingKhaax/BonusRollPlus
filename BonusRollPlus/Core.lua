@@ -247,14 +247,6 @@ local function DeltaText(d)
     return "|cffaaaaaa=|r"
 end
 
-local function UnknownAppearance(link)
-    if not (C_TransmogCollection and C_TransmogCollection.GetItemInfo and C_TransmogCollection.PlayerKnowsSource) then return false end
-    local ok, _, sourceID = pcall(C_TransmogCollection.GetItemInfo, link)
-    if not ok or not sourceID then return false end
-    local ok2, known = pcall(C_TransmogCollection.PlayerKnowsSource, sourceID)
-    return ok2 and known == false
-end
-
 local function Tag(path, size, y)
     return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:" .. (y or -1) .. "|t"
 end
@@ -314,7 +306,6 @@ local function ValueInfo(link, f)
     local parts = {}
     local bis = BisRank(link)
     if bis then parts[#parts + 1] = "|cffffd100" .. (bis == 1 and "BiS" or ("BiS #" .. bis)) .. "|r" end
-    if equipLoc and equipLoc ~= "" and UnknownAppearance(link) then parts[#parts + 1] = "|cffd070ff*|r" end
     local vendor = type(sell) == "number" and sell > 0 and sell or nil
     local auction = TsmValue("DBMarket", id)
     local destroy = f and f.canDE and TsmValue("Destroy", id) or nil
