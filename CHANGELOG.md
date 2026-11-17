@@ -4,7 +4,7 @@
 
 - Ctrl + clic en el icono del objeto abre el probador del juego (transmog) con esa pieza.
 - Nueva opción en Ajustes (desactivada por defecto) para ocultar el aviso del juego «Has recibido» que sale abajo al ganar un objeto. Se guarda en los perfiles.
-- El diseño Vacío violeta ya no lleva los dos círculos decorativos.
+- Los diseños Vacío violeta y Escarcha ya no llevan círculos decorativos.
 - Las monedas de la línea de valor ya no se pisan con los iconos de subasta y desencantar y quedan alineadas con el texto.
 
 ## 0.8.0

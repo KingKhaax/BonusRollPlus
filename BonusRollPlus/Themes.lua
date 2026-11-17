@@ -105,7 +105,6 @@ Add("frost", "Frost", "Escarcha", {
     layout = "ring", font = F_FRIZ, bg = "#2D5A92", bgA = 0.88, border = "#D6F1FF", borderA = 0.85, ink = "#FFFFFF", sub = "#DDF3FF",
     bfill = "#FFFFFF", bfa = 0.2, bborder = "#FFFFFF", bba = 0.6, sel = "#E9F9FF", sela = 0.9, selInk = "#FFFFFF",
     bar = "#E9F9FF", track = "#FFFFFF", tracka = 0.25, shine = 0.22,
-    orn = function(w, h) return { { op = "circle", x = w - 20, y = h - 20, size = 70, c = "#FFFFFF", a = 0.12 } } end,
 })
 Add("minimal", "Dark Minimal", "Minimal oscuro", {
     layout = "row", font = F_ARIAL, bg = "#0E0E12", bgA = 0.94, border = "#2A2A33", ink = "#FFFFFF", sub = "#8A8A96",
