@@ -256,7 +256,7 @@ local function UnknownAppearance(link)
 end
 
 local function Tag(path, size)
-    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:" .. (db.coinY or -8) .. "|t"
+    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:-8|t"
 end
 
 local function FormatMoney(copper)
@@ -1060,7 +1060,7 @@ local function BuildGeneric(T)
     f.piece = Text(f, T.piece)
     if T.bind then
         f.bind = Text(f, T.bind)
-        f.value = Text(f, { x = 18, y = 76, w = 264, font = T.bind.font, size = T.bind.size, justify = "LEFT", color = T.bind.color })
+        f.value = Text(f, { x = 18, y = 84, w = 264, font = T.bind.font, size = T.bind.size, justify = "LEFT", color = T.bind.color })
     end
     if T.ilvl then f.ilvl = Text(f, T.ilvl) end
     f.buttons = {}
@@ -1957,15 +1957,6 @@ local function Slash(msg)
             stack:SetScale(v)
         else
             print("|cffffd100BonusRoll Plus|r: " .. L.SCALE_USAGE)
-        end
-    elseif cmd == "coin" then
-        local v = tonumber(arg)
-        if v and v >= -20 and v <= 20 then
-            db.coinY = v
-            for _, fr in ipairs(active) do UpdateValue(fr) end
-            print("|cffffd100BonusRoll Plus|r: coin offset " .. v)
-        else
-            print("|cffffd100BonusRoll Plus|r: /br coin <-20..20> (now " .. (db.coinY or -8) .. ")")
         end
     elseif cmd == "rolls" then
         db.showRolls = not db.showRolls
