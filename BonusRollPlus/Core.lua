@@ -255,22 +255,20 @@ local function UnknownAppearance(link)
     return ok2 and known == false
 end
 
-local COIN_GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:11:11:0:-4|t"
-local COIN_SILVER = "|TInterface\\MoneyFrame\\UI-SilverIcon:11:11:0:-4|t"
-local COIN_COPPER = "|TInterface\\MoneyFrame\\UI-CopperIcon:11:11:0:-4|t"
+local function Tag(path, size)
+    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:" .. (db.coinY or -8) .. "|t"
+end
 
 local function FormatMoney(copper)
     copper = math.floor(copper)
     local gold, silver, rest = math.floor(copper / 10000), math.floor((copper % 10000) / 100), copper % 100
     local parts = {}
-    if gold > 0 then parts[#parts + 1] = gold .. COIN_GOLD end
-    if silver > 0 then parts[#parts + 1] = silver .. COIN_SILVER end
-    if rest > 0 or #parts == 0 then parts[#parts + 1] = rest .. COIN_COPPER end
+    if gold > 0 then parts[#parts + 1] = gold .. Tag("Interface\\MoneyFrame\\UI-GoldIcon", 11) end
+    if silver > 0 then parts[#parts + 1] = silver .. Tag("Interface\\MoneyFrame\\UI-SilverIcon", 11) end
+    if rest > 0 or #parts == 0 then parts[#parts + 1] = rest .. Tag("Interface\\MoneyFrame\\UI-CopperIcon", 11) end
     return table.concat(parts, "  ")
 end
 
-local AH_ICON = "|TInterface\\MINIMAP\\TRACKING\\Auctioneer:14:14:0:-4|t"
-local DE_ICON = "|TInterface\\Buttons\\UI-GroupLoot-DE-Up:14:14:0:-4|t"
 
 local function TsmValue(source, id)
     if not (id and _G.TSM_API and _G.TSM_API.GetCustomPriceValue) then return nil end
@@ -321,8 +319,8 @@ local function ValueInfo(link, f)
     local auction = TsmValue("DBMarket", id)
     local destroy = f and f.canDE and TsmValue("Destroy", id) or nil
     if vendor then parts[#parts + 1] = FormatMoney(vendor) end
-    if auction then parts[#parts + 1] = AH_ICON .. "  " .. FormatMoney(auction) end
-    if destroy then parts[#parts + 1] = DE_ICON .. "  " .. FormatMoney(destroy) end
+    if auction then parts[#parts + 1] = Tag("Interface\\MINIMAP\\TRACKING\\Auctioneer", 14) .. "  " .. FormatMoney(auction) end
+    if destroy then parts[#parts + 1] = Tag("Interface\\Buttons\\UI-GroupLoot-DE-Up", 14) .. "  " .. FormatMoney(destroy) end
     if not vendor and not auction and not destroy and type(sell) == "number" and sell == 0 then
         parts[#parts + 1] = "|cff9a9a9a" .. L.NO_SELL .. "|r"
     end
@@ -1959,6 +1957,15 @@ local function Slash(msg)
             stack:SetScale(v)
         else
             print("|cffffd100BonusRoll Plus|r: " .. L.SCALE_USAGE)
+        end
+    elseif cmd == "coin" then
+        local v = tonumber(arg)
+        if v and v >= -20 and v <= 20 then
+            db.coinY = v
+            for _, fr in ipairs(active) do UpdateValue(fr) end
+            print("|cffffd100BonusRoll Plus|r: coin offset " .. v)
+        else
+            print("|cffffd100BonusRoll Plus|r: /br coin <-20..20> (now " .. (db.coinY or -8) .. ")")
         end
     elseif cmd == "rolls" then
         db.showRolls = not db.showRolls
