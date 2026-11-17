@@ -1,6 +1,6 @@
 # Cambios
 
-## 0.9.0 (pendiente de publicar, solo cuando el autor lo pida)
+## 0.9.0
 
 - Ctrl + clic en el icono del objeto abre el probador del juego (transmog) con esa pieza.
 - Nueva opción en Ajustes (desactivada por defecto) para ocultar el aviso del juego «Has recibido» que sale abajo al ganar un objeto. Se guarda en los perfiles.

@@ -11,6 +11,19 @@ local PANEL, DARK, LINE = "#262626", "#0F0F0F", "#3A3A3A"
 
 local CHANGES = {
     {
+        v = "0.9.0", d = "17/11/2026",
+        en = {
+            "Ctrl + click on the item icon opens the game's dressing room so you can see the appearance (transmog).",
+            "New option (off by default) to hide the game's \"You received\" popup when you win an item.",
+            "Cleaner look: the decorative circles of Violet Void and Frost are gone, and the coins and icons of the value line are aligned.",
+        },
+        es = {
+            "Ctrl + clic en el icono del objeto abre el probador del juego para ver el aspecto (transmog).",
+            "Nueva opción (desactivada por defecto) para ocultar el aviso del juego «Has recibido» al ganar un objeto.",
+            "Aspecto más limpio: se han quitado los círculos decorativos de Vacío violeta y Escarcha, y las monedas y los iconos de la línea de valor están alineados.",
+        },
+    },
+    {
         v = "0.8.0", d = "15/11/2026",
         en = {
             "New option to use the game's own loot window: BonusRoll Plus keeps the list with everyone's rolls and shows it to the right of it.",

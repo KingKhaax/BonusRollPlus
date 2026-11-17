@@ -51,7 +51,7 @@ assert(loadfile("BonusRollPlus/Themes.lua"))("BonusRollPlus", ns)
 assert(loadfile("BonusRollPlus/Core.lua"))("BonusRollPlus", ns)
 _G.tinsert = table.insert
 _G.UISpecialFrames = {}
-for _, f in ipairs({ "LocalesText", "LocalesExtra", "LocalesV07", "LocalesNotes07", "LocalesV08", "Facts", "FactsDEFR", "FactsITPT", "FactsRUKO", "FactsZH", "Profiles" }) do assert(loadfile("BonusRollPlus/" .. f .. ".lua"))("BonusRollPlus", ns) end
+for _, f in ipairs({ "LocalesText", "LocalesExtra", "LocalesV07", "LocalesNotes07", "LocalesV08", "LocalesNotes09", "Facts", "FactsDEFR", "FactsITPT", "FactsRUKO", "FactsZH", "Profiles" }) do assert(loadfile("BonusRollPlus/" .. f .. ".lua"))("BonusRollPlus", ns) end
 assert(loadfile("BonusRollPlus/Settings.lua"))("BonusRollPlus", ns)
 
 local handler
@@ -262,4 +262,5 @@ ns.SetValue("useBlizzard", true)
 startRoll(25)
 ns.SetValue("useBlizzard", false)
 startRoll(26)
-print("0.8.0 ok")
+for loc, items in pairs(ns.ChangelogL["0.9.0"]) do assert(#items == 3, "0.9.0 notes " .. loc) end
+print("0.9.0 ok")
