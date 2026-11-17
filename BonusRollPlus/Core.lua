@@ -256,7 +256,7 @@ local function UnknownAppearance(link)
 end
 
 local function Tag(path, size, y)
-    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:" .. (y or -3) .. "|t"
+    return "|T" .. path .. ":" .. size .. ":" .. size .. ":0:" .. (y or -1) .. "|t"
 end
 
 local function FormatMoney(copper)
