@@ -1,5 +1,10 @@
 # Cambios
 
+## Pendiente (sin publicar)
+
+- Si el tiempo de una tirada se acaba y el juego no avisa del ganador, la ventana se cierra sola a los 12 segundos en vez de quedarse bloqueada.
+- La casilla de ocultar el aviso «Has recibido» viene desactivada por defecto, el asterisco morado de apariencia sin coleccionar ya no sale, y las monedas de la línea de valor van a la altura de los números.
+
 ## 0.9.0
 
 - Ctrl + clic en el icono del objeto abre el probador del juego (transmog) con esa pieza.

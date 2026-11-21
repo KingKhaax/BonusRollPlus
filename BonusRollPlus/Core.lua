@@ -795,6 +795,12 @@ local function NewFrame(T)
         if self.fake and frac <= 0 and not self.closing then
             self.closing = true
             C_Timer.After(1, function() Release(self) end)
+        elseif not self.fake and frac <= 0 and not self.expired and not self.closingSoon and GetTime() >= (self.deadline or 0) - 11 then
+            self.expired = true
+            local token = self.token
+            C_Timer.After(12, function()
+                if self.token == token and not self.closingSoon then Release(self) end
+            end)
         end
     end)
     return f
@@ -1185,7 +1191,7 @@ local function Setup(f, data)
     f.token = rollToken
     f.deadline = GetTime() + (f.rollTime or 60000) / 1000 + 10
     f.canDE, f.canGreed, f.canNeed = data.canDE, data.canGreed, data.canNeed
-    f.autoDone = nil
+    f.autoDone, f.expired = nil, nil
     ApplyFontScale(f)
     f.chosen, f.entries = nil, nil
     f.itemID = ItemID(data.link)
