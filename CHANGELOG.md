@@ -2,6 +2,7 @@
 
 ## Pendiente (sin publicar)
 
+- Si el mismo objeto sale varias veces, cada ventana muestra solo las tiradas de su propio reparto: ya no se mezclan las de repartos anteriores ni las del objeto repetido.
 - Si el tiempo de una tirada se acaba y el juego no avisa del ganador, la ventana se cierra sola a los 12 segundos en vez de quedarse bloqueada.
 - La casilla de ocultar el aviso «Has recibido» viene desactivada por defecto, el asterisco morado de apariencia sin coleccionar ya no sale, y las monedas de la línea de valor van a la altura de los números.
 

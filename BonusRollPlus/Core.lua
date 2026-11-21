@@ -574,6 +574,7 @@ function Release(f)
     DetachPanel(f)
     f.hostBlizz = nil
     f.rollID, f.fake, f.entries, f.chosen, f.closing, f.queued, f.closingSoon = nil, nil, nil, nil, nil, nil, nil
+    f.dropKey = nil
     for i, a in ipairs(active) do
         if a == f then table.remove(active, i) break end
     end
@@ -1191,7 +1192,7 @@ local function Setup(f, data)
     f.token = rollToken
     f.deadline = GetTime() + (f.rollTime or 60000) / 1000 + 10
     f.canDE, f.canGreed, f.canNeed = data.canDE, data.canGreed, data.canNeed
-    f.autoDone, f.expired = nil, nil
+    f.autoDone, f.expired, f.dropKey = nil, nil, nil
     ApplyFontScale(f)
     f.chosen, f.entries = nil, nil
     f.itemID = ItemID(data.link)
@@ -1279,16 +1280,23 @@ local function Setup(f, data)
     Layout()
 end
 
-local function FindFrame(itemID, link)
-    for _, f in ipairs(active) do
-        if itemID and f.itemID == itemID then return f end
-    end
+local function FindFrame(itemID, link, key)
     local name = type(link) == "string" and link:match("|h%[(.-)%]|h")
-    if name then
-        for _, f in ipairs(active) do
-            if f.itemName and f.itemName:lower() == name:lower() then return f end
+    local first, any
+    for _, f in ipairs(active) do
+        if (itemID and f.itemID == itemID) or (name and f.itemName and f.itemName:lower() == name:lower()) then
+            if key and f.dropKey == key then return f end
+            any = any or f
+            if not f.closingSoon and not f.dropKey then first = first or f end
         end
     end
+    if key then return first end
+    for _, f in ipairs(active) do
+        if f.itemID == itemID or (name and f.itemName and f.itemName:lower() == name:lower()) then
+            if not f.closingSoon then return f end
+        end
+    end
+    return any
 end
 
 local function AwardDelay()
@@ -1376,10 +1384,28 @@ local function RollKind(state)
     if state == (S.Pass or 5) then return "pass" end
 end
 
+local function DropKey(drop)
+    if not (Readable(drop.encounterID) and Readable(drop.lootListID)) then return nil end
+    return tostring(drop.encounterID) .. ":" .. tostring(drop.lootListID)
+end
+
+local function DropFinished(drop)
+    if drop.allPassed == true then return true end
+    for _, roll in ipairs(drop.rollInfos or {}) do
+        if roll.isWinner == true then return true end
+    end
+    return false
+end
+
 local function ApplyDrop(drop)
     if type(drop) ~= "table" or not Readable(drop.itemHyperlink) then return end
-    local f = FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink)
+    local key = DropKey(drop)
+    local f = FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink, key)
     if not f then return end
+    if key and not f.dropKey then
+        if DropFinished(drop) then return end
+        f.dropKey = key
+    end
     local winnerName
     for _, roll in ipairs(drop.rollInfos or {}) do
         if Readable(roll.playerName) and Readable(roll.state) then
@@ -1409,7 +1435,7 @@ local function SyncFromHistory(f)
     if not (C_LootHistory and C_LootHistory.GetAllEncounterInfos and C_LootHistory.GetSortedDropsForEncounter) then return end
     for _, encounter in ipairs(C_LootHistory.GetAllEncounterInfos() or {}) do
         for _, drop in ipairs(C_LootHistory.GetSortedDropsForEncounter(encounter.encounterID) or {}) do
-            if type(drop) == "table" and Readable(drop.itemHyperlink) and FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink) == f then
+            if type(drop) == "table" and Readable(drop.itemHyperlink) and FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink, DropKey(drop)) == f then
                 ApplyDrop(drop)
             end
         end
