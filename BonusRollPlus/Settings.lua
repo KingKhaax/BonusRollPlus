@@ -11,6 +11,19 @@ local PANEL, DARK, LINE = "#262626", "#0F0F0F", "#3A3A3A"
 
 local CHANGES = {
     {
+        v = "0.9.1", d = "23/11/2026",
+        en = {
+            "When the same item drops several times, each window shows only the rolls of its own drop, without the ones from earlier drops.",
+            "If the time of a roll runs out and the game does not announce a winner, the window closes by itself after 12 seconds instead of staying stuck.",
+            "Cleaner value line: the purple asterisk for unknown appearances is gone and the coins line up with the numbers.",
+        },
+        es = {
+            "Cuando el mismo objeto sale varias veces, cada ventana muestra solo las tiradas de su propio reparto, sin las de repartos anteriores.",
+            "Si el tiempo de una tirada se acaba y el juego no anuncia ganador, la ventana se cierra sola a los 12 segundos en vez de quedarse bloqueada.",
+            "Línea de valor más limpia: el asterisco morado de apariencias desconocidas ya no sale y las monedas quedan a la altura de los números.",
+        },
+    },
+    {
         v = "0.9.0", d = "17/11/2026",
         en = {
             "Ctrl + click on the item icon opens the game's dressing room so you can see the appearance (transmog).",

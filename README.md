@@ -105,6 +105,7 @@ Use this when you pick the project up on another PC or in a new working session.
 | **0.6.0** | Published on CurseForge on 2026-11-13 (file id 9590891), at the author's request. Commit `11c610a`. Pending CurseForge review. |
 | **0.7.0** | **Published on CurseForge on 2026-11-14 (file 9603587).** |
 | **0.8.0** | **Published on CurseForge on 2026-11-15 (file 9632037).** Tested only with the simulation; the Blizzard-window mode and the recipe rule still need checking in game. |
+| **0.9.1** | **Published on CurseForge on 2026-11-23.** Rolls of repeated items are kept apart per drop (`dropKey` pairing with the loot history), windows whose time ran out close by themselves after 12 seconds, the purple appearance asterisk was removed and the value-line coins are aligned. Tested only with the simulation. |
 | **0.9.0** | **Published on CurseForge on 2026-11-17.** Ctrl+click on the item icon opens the dressing room, option `hideWon` (default off) hides the game's "You received" popup, circles removed from Violet Void and Frost, value-line coins and icons aligned. Tested only with the simulation. |
 | In-game testing | **Almost nothing is verified in the client.** Everything is tested with a simulation (see "Tests"). Confirmed by hand by the author: the roll window, hiding the Blizzard window (after some fixes) and the rolls panel after several fixes. |
 

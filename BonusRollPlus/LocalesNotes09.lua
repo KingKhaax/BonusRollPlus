@@ -43,3 +43,46 @@ ns.ChangelogL["0.9.0"] = {
         "介面更清爽：移除了「紫色虛空」和「冰霜」樣式的裝飾圓圈，價值行中的貨幣和圖示也對齊了。",
     },
 }
+
+ns.ChangelogL["0.9.1"] = {
+    deDE = {
+        "Wenn derselbe Gegenstand mehrmals fällt, zeigt jedes Fenster nur die Würfe seiner eigenen Verteilung, ohne die früherer Verteilungen.",
+        "Wenn die Zeit eines Wurfs abläuft und das Spiel keinen Gewinner meldet, schließt sich das Fenster nach 12 Sekunden selbst, statt hängen zu bleiben.",
+        "Sauberere Wertzeile: Das violette Sternchen für unbekannte Aussehen ist weg, und die Münzen stehen auf der Höhe der Zahlen.",
+    },
+    frFR = {
+        "Quand le même objet tombe plusieurs fois, chaque fenêtre n'affiche que les jets de son propre tirage, sans ceux des tirages précédents.",
+        "Si le temps d'un jet s'écoule et que le jeu n'annonce aucun gagnant, la fenêtre se ferme toute seule après 12 secondes au lieu de rester bloquée.",
+        "Ligne de valeur plus nette : l'astérisque violet des apparences inconnues a disparu et les pièces sont alignées avec les chiffres.",
+    },
+    itIT = {
+        "Quando lo stesso oggetto cade più volte, ogni finestra mostra solo i tiri della sua distribuzione, senza quelli delle precedenti.",
+        "Se il tempo di un tiro finisce e il gioco non annuncia un vincitore, la finestra si chiude da sola dopo 12 secondi invece di restare bloccata.",
+        "Riga del valore più pulita: l'asterisco viola degli aspetti sconosciuti non c'è più e le monete sono allineate ai numeri.",
+    },
+    ptBR = {
+        "Quando o mesmo item cai várias vezes, cada janela mostra só as rolagens da sua própria distribuição, sem as de distribuições anteriores.",
+        "Se o tempo de uma rolagem acaba e o jogo não anuncia o vencedor, a janela fecha sozinha após 12 segundos em vez de ficar travada.",
+        "Linha de valor mais limpa: o asterisco roxo de aparências desconhecidas sumiu e as moedas ficam alinhadas com os números.",
+    },
+    ruRU = {
+        "Если один и тот же предмет выпадает несколько раз, каждое окно показывает только броски своего розыгрыша, без бросков предыдущих.",
+        "Если время броска истекло, а игра не объявила победителя, окно само закрывается через 12 секунд, а не зависает.",
+        "Более аккуратная строка стоимости: фиолетовая звёздочка неизвестного облика убрана, а монеты выровнены по цифрам.",
+    },
+    koKR = {
+        "같은 아이템이 여러 번 나오면 각 창은 이전 분배의 굴림이 아닌 자신의 분배 굴림만 표시합니다.",
+        "굴림 시간이 끝났는데 게임이 승자를 알리지 않으면 창이 멈춰 있지 않고 12초 뒤에 저절로 닫힙니다.",
+        "더 깔끔한 가치 줄: 수집하지 않은 외형을 나타내던 보라색 별표가 사라지고 동전이 숫자와 같은 높이에 맞춰졌습니다.",
+    },
+    zhCN = {
+        "同一件物品多次掉落时，每个窗口只显示自己那次分配的掷骰，不再混入之前分配的结果。",
+        "掷骰时间结束而游戏没有公布赢家时，窗口会在 12 秒后自动关闭，不再卡住。",
+        "价值行更清爽：未收藏外观的紫色星号已移除，货币图标与数字对齐。",
+    },
+    zhTW = {
+        "同一件物品多次掉落時，每個視窗只顯示自己那次分配的擲骰，不再混入先前分配的結果。",
+        "擲骰時間結束而遊戲沒有公布贏家時，視窗會在 12 秒後自動關閉，不再卡住。",
+        "價值行更清爽：未收藏外觀的紫色星號已移除，貨幣圖示與數字對齊。",
+    },
+}

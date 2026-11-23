@@ -1,14 +1,12 @@
-## 0.9.0 - See how it looks, hide the popup, and a cleaner window
+## 0.9.1 - Repeated items, stuck windows and a cleaner value line
 
-### See the look before you decide
-- **Ctrl + click on the item icon** opens the game's dressing room, so you can see how the piece looks on your character (transmog) before you choose.
-
-### Less clutter on your screen
-- New option to **hide the game's own "You received" popup** that appears at the bottom when you win an item. It is off by default, and you can turn it on or off in the settings.
+### Fixes
+- **Items that drop more than once now keep their rolls apart.** Before, the rolls of an earlier drop could show up in the new window, or the new window could stay empty. Now every window shows only the rolls of its own drop.
+- **A window can no longer get stuck.** If the time of a roll runs out and the game never announces a winner, the window now closes by itself after 12 seconds instead of staying on screen with an empty time bar.
 
 ### Cleaner look
-- The **decorative circles are gone** from the Violet Void and Frost designs.
-- In the value line, the **gold, silver and copper coins and the auction and disenchant icons are now the same size and sit at the same height as the numbers**, and each icon is next to its own price.
+- The **purple asterisk** that marked an appearance you had not collected is gone from the value line.
+- The **gold, silver and copper coins** now sit at the same height as the numbers next to them.
 
 ### Also
 - Translated into all 11 languages.
