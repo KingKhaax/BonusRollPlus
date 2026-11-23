@@ -1299,6 +1299,15 @@ local function FindFrame(itemID, link, key)
     return any
 end
 
+local function CountOpenCopies(itemID, link)
+    local name = type(link) == "string" and link:match("|h%[(.-)%]|h")
+    local n = 0
+    for _, f in ipairs(active) do
+        if not f.closingSoon and ((itemID and f.itemID == itemID) or (name and f.itemName and f.itemName:lower() == name:lower())) then n = n + 1 end
+    end
+    return n
+end
+
 local function AwardDelay()
     local d = db and tonumber(db.closeDelay)
     if d and d >= 0 and d <= 15 then return d end
@@ -1362,6 +1371,7 @@ local function OnLootMessage(text)
         print("|cff55ccffBRP|r windows: " .. (#ids > 0 and table.concat(ids, ", ") or "none") .. "  found: " .. tostring(f ~= nil))
     end
     if not f then return end
+    if CountOpenCopies(ItemID(r.link), r.link) > 1 and C_LootHistory then return end
     if r.type == "allpassed" then
         ReleaseAfterAward(f)
         return

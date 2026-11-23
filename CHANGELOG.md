@@ -1,5 +1,9 @@
 # Cambios
 
+## Pendiente (sin publicar)
+
+- Si caen dos copias iguales a la vez, las tiradas del chat (que no dicen a qué copia se refieren) se ignoran y cada ventana se rellena solo con el historial de botín, que sí distingue cada copia, así no se intercambian entre ventanas.
+
 ## 0.9.1
 
 - Cuando el mismo objeto sale varias veces, cada ventana muestra solo las tiradas de su propio reparto, sin las de repartos anteriores.
