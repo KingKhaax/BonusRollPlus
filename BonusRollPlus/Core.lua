@@ -574,7 +574,6 @@ function Release(f)
     DetachPanel(f)
     f.hostBlizz = nil
     f.rollID, f.fake, f.entries, f.chosen, f.closing, f.queued, f.closingSoon = nil, nil, nil, nil, nil, nil, nil
-    f.dropKey = nil
     for i, a in ipairs(active) do
         if a == f then table.remove(active, i) break end
     end
@@ -1192,7 +1191,7 @@ local function Setup(f, data)
     f.token = rollToken
     f.deadline = GetTime() + (f.rollTime or 60000) / 1000 + 10
     f.canDE, f.canGreed, f.canNeed = data.canDE, data.canGreed, data.canNeed
-    f.autoDone, f.expired, f.dropKey = nil, nil, nil
+    f.autoDone, f.expired = nil, nil
     ApplyFontScale(f)
     f.chosen, f.entries = nil, nil
     f.itemID = ItemID(data.link)
@@ -1280,43 +1279,22 @@ local function Setup(f, data)
     Layout()
 end
 
-local function FindFrame(itemID, link, key)
+local function FindFrame(itemID, link)
     local name = type(link) == "string" and link:match("|h%[(.-)%]|h")
-    local first, any
+    local any
     for _, f in ipairs(active) do
         if (itemID and f.itemID == itemID) or (name and f.itemName and f.itemName:lower() == name:lower()) then
-            if key and f.dropKey == key then return f end
-            any = any or f
-            if not f.closingSoon and not f.dropKey then first = first or f end
-        end
-    end
-    if key then return first end
-    for _, f in ipairs(active) do
-        if f.itemID == itemID or (name and f.itemName and f.itemName:lower() == name:lower()) then
             if not f.closingSoon then return f end
+            any = any or f
         end
     end
     return any
-end
-
-local function CountOpenCopies(itemID, link)
-    local name = type(link) == "string" and link:match("|h%[(.-)%]|h")
-    local n = 0
-    for _, f in ipairs(active) do
-        if not f.closingSoon and ((itemID and f.itemID == itemID) or (name and f.itemName and f.itemName:lower() == name:lower())) then n = n + 1 end
-    end
-    return n
 end
 
 local function AwardDelay()
     local d = db and tonumber(db.closeDelay)
     if d and d >= 0 and d <= 15 then return d end
     return 2
-end
-
-local function Readable(v)
-    if v == nil then return false end
-    return not (issecretvalue and issecretvalue(v))
 end
 
 local function MarkWon(f, name, link)
@@ -1371,7 +1349,6 @@ local function OnLootMessage(text)
         print("|cff55ccffBRP|r windows: " .. (#ids > 0 and table.concat(ids, ", ") or "none") .. "  found: " .. tostring(f ~= nil))
     end
     if not f then return end
-    if CountOpenCopies(ItemID(r.link), r.link) > 1 and C_LootHistory then return end
     if r.type == "allpassed" then
         ReleaseAfterAward(f)
         return
@@ -1385,71 +1362,6 @@ local function OnLootMessage(text)
         MarkWon(f, name, r.link)
     end
     RefreshPanel(f)
-end
-
-local function RollKind(state)
-    local S = (Enum and Enum.EncounterLootDropRollState) or {}
-    if state == (S.NeedMainSpec or 0) or state == (S.NeedOffSpec or 1) then return "need" end
-    if state == (S.Greed or 3) or state == (S.Transmog or 2) then return "greed" end
-    if state == (S.Pass or 5) then return "pass" end
-end
-
-local function DropKey(drop)
-    if not (Readable(drop.encounterID) and Readable(drop.lootListID)) then return nil end
-    return tostring(drop.encounterID) .. ":" .. tostring(drop.lootListID)
-end
-
-local function DropFinished(drop)
-    if drop.allPassed == true then return true end
-    for _, roll in ipairs(drop.rollInfos or {}) do
-        if roll.isWinner == true then return true end
-    end
-    return false
-end
-
-local function ApplyDrop(drop)
-    if type(drop) ~= "table" or not Readable(drop.itemHyperlink) then return end
-    local key = DropKey(drop)
-    local f = FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink, key)
-    if not f then return end
-    if key and not f.dropKey then
-        if DropFinished(drop) then return end
-        f.dropKey = key
-    end
-    local winnerName
-    for _, roll in ipairs(drop.rollInfos or {}) do
-        if Readable(roll.playerName) and Readable(roll.state) then
-            local kind = RollKind(roll.state)
-            if kind then
-                local name = MatchGroupName(ShortName(roll.playerName))
-                AddEntry(f, name, kind, Readable(roll.roll) and roll.roll or nil)
-                if roll.isWinner == true then winnerName = name end
-            end
-        end
-    end
-    if winnerName then
-        MarkWon(f, winnerName, drop.itemHyperlink)
-    elseif drop.allPassed == true then
-        ReleaseAfterAward(f)
-    end
-    RefreshPanel(f)
-end
-
-local function OnHistoryDrop(encounterID, lootListID)
-    if C_LootHistory and C_LootHistory.GetSortedInfoForDrop and Readable(encounterID) and Readable(lootListID) then
-        ApplyDrop(C_LootHistory.GetSortedInfoForDrop(encounterID, lootListID))
-    end
-end
-
-local function SyncFromHistory(f)
-    if not (C_LootHistory and C_LootHistory.GetAllEncounterInfos and C_LootHistory.GetSortedDropsForEncounter) then return end
-    for _, encounter in ipairs(C_LootHistory.GetAllEncounterInfos() or {}) do
-        for _, drop in ipairs(C_LootHistory.GetSortedDropsForEncounter(encounter.encounterID) or {}) do
-            if type(drop) == "table" and Readable(drop.itemHyperlink) and FindFrame(ItemID(drop.itemHyperlink), drop.itemHyperlink, DropKey(drop)) == f then
-                ApplyDrop(drop)
-            end
-        end
-    end
 end
 
 local ROLL_BUTTONS = { "NeedButton", "GreedButton", "TransmogButton", "DisenchantButton", "PassButton" }
@@ -1624,7 +1536,6 @@ local function OnStartRoll(rollID, rollTime)
     end
     C_Timer.After(0.6, function()
         if f.rollID == rollID and f.refreshTexts then f.refreshTexts() end
-        if f.rollID == rollID then SyncFromHistory(f) end
         if f.rollID == rollID and AutoDecide(f) == false then
             local token = f.token
             C_Timer.After(1.5, function()
@@ -2051,7 +1962,6 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         self:RegisterEvent("START_LOOT_ROLL")
         self:RegisterEvent("CANCEL_LOOT_ROLL")
         self:RegisterEvent("CHAT_MSG_LOOT")
-        pcall(self.RegisterEvent, self, "LOOT_HISTORY_UPDATE_DROP")
         pcall(self.RegisterEvent, self, "PLAYER_SPECIALIZATION_CHANGED")
         pcall(self.RegisterEvent, self, "ACTIVE_TALENT_GROUP_CHANGED")
         self:RegisterEvent("PLAYER_LOGIN")
@@ -2077,8 +1987,6 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         C_Timer.After(1, function()
             if ns.Profiles then ns.Profiles.AutoLoad() end
         end)
-    elseif event == "LOOT_HISTORY_UPDATE_DROP" then
-        OnHistoryDrop(a, b)
     elseif event == "CHAT_MSG_ADDON" then
         OnAddonMessage(a, b, c, d)
     elseif event == "PLAYER_ENTERING_WORLD" then
