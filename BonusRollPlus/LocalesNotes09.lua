@@ -86,3 +86,46 @@ ns.ChangelogL["0.9.1"] = {
         "價值行更清爽：未收藏外觀的紫色星號已移除，貨幣圖示與數字對齊。",
     },
 }
+
+ns.ChangelogL["0.9.2"] = {
+    deDE = {
+        "Behoben: Würfe und Gewinner erscheinen wieder im Fenster. Der Beute-Chat kommt ohne Link und mit dem Präfix [Beute] an, das wird jetzt richtig gelesen.",
+        "Die Wurfliste wird nur noch aus dem Chat gefüllt und beginnt für jeden Gegenstand leer, sodass keine Würfe früherer Verteilungen desselben Gegenstands auftauchen.",
+        "Fenster bleiben nach der Verteilung nicht mehr hängen.",
+    },
+    frFR = {
+        "Corrigé : les jets et le gagnant s'affichent de nouveau dans la fenêtre. Le chat de butin arrive sans lien et avec le préfixe [Butin], ce qui est maintenant lu correctement.",
+        "La liste des jets est remplie uniquement par le chat et commence vide pour chaque objet, sans jets de tirages précédents du même objet.",
+        "Les fenêtres ne restent plus bloquées après l'attribution.",
+    },
+    itIT = {
+        "Corretto: i tiri e il vincitore tornano a comparire nella finestra. La chat del bottino arriva senza link e con il prefisso [Bottino], ora letto correttamente.",
+        "L'elenco dei tiri si riempie solo dalla chat e parte vuoto per ogni oggetto, senza tiri di distribuzioni precedenti dello stesso oggetto.",
+        "Le finestre non restano più bloccate dopo l'assegnazione.",
+    },
+    ptBR = {
+        "Corrigido: as rolagens e o vencedor voltam a aparecer na janela. O chat de saque chega sem link e com o prefixo [Saque], agora lido corretamente.",
+        "A lista de rolagens é preenchida só pelo chat e começa vazia em cada item, sem rolagens de distribuições anteriores do mesmo item.",
+        "As janelas não ficam mais travadas depois da entrega.",
+    },
+    ruRU = {
+        "Исправлено: броски и победитель снова появляются в окне. Чат добычи приходит без ссылки и с префиксом [Добыча], теперь он читается правильно.",
+        "Список бросков заполняется только из чата и для каждого предмета начинается пустым, без бросков прошлых розыгрышей того же предмета.",
+        "Окна больше не зависают после розыгрыша.",
+    },
+    koKR = {
+        "수정: 굴림과 승자가 다시 창에 표시됩니다. 전리품 채팅이 링크 없이 [전리품] 접두어와 함께 오는 것을 올바르게 읽습니다.",
+        "굴림 목록은 채팅으로만 채워지며 아이템마다 비어 있는 상태로 시작해 같은 아이템의 이전 분배 굴림이 섞이지 않습니다.",
+        "분배 후 창이 멈춰 있지 않습니다.",
+    },
+    zhCN = {
+        "修复：掷骰结果和赢家重新显示在窗口中。战利品聊天不带链接且带有 [战利品] 前缀，现在可以正确读取。",
+        "掷骰列表只由聊天填充，并且每件物品都从空列表开始，不再混入同一物品之前分配的结果。",
+        "分配后窗口不再卡住。",
+    },
+    zhTW = {
+        "修復：擲骰結果和贏家重新顯示在視窗中。戰利品聊天不帶連結且帶有 [戰利品] 前綴，現在可以正確讀取。",
+        "擲骰列表只由聊天填入，且每件物品都從空列表開始，不再混入同一物品先前分配的結果。",
+        "分配後視窗不再卡住。",
+    },
+}

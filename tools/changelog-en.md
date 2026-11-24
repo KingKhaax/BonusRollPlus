@@ -1,12 +1,11 @@
-## 0.9.1 - Repeated items, stuck windows and a cleaner value line
+## 0.9.2 - Rolls and winners show up again
 
 ### Fixes
-- **Items that drop more than once now keep their rolls apart.** Before, the rolls of an earlier drop could show up in the new window, or the new window could stay empty. Now every window shows only the rolls of its own drop.
-- **A window can no longer get stuck.** If the time of a roll runs out and the game never announces a winner, the window now closes by itself after 12 seconds instead of staying on screen with an empty time bar.
+- **Rolls and the winner appear in the window again.** The game's loot chat arrives without item links and with a `[Loot]` prefix, which the addon did not understand, so windows stayed empty and got stuck. It is now read correctly.
+- **Windows no longer stay stuck** after the item is awarded.
 
-### Cleaner look
-- The **purple asterisk** that marked an appearance you had not collected is gone from the value line.
-- The **gold, silver and copper coins** now sit at the same height as the numbers next to them.
+### Rolls list
+- The list is filled **only from the loot chat** and starts **empty for every item**, so rolls from earlier drops of the same item never show up in a new window.
 
 ### Also
 - Translated into all 11 languages.

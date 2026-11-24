@@ -11,6 +11,19 @@ local PANEL, DARK, LINE = "#262626", "#0F0F0F", "#3A3A3A"
 
 local CHANGES = {
     {
+        v = "0.9.2", d = "24/11/2026",
+        en = {
+            "Fixed: rolls and the winner show up in the window again. The loot chat arrives without links and with the [Loot] prefix, and it is now read correctly.",
+            "The rolls list is filled only from the chat and starts empty for every item, so rolls from earlier drops of the same item never show up.",
+            "Windows no longer stay stuck after the item is awarded.",
+        },
+        es = {
+            "Arreglado: las tiradas y el ganador vuelven a salir en la ventana. El chat de botín llega sin enlaces y con el prefijo [Botín], y ahora se lee bien.",
+            "La lista de tiradas se rellena solo con el chat y empieza vacía en cada objeto, así que nunca salen tiradas de repartos anteriores del mismo objeto.",
+            "Las ventanas ya no se quedan pilladas después de repartirse el objeto.",
+        },
+    },
+    {
         v = "0.9.1", d = "23/11/2026",
         en = {
             "When the same item drops several times, each window shows only the rolls of its own drop, without the ones from earlier drops.",
