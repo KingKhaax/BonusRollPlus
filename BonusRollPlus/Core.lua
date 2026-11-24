@@ -51,7 +51,7 @@ end
 local function Compile(fmt)
     if type(fmt) ~= "string" then return end
     fmt = fmt:gsub("%%%%", "\1")
-    local parts, order, pos, n = { "^" }, {}, 1, 0
+    local parts, order, kinds, pos, n = { "^" }, {}, {}, 1, 0
     while pos <= #fmt do
         local s, e, num, kind = fmt:find("%%(%d*)%$?([sd])", pos)
         if not s then
@@ -61,11 +61,12 @@ local function Compile(fmt)
         parts[#parts + 1] = Escape(fmt:sub(pos, s - 1))
         n = n + 1
         order[n] = tonumber(num) or n
+        kinds[n] = kind
         parts[#parts + 1] = kind == "d" and "(%d+)" or "(.-)"
         pos = e + 1
     end
     parts[#parts + 1] = "$"
-    return table.concat(parts), order
+    return table.concat(parts), order, kinds
 end
 
 local function Match(entry, text)
@@ -73,7 +74,7 @@ local function Match(entry, text)
     if #caps == 0 then return end
     local out = {}
     for i, v in ipairs(caps) do out[entry.order[i]] = v end
-    return out
+    return out, caps
 end
 
 local compiled
@@ -82,22 +83,26 @@ local function Compiled()
     compiled = {}
     for _, s in ipairs(SPECS) do
         local fmt = _G[s[1]]
-        local pat, order = Compile(fmt)
+        local pat, order, kinds = Compile(fmt)
         if pat then
-            compiled[#compiled + 1] = { pat = pat, order = order, type = s[2], kind = s[3], fields = s[4], self = s[5] }
+            compiled[#compiled + 1] = { pat = pat, order = order, kinds = kinds, type = s[2], kind = s[3], fields = s[4], self = s[5] }
         end
     end
     return compiled
 end
 
 local function Parse(text)
+    text = text:gsub("^%[[^%]]*%]: ", "")
     for _, entry in ipairs(Compiled()) do
-        local caps = Match(entry, text)
+        local _, caps = Match(entry, text)
         if caps then
             local r = { type = entry.type, kind = entry.kind }
-            for i, field in ipairs(entry.fields) do r[field] = caps[i] end
+            for i, v in ipairs(caps) do
+                if entry.kinds[i] == "d" then r.value = tonumber(v)
+                elseif v:find("%[.-%]") then r.link = v
+                else r.player = v end
+            end
             if entry.self then r.player = UnitName("player") end
-            if r.value then r.value = tonumber(r.value) end
             return r
         end
     end
@@ -105,6 +110,10 @@ end
 
 local function ItemID(link)
     return link and tonumber(link:match("item:(%d+)"))
+end
+
+local function LinkName(link)
+    return type(link) == "string" and (link:match("|h%[(.-)%]|h") or link:match("%[(.-)%]"))
 end
 
 local function ShortName(name)
@@ -1280,7 +1289,7 @@ local function Setup(f, data)
 end
 
 local function FindFrame(itemID, link)
-    local name = type(link) == "string" and link:match("|h%[(.-)%]|h")
+    local name = LinkName(link)
     local any
     for _, f in ipairs(active) do
         if (itemID and f.itemID == itemID) or (name and f.itemName and f.itemName:lower() == name:lower()) then

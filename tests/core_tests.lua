@@ -55,6 +55,8 @@ r = ns.Parse("Zandri won: " .. link)
 eq(r.type, "won") eq(r.player, "Zandri")
 r = ns.Parse("Tirada de Codicia: " .. link .. " 88 por Kael")
 eq(r.type, "rolled") eq(r.value, 88) eq(r.link, link) eq(r.player, "Kael")
+r = ns.Parse("[Loot]: Need Roll - 37 for [Crown Item] by Ben Whittaker")
+eq(r.type, "rolled") eq(r.value, 37) eq(r.player, "Ben Whittaker") eq(r.link, "[Crown Item]")
 eq(ns.Parse("something unrelated"), nil)
 
 local pat = ns.Compile("%s (50%% off) [x]")
