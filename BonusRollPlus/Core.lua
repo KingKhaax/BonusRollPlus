@@ -192,6 +192,13 @@ local function QualityColor(q)
     return 1, 1, 1
 end
 
+local function IsGear(link)
+    if not (C_Item and C_Item.GetItemInfoInstant and link) then return false end
+    local ok, _, _, _, equipLoc, _, classID = pcall(C_Item.GetItemInfoInstant, link)
+    if not ok or (classID ~= 2 and classID ~= 4) then return false end
+    return type(equipLoc) == "string" and equipLoc ~= "" and not equipLoc:find("NON_EQUIP")
+end
+
 local function LevelTag(ilvl, r, g, b, gap)
     if not ilvl then return "" end
     local function c(v) return math.floor((tonumber(v) or 1) * 255 + 0.5) end
@@ -1198,7 +1205,7 @@ function MiniRefresh(f)
     m.ring:SetColorTexture(r, g, b, 1)
     m.name:SetTextColor(r, g, b)
     local ilvl = ItemMeta(f.link)
-    m.name:SetText((ilvl and (LevelTag(ilvl, r, g, b, "") .. " ") or "") .. (f.itemName or "?"))
+    m.name:SetText((ilvl and IsGear(f.link) and (LevelTag(ilvl, r, g, b, "") .. " ") or "") .. (f.itemName or "?"))
     ns.MiniMark(f)
 end
 
@@ -1247,7 +1254,7 @@ local function Setup(f, data)
         local spec = T.name or {}
         if spec.upper then nm = nm:upper() end
         local suffix = ""
-        if ilvl and not spec.noIlvl then suffix = LevelTag(ilvl, f.qr, f.qg, f.qb, "") .. " " end
+        if ilvl and not spec.noIlvl and IsGear(f.link) then suffix = LevelTag(ilvl, f.qr, f.qg, f.qb, "") .. " " end
         f.name:SetText(suffix .. nm)
         local pieceText = piece or ""
         if db.showUpgrade then
@@ -1724,8 +1731,7 @@ local function TooltipLevel(tip, data)
     local link = type(data) == "table" and (data.hyperlink or (data.id and ("item:" .. data.id)))
     if not link or tip.brpData == data then return end
     tip.brpData = data
-    local equipLoc = C_Item and C_Item.GetItemInfoInstant and select(4, C_Item.GetItemInfoInstant(link))
-    if not equipLoc or equipLoc == "" then return end
+    if not IsGear(link) then return end
     local ilvl = ItemMeta(link)
     if not ilvl then return end
     local quality = C_Item and C_Item.GetItemInfo and select(3, C_Item.GetItemInfo(link))
@@ -1764,8 +1770,7 @@ local function ChatLevel(_, _, msg, ...)
     if not (db and db.chatIlvl) or type(msg) ~= "string" then return false end
     local ok, out = pcall(string.gsub, msg, "|H(item:[^|]*)|h%[(.-)%]|h", function(l, name)
         if name:find("^%(%d+%)") then return nil end
-        local equipLoc = C_Item and C_Item.GetItemInfoInstant and select(4, C_Item.GetItemInfoInstant(l))
-        if not equipLoc or equipLoc == "" then return nil end
+        if not IsGear(l) then return nil end
         local ilvl = ItemMeta(l)
         if not ilvl then return nil end
         return "|H" .. l .. "|h[(" .. ilvl .. ") " .. name .. "]|h"
@@ -1872,7 +1877,7 @@ function ns.GetHistoryEntries(n, minQuality, mineOnly)
         if (not minQuality or minQuality <= 0 or (h.q or 0) >= minQuality) and (not mineOnly or h.me) then
             local link, ilvl = HistoryItem(h)
             local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
-            local level = LevelTag(ilvl, QualityColor(h.q))
+            local level = IsGear(link) and LevelTag(ilvl, QualityColor(h.q)) or ""
             local roll = h.value and (" (" .. h.value .. ")") or ""
             out[#out + 1] = {
                 link = link,
