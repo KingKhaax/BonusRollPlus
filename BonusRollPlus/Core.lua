@@ -1693,7 +1693,7 @@ local function TooltipLevel(tip, data)
     local text = line:GetText()
     if type(text) ~= "string" or text == "" or line.brpTagged == text then return end
     local r, g, b = QualityColor(quality)
-    local out = text .. LevelTag(ilvl, r, g, b, " ")
+    local out = LevelTag(ilvl, r, g, b, "") .. " " .. text
     line:SetText(out)
     line.brpTagged = line:GetText()
 end
