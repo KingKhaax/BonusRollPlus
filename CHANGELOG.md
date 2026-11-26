@@ -3,7 +3,7 @@
 ## Pendiente (sin publicar)
 
 - Nuevo ajuste: el nivel del objeto, entre paréntesis y con el color del objeto, también sale a la izquierda del nombre en los tooltips del juego de cualquier objeto equipable (activado por defecto; se apaga en ajustes).
-- El nivel del objeto junto al nombre, entre paréntesis, sale ahora con el color de la calidad del objeto (antes salía en crema) y con la misma fuente que el nombre.
+- El nivel del objeto, entre paréntesis, sale ahora a la izquierda del nombre y con el color de la calidad del objeto (antes salía en crema) y con la misma fuente que el nombre.
 
 ## 0.9.2
 

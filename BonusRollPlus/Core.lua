@@ -1174,7 +1174,7 @@ function MiniRefresh(f)
     m.ring:SetColorTexture(r, g, b, 1)
     m.name:SetTextColor(r, g, b)
     local ilvl = ItemMeta(f.link)
-    m.name:SetText((f.itemName or "?") .. LevelTag(ilvl, r, g, b))
+    m.name:SetText((ilvl and (LevelTag(ilvl, r, g, b, "") .. " ") or "") .. (f.itemName or "?"))
     ns.MiniMark(f)
 end
 
@@ -1223,8 +1223,8 @@ local function Setup(f, data)
         local spec = T.name or {}
         if spec.upper then nm = nm:upper() end
         local suffix = ""
-        if ilvl and not spec.noIlvl then suffix = LevelTag(ilvl, f.qr, f.qg, f.qb) end
-        f.name:SetText(nm .. suffix)
+        if ilvl and not spec.noIlvl then suffix = LevelTag(ilvl, f.qr, f.qg, f.qb, "") .. " " end
+        f.name:SetText(suffix .. nm)
         local pieceText = piece or ""
         if db.showUpgrade then
             local delta = UpgradeDelta(f.link, ilvl)
@@ -1868,7 +1868,7 @@ function ns.BuildPreview(T, parent)
     f.icon:SetTexture(tex or "Interface\\Icons\\INV_Misc_QuestionMark")
     local slot = INVTYPE_CHEST or "Chest"
     local sub = C_Item and C_Item.GetItemSubClassInfo and C_Item.GetItemSubClassInfo(4, 3)
-    f.name:SetText(L.SAMPLE_ITEM .. LevelTag(27, r, g, b))
+    f.name:SetText(LevelTag(27, r, g, b, "") .. " " .. L.SAMPLE_ITEM)
     f.piece:SetText(sub and (slot .. " · " .. sub) or slot)
     if f.bind then f.bind:SetText(ITEM_BIND_ON_PICKUP or "") end
     for _, btn in ipairs(f.buttons) do
