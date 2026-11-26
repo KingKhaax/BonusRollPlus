@@ -265,4 +265,5 @@ startRoll(26)
 for loc, items in pairs(ns.ChangelogL["0.9.0"]) do assert(#items == 3, "0.9.0 notes " .. loc) end
 for loc, items in pairs(ns.ChangelogL["0.9.1"]) do assert(#items == 3, "0.9.1 notes " .. loc) end
 for loc, items in pairs(ns.ChangelogL["0.9.2"]) do assert(#items == 3, "0.9.2 notes " .. loc) end
-print("0.9.2 ok")
+for loc, items in pairs(ns.ChangelogL["0.10.0"]) do assert(#items == 3, "0.10.0 notes " .. loc) end
+print("0.10.0 ok")

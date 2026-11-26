@@ -129,3 +129,46 @@ ns.ChangelogL["0.9.2"] = {
         "分配後視窗不再卡住。",
     },
 }
+
+ns.ChangelogL["0.10.0"] = {
+    deDE = {
+        "Die Gegenstandsstufe steht jetzt in Klammern und in der Qualitätsfarbe vor dem Namen von Ausrüstung, in Tooltips, im Chat, im Würfelfenster und im Verlauf. Tooltips zeigen außerdem den Vergleich mit deiner Ausrüstung und den Auktions- und Entzauberwert (TSM).",
+        "Neue Hinweise: Gegenstand wird beim Anlegen gebunden, Rüstung, Waffe oder Schild, die deine Klasse nicht benutzen kann, ein Ton (aus 13 Tönen wählbar, mit Testknopf), die Erinnerung zum Tauschen für 2 Stunden und eine Meldung, wenn du knapp verlierst.",
+        "Die Einstellungen sind nach Inhalt in Abschnitte gegliedert, und der Verlauf kann nur deine Gewinne zeigen.",
+    },
+    frFR = {
+        "Le niveau d'objet s'affiche maintenant entre parenthèses, de la couleur de la qualité, avant le nom de l'équipement, dans les infobulles, le chat, la fenêtre de jet et l'historique. Les infobulles ajoutent la comparaison avec votre équipement et la valeur en vente aux enchères et en désenchantement (TSM).",
+        "Nouveaux avertissements : objet lié quand équipé, armure, arme ou bouclier que votre classe ne peut pas utiliser, un son (au choix parmi 13, avec un bouton de test), le rappel d'échange pendant 2 heures et un message quand vous perdez de peu.",
+        "Les paramètres sont séparés par contenu en sections, et l'historique peut n'afficher que vos victoires.",
+    },
+    itIT = {
+        "Il livello dell'oggetto ora compare tra parentesi, nel colore della qualità, prima del nome dell'equipaggiamento, nei tooltip, nella chat, nella finestra di tiro e nella cronologia. I tooltip aggiungono il confronto con il tuo equipaggiamento e il valore all'asta e al disincanto (TSM).",
+        "Nuovi avvisi: oggetto vincolato all'equipaggiamento, armatura, arma o scudo che la tua classe non può usare, un suono (a scelta tra 13, con pulsante di prova), il promemoria di scambio per 2 ore e un messaggio quando perdi per poco.",
+        "Le impostazioni sono divise per contenuto in sezioni e la cronologia può mostrare solo le tue vittorie.",
+    },
+    ptBR = {
+        "O nível do item agora aparece entre parênteses, na cor da qualidade, antes do nome do equipamento, nas dicas, no chat, na janela de rolagem e no histórico. As dicas também mostram a comparação com seu equipamento e o valor no leilão e ao desencantar (TSM).",
+        "Novos avisos: item vinculado ao equipar, armadura, arma ou escudo que sua classe não pode usar, um som (à escolha entre 13, com botão de teste), o lembrete de troca por 2 horas e uma mensagem quando você perde por pouco.",
+        "As configurações foram separadas por conteúdo em seções, e o histórico pode mostrar só as suas vitórias.",
+    },
+    ruRU = {
+        "Уровень предмета теперь показывается в скобках цветом качества перед названием экипировки в подсказках, чате, окне броска и истории. Подсказки также показывают сравнение с вашей экипировкой и цену на аукционе и при распылении (TSM).",
+        "Новые предупреждения: предмет становится персональным при надевании, броня, оружие или щит, которые ваш класс не может использовать, звук (на выбор из 13, с кнопкой проверки), напоминание об обмене в течение 2 часов и сообщение, если вы проиграли совсем чуть-чуть.",
+        "Настройки разделены по содержимому на разделы, а история может показывать только ваши победы.",
+    },
+    koKR = {
+        "아이템 레벨이 이제 장비 이름 앞에 품질 색상으로 괄호 안에 표시됩니다(툴팁, 채팅, 굴림 창, 기록). 툴팁에는 착용 장비와의 비교와 경매장·마력 추출 가치(TSM)도 나옵니다.",
+        "새 경고: 착용 시 귀속, 내 직업이 쓸 수 없는 방어구·무기·방패, 소리(13가지 중 선택, 테스트 버튼 포함), 2시간 동안의 거래 알림, 근소하게 졌을 때의 메시지.",
+        "설정이 내용별 구역으로 나뉘었고, 기록에서 내가 이긴 것만 볼 수 있습니다.",
+    },
+    zhCN = {
+        "物品等级现在以品质颜色的括号显示在装备名称前，适用于提示、聊天、掷骰窗口和历史记录。提示还会显示与当前装备的对比以及拍卖和分解价值（TSM）。",
+        "新增提醒：装备后绑定、你的职业无法使用的护甲、武器或盾牌、声音（13 种可选，带试听按钮）、2 小时内可交易的提醒，以及以微小差距落败时的消息。",
+        "设置按内容分成多个部分，历史记录可以只显示你赢得的物品。",
+    },
+    zhTW = {
+        "物品等級現在以品質顏色的括號顯示在裝備名稱前，適用於提示、聊天、擲骰視窗和歷史記錄。提示還會顯示與目前裝備的比較以及拍賣和分解價值（TSM）。",
+        "新增提醒：裝備後綁定、你的職業無法使用的護甲、武器或盾牌、聲音（13 種可選，附試聽按鈕）、2 小時內可交易的提醒，以及以微小差距落敗時的訊息。",
+        "設定依內容分成多個區段，歷史記錄可以只顯示你贏得的物品。",
+    },
+}

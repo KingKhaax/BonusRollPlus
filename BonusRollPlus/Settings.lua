@@ -11,6 +11,19 @@ local PANEL, DARK, LINE = "#262626", "#0F0F0F", "#3A3A3A"
 
 local CHANGES = {
     {
+        v = "0.10.0", d = "26/11/2026",
+        en = {
+            "The item level now shows in brackets, in the quality colour, before the name of equipment in tooltips, chat, the roll window and the history. Tooltips also show the comparison with what you wear and the auction and disenchant value (TSM).",
+            "New warnings: binds when equipped, armor, weapon or shield your class cannot use, a sound (pick from 13, with a test button), a reminder that you can trade the item for 2 hours and a message when you lose by a few points.",
+            "Settings are split by content into sections, and the history can show only your wins.",
+        },
+        es = {
+            "El nivel del objeto sale ahora entre paréntesis, con el color de la calidad, antes del nombre del equipo en tooltips, chat, ventana de tirada e historial. Los tooltips también muestran la comparación con lo que llevas puesto y el valor en subasta y al desencantar (TSM).",
+            "Avisos nuevos: se liga al equiparlo, armadura, arma o escudo que tu clase no puede usar, un sonido (a elegir entre 13, con botón de prueba), el recordatorio de que puedes intercambiar el objeto 2 horas y un mensaje cuando pierdes por pocos puntos.",
+            "Los ajustes se separan por contenido en secciones, y el historial puede mostrar solo tus victorias.",
+        },
+    },
+    {
         v = "0.9.2", d = "24/11/2026",
         en = {
             "Fixed: rolls and the winner show up in the window again. The loot chat arrives without links and with the [Loot] prefix, and it is now read correctly.",

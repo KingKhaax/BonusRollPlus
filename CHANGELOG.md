@@ -1,6 +1,6 @@
 # Cambios
 
-## Pendiente (sin publicar)
+## 0.10.0
 
 - Ajustes: la pestaña de ajustes de las ventanas se separa por contenido en secciones (Ventanas, Ventana de botín del juego, Tiradas e información, Tooltips y chat, Avisos y notificaciones, Avisos).
 - Tooltips: nuevas líneas, cada una con su ajuste: comparación con lo que llevas puesto (+12 / -3) y valor en subasta y al desencantar (con TSM).
