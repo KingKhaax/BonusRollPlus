@@ -215,6 +215,97 @@ local function MakeCheck(parent, text, get, set)
     return c
 end
 
+local dropFrame, dropCatcher
+
+local function CloseDropdown()
+    if dropFrame then dropFrame:Hide() end
+    if dropCatcher then dropCatcher:Hide() end
+end
+
+local function OpenDropdown(anchor, entries, current, onPick, width)
+    if not dropFrame then
+        dropCatcher = CreateFrame("Button", nil, UIParent)
+        dropCatcher:SetAllPoints(UIParent)
+        dropCatcher:SetFrameStrata("FULLSCREEN")
+        dropCatcher:SetScript("OnClick", CloseDropdown)
+        dropCatcher:Hide()
+        dropFrame = CreateFrame("Frame", nil, UIParent)
+        dropFrame:SetFrameStrata("FULLSCREEN_DIALOG")
+        dropFrame.bg = Solid(dropFrame, "BACKGROUND", DARK, 0.98)
+        dropFrame.bg:SetAllPoints()
+        dropFrame.edges = Edges(dropFrame, EDGE, 1)
+        dropFrame.rows = {}
+        dropFrame:Hide()
+    end
+    if dropFrame:IsShown() and dropFrame.owner == anchor then
+        CloseDropdown()
+        return
+    end
+    dropFrame.owner = anchor
+    local rowH = 24
+    width = width or anchor:GetWidth()
+    dropFrame:SetSize(width, #entries * rowH + 4)
+    dropFrame:ClearAllPoints()
+    dropFrame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -2)
+    for i, entry in ipairs(entries) do
+        local row = dropFrame.rows[i]
+        if not row then
+            row = CreateFrame("Button", nil, dropFrame)
+            row:SetHeight(rowH)
+            row.hl = row:CreateTexture(nil, "HIGHLIGHT")
+            row.hl:SetColorTexture(Hex(ACCENT, 0.3))
+            row.hl:SetAllPoints()
+            row.sel = Solid(row, "BACKGROUND", ACCENT, 0.25)
+            row.sel:SetAllPoints()
+            row.fs = Label(row, "", 13, "#FFFFFF")
+            row.fs:SetPoint("LEFT", 10, 0)
+            row.fs:SetPoint("RIGHT", -6, 0)
+            row.fs:SetWordWrap(false)
+            dropFrame.rows[i] = row
+        end
+        row:ClearAllPoints()
+        row:SetPoint("TOPLEFT", dropFrame, "TOPLEFT", 2, -2 - (i - 1) * rowH)
+        row:SetPoint("RIGHT", dropFrame, "RIGHT", -2, 0)
+        row.fs:SetText(entry.label)
+        row.sel:SetShown(entry.key == current)
+        row.key = entry.key
+        row:SetScript("OnClick", function(self)
+            CloseDropdown()
+            onPick(self.key)
+        end)
+        row:Show()
+    end
+    for i = #entries + 1, #dropFrame.rows do dropFrame.rows[i]:Hide() end
+    dropCatcher:Show()
+    dropFrame:Show()
+    dropFrame:Raise()
+end
+
+-- A button showing the current choice; clicking it opens a list with every choice.
+local function MakeDropdown(parent, w, h, values, get, set)
+    local b = MakeButton(parent, "", w, h, function(self)
+        OpenDropdown(self, values, get(), function(key)
+            set(key)
+            self:Refresh()
+        end, w)
+    end)
+    b.fs:ClearAllPoints()
+    b.fs:SetPoint("LEFT", 10, 0)
+    b.fs:SetPoint("RIGHT", -22, 0)
+    b.fs:SetJustifyH("LEFT")
+    b.caret = Label(b, "v", 12, ACCENT)
+    b.caret:SetPoint("RIGHT", -8, 0)
+    function b:Refresh()
+        local current = get()
+        for _, v in ipairs(values) do
+            if v.key == current then self.fs:SetText(v.label) end
+        end
+    end
+    b:SetScript("OnShow", b.Refresh)
+    b:SetScript("OnHide", CloseDropdown)
+    return b
+end
+
 local function MakeSlider(parent, text, min, max, step, get, set, fmt)
     local holder = CreateFrame("Frame", nil, parent)
     holder:SetSize(420, 40)
@@ -468,18 +559,27 @@ local function BuildSettings(tab)
         { key = "left", label = L.DIR_LEFT }, { key = "right", label = L.DIR_RIGHT },
     }
     Add(MakeCycle(child, 280, 26, dirs, function() return db().stackDir end, function(v) ns.SetValue("stackDir", v) end, L.STACK_DIR_FMT), 36)
-    check(L.USE_BLIZZARD, "useBlizzard", function(v) ns.SetValue("useBlizzard", v) end)
-    check(L.SHOW_ROLLS, "showRolls", function(v) ns.SetShowRolls(v) end)
     check(L.ULTRA_COMPACT, "ultra", function(v) ns.SetValue("ultra", v) end)
     check(L.COMPACT_ROWS, "compact", function(v) ns.SetCompact(v) end)
+    local lock = check(L.LOCK, "locked", function(v) ns.SetLocked(v) end, 30)
+
+    Section(L.SEC_LOOT)
+    check(L.USE_BLIZZARD, "useBlizzard", function(v) ns.SetValue("useBlizzard", v) end)
+    check(L.HIDE_WON, "hideWon", function(v) ns.SetValue("hideWon", v) end, 30)
+
+    Section(L.SEC_ROLLINFO)
+    check(L.SHOW_ROLLS, "showRolls", function(v) ns.SetShowRolls(v) end)
     check(L.SHOW_UPGRADE, "showUpgrade", function(v) ns.SetShowUpgrade(v) end)
     check(L.SHOW_VALUE, "showValue", option("showValue"))
     check(L.COUNTDOWN, "countdown", option("countdown"))
-    check(L.HIDE_WON, "hideWon", function(v) ns.SetValue("hideWon", v) end, 30)
+
+    Section(L.SEC_TIPS)
     check(L.TIP_ILVL, "tipIlvl", function(v) ns.SetValue("tipIlvl", v) end, 30)
     check(L.TIP_DELTA, "tipDelta", function(v) ns.SetValue("tipDelta", v) end, 38)
     check(L.TIP_VALUE, "tipValue", function(v) ns.SetValue("tipValue", v) end, 38)
     check(L.CHAT_ILVL, "chatIlvl", function(v) ns.SetValue("chatIlvl", v) end, 38)
+
+    Section(L.SEC_NOTICES)
     check(L.WARN_USE, "warnUse", function(v) ns.SetValue("warnUse", v) end, 38)
     check(L.WARN_TRADE, "warnTrade", function(v) ns.SetValue("warnTrade", v) end, 38)
     check(L.WIN_NOTICE, "winNotice", function(v) ns.SetValue("winNotice", v) end, 38)
@@ -487,16 +587,17 @@ local function BuildSettings(tab)
     for _, entry in ipairs(ns.WIN_SOUNDS) do sounds[#sounds + 1] = { key = entry.key, label = L[entry.label] } end
     local soundRow = CreateFrame("Frame", nil, child)
     soundRow:SetSize(560, 28)
-    local soundPick = MakeCycle(soundRow, 300, 26, sounds, function() return db().winSound or "epic" end, function(v)
+    local soundLabel = Label(soundRow, L.WIN_SOUND_LABEL, 13, "#E8E8E8")
+    soundLabel:SetPoint("LEFT", soundRow, "LEFT", 24, 0)
+    local soundPick = MakeDropdown(soundRow, 200, 26, sounds, function() return db().winSound or "epic" end, function(v)
         ns.SetValue("winSound", v)
         ns.PlayWinSound(v)
-    end, L.WIN_SOUND_FMT)
-    soundPick:SetPoint("LEFT", soundRow, "LEFT", 0, 0)
-    local soundTest = MakeButton(soundRow, L.WIN_SOUND_TEST, 110, 26, function() ns.PlayWinSound() end)
+    end)
+    soundPick:SetPoint("LEFT", soundRow, "LEFT", 270, 0)
+    local soundTest = MakeButton(soundRow, L.WIN_SOUND_TEST, 100, 26, function() ns.PlayWinSound() end)
     soundTest:SetPoint("LEFT", soundPick, "RIGHT", 8, 0)
     function soundRow:Refresh() soundPick:Refresh() end
     Add(soundRow, 36)
-    local lock = check(L.LOCK, "locked", function(v) ns.SetLocked(v) end, 30)
 
     Section(L.SEC_ALERTS)
     check(L.SOUND_ALERT, "sound", option("sound"))

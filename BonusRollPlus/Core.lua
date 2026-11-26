@@ -1762,16 +1762,27 @@ function ns.GetHistoryLines(n)
     return lines
 end
 
-ns.WIN_SOUNDS = {
-    { key = "epic", id = 44292, label = "SOUND_EPIC" },
-    { key = "legendary", id = 63971, label = "SOUND_LEGENDARY" },
-    { key = "levelup", id = 888, label = "SOUND_LEVELUP" },
-    { key = "quest", id = 878, label = "SOUND_QUEST" },
-    { key = "raidwarning", id = 8959, label = "SOUND_RAIDWARNING" },
-    { key = "ready", id = 8960, label = "SOUND_READY" },
-    { key = "alarm", id = 12867, label = "SOUND_ALARM" },
-    { key = "ping", id = 3175, label = "SOUND_PING" },
+local SOUND_DEFS = {
+    { key = "epic", kit = "UI_EPICLOOT_TOAST", id = 44292, label = "SOUND_EPIC" },
+    { key = "legendary", kit = "UI_LEGENDARY_LOOT_TOAST", id = 63971, label = "SOUND_LEGENDARY" },
+    { key = "lesser", kit = "UI_LOOT_TOAST_LESSER_ITEM_WON", label = "SOUND_LESSER" },
+    { key = "bonusend", kit = "UI_BONUS_LOOT_ROLL_END", label = "SOUND_BONUSEND" },
+    { key = "bonusstart", kit = "UI_BONUS_LOOT_ROLL_START", label = "SOUND_BONUSSTART" },
+    { key = "coin", kit = "LOOT_WINDOW_COIN_SOUND", id = 120, label = "SOUND_COIN" },
+    { key = "boss", kit = "UI_RAID_BOSS_DEFEATED", label = "SOUND_BOSS" },
+    { key = "levelup", kit = "LEVELUP", id = 888, label = "SOUND_LEVELUP" },
+    { key = "quest", kit = "IG_QUEST_LIST_COMPLETE", id = 878, label = "SOUND_QUEST" },
+    { key = "raidwarning", kit = "RAID_WARNING", id = 8959, label = "SOUND_RAIDWARNING" },
+    { key = "ready", kit = "READY_CHECK", id = 8960, label = "SOUND_READY" },
+    { key = "alarm", kit = "ALARM_CLOCK_WARNING_3", id = 12867, label = "SOUND_ALARM" },
+    { key = "ping", kit = "MAP_PING", id = 3175, label = "SOUND_PING" },
 }
+
+ns.WIN_SOUNDS = {}
+for _, def in ipairs(SOUND_DEFS) do
+    local id = (SOUNDKIT and SOUNDKIT[def.kit]) or def.id
+    if id then ns.WIN_SOUNDS[#ns.WIN_SOUNDS + 1] = { key = def.key, id = id, label = def.label } end
+end
 
 function ns.PlayWinSound(key)
     key = key or (db and db.winSound) or "epic"
@@ -1781,6 +1792,7 @@ function ns.PlayWinSound(key)
             return
         end
     end
+    if ns.WIN_SOUNDS[1] then pcall(PlaySound, ns.WIN_SOUNDS[1].id, "Master") end
 end
 
 local function TooltipLevel(tip, data)

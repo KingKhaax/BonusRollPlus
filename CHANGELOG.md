@@ -2,10 +2,11 @@
 
 ## Pendiente (sin publicar)
 
+- Ajustes: la pestaña de ajustes de las ventanas se separa por contenido en secciones (Ventanas, Ventana de botín del juego, Tiradas e información, Tooltips y chat, Avisos y notificaciones, Avisos).
 - Tooltips: nuevas líneas, cada una con su ajuste: comparación con lo que llevas puesto (+12 / -3) y valor en subasta y al desencantar (con TSM).
 - Chat: el nivel del objeto aparece dentro de los enlaces de objetos (botín, grupo, banda, hermandad y decir).
 - Ventana de tirada: avisa de objetos que se ligan al equiparlos, de armadura más pesada de la que puedes llevar, de escudos y de armas que tu clase no puede usar (según las habilidades de armas y armaduras de cada clase en Classic).
-- Al ganar un objeto: sonido (a elegir entre ocho en ajustes, con botón para probarlo al momento) y mensaje, aviso de que puedes intercambiarlo con el grupo durante 2 horas y, si pierdes por 3 puntos o menos, un mensaje de "por poco".
+- Al ganar un objeto: sonido (se elige en una lista desplegable con 13 sonidos de botín y más, con botón para probarlo al momento) y mensaje, aviso de que puedes intercambiarlo con el grupo durante 2 horas y, si pierdes por 3 puntos o menos, un mensaje de "por poco".
 - Historial: nuevo filtro para ver solo tus victorias. El filtro por calidad y la exportación a texto ya existían.
 - Nuevo ajuste: el nivel del objeto, entre paréntesis y con el color del objeto, también sale a la izquierda del nombre en los tooltips del juego de cualquier objeto equipable (activado por defecto; se apaga en ajustes).
 - El nivel del objeto, entre paréntesis, solo sale en piezas de equipo (armas, armaduras, anillos, abalorios, de cualquier clase; no en materiales ni objetos de vender), a la izquierda del nombre y con el color de la calidad del objeto (antes salía en crema) y con la misma fuente que el nombre.
