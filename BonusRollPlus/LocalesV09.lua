@@ -2,6 +2,7 @@ local ADDON, ns = ...
 
 local NEW = {
     enUS = {
+        WARN_WEAPON = "Weapon your class cannot use",
         TIP_DELTA = "Show in item tooltips how the item compares with what you wear",
         TIP_DELTA_LINE = "Compared with what you wear: %s",
         TIP_VALUE = "Show the auction and disenchant value in item tooltips (needs TSM)",
@@ -20,6 +21,7 @@ local NEW = {
         WINNERS_FILTER = "Show: %s",
     },
     esES = {
+        WARN_WEAPON = "Arma que tu clase no puede usar",
         TIP_DELTA = "Mostrar en los tooltips cómo se compara el objeto con lo que llevas puesto",
         TIP_DELTA_LINE = "Comparado con lo que llevas: %s",
         TIP_VALUE = "Mostrar en los tooltips el valor en subasta y al desencantar (necesita TSM)",
@@ -38,6 +40,7 @@ local NEW = {
         WINNERS_FILTER = "Mostrar: %s",
     },
     deDE = {
+        WARN_WEAPON = "Waffe, die deine Klasse nicht benutzen kann",
         TIP_DELTA = "In Tooltips anzeigen, wie der Gegenstand im Vergleich zu deiner Ausrüstung abschneidet",
         TIP_DELTA_LINE = "Verglichen mit deiner Ausrüstung: %s",
         TIP_VALUE = "In Tooltips den Auktions- und Entzauberwert anzeigen (benötigt TSM)",
@@ -56,6 +59,7 @@ local NEW = {
         WINNERS_FILTER = "Anzeigen: %s",
     },
     frFR = {
+        WARN_WEAPON = "Arme que votre classe ne peut pas utiliser",
         TIP_DELTA = "Afficher dans les infobulles la comparaison de l'objet avec ce que vous portez",
         TIP_DELTA_LINE = "Comparé à ce que vous portez : %s",
         TIP_VALUE = "Afficher dans les infobulles la valeur en vente aux enchères et en désenchantement (nécessite TSM)",
@@ -74,6 +78,7 @@ local NEW = {
         WINNERS_FILTER = "Afficher : %s",
     },
     itIT = {
+        WARN_WEAPON = "Arma che la tua classe non può usare",
         TIP_DELTA = "Mostra nei tooltip il confronto dell'oggetto con quello che indossi",
         TIP_DELTA_LINE = "Rispetto a ciò che indossi: %s",
         TIP_VALUE = "Mostra nei tooltip il valore all'asta e al disincanto (richiede TSM)",
@@ -92,6 +97,7 @@ local NEW = {
         WINNERS_FILTER = "Mostra: %s",
     },
     ptBR = {
+        WARN_WEAPON = "Arma que sua classe não pode usar",
         TIP_DELTA = "Mostrar nas dicas como o item se compara com o que você veste",
         TIP_DELTA_LINE = "Comparado com o que você veste: %s",
         TIP_VALUE = "Mostrar nas dicas o valor no leilão e ao desencantar (requer TSM)",
@@ -110,6 +116,7 @@ local NEW = {
         WINNERS_FILTER = "Mostrar: %s",
     },
     ruRU = {
+        WARN_WEAPON = "Оружие, которое ваш класс не может использовать",
         TIP_DELTA = "Показывать в подсказках, как предмет соотносится с надетым",
         TIP_DELTA_LINE = "По сравнению с надетым: %s",
         TIP_VALUE = "Показывать в подсказках цену на аукционе и при распылении (нужен TSM)",
@@ -128,6 +135,7 @@ local NEW = {
         WINNERS_FILTER = "Показать: %s",
     },
     koKR = {
+        WARN_WEAPON = "내 직업이 사용할 수 없는 무기",
         TIP_DELTA = "툴팁에 착용 중인 장비와 비교한 결과 표시",
         TIP_DELTA_LINE = "착용 장비와 비교: %s",
         TIP_VALUE = "툴팁에 경매장 및 마력 추출 가치 표시 (TSM 필요)",
@@ -146,6 +154,7 @@ local NEW = {
         WINNERS_FILTER = "표시: %s",
     },
     zhCN = {
+        WARN_WEAPON = "你的职业无法使用的武器",
         TIP_DELTA = "在物品提示中显示该物品与你当前装备的对比",
         TIP_DELTA_LINE = "与当前装备相比：%s",
         TIP_VALUE = "在物品提示中显示拍卖和分解价值（需要 TSM）",
@@ -164,6 +173,7 @@ local NEW = {
         WINNERS_FILTER = "显示：%s",
     },
     zhTW = {
+        WARN_WEAPON = "你的職業無法使用的武器",
         TIP_DELTA = "在物品提示中顯示該物品與你目前裝備的比較",
         TIP_DELTA_LINE = "與目前裝備相比：%s",
         TIP_VALUE = "在物品提示中顯示拍賣和分解價值（需要 TSM）",

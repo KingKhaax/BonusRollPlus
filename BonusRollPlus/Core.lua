@@ -199,6 +199,33 @@ local CLASS_ARMOR = {
     WARRIOR = 4, PALADIN = 4, DEATHKNIGHT = 4,
 }
 
+local function Set(...)
+    local t = {}
+    for _, v in ipairs({ ... }) do t[v] = true end
+    return t
+end
+
+-- Weapon subclasses each class can learn to use. The nine Classic classes follow the Classic trainers;
+-- the later classes use their own lists. 0 axe, 1 two-handed axe, 2 bow, 3 gun, 4 mace, 5 two-handed mace,
+-- 6 polearm, 7 sword, 8 two-handed sword, 9 warglaive, 10 staff, 13 fist weapon, 15 dagger, 16 thrown,
+-- 18 crossbow, 19 wand.
+local CLASS_WEAPONS = {
+    WARRIOR = Set(0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 15, 16, 18),
+    PALADIN = Set(0, 1, 4, 5, 6, 7, 8),
+    HUNTER = Set(0, 1, 2, 3, 6, 7, 8, 10, 13, 15, 16, 18),
+    ROGUE = Set(2, 3, 4, 7, 13, 15, 16, 18),
+    PRIEST = Set(4, 10, 15, 19),
+    SHAMAN = Set(0, 1, 4, 5, 10, 13, 15),
+    MAGE = Set(7, 10, 15, 19),
+    WARLOCK = Set(7, 10, 15, 19),
+    DRUID = Set(4, 5, 10, 13, 15),
+    DEATHKNIGHT = Set(0, 1, 4, 5, 6, 7, 8),
+    MONK = Set(0, 4, 6, 7, 10, 13),
+    DEMONHUNTER = Set(0, 7, 9, 13),
+    EVOKER = Set(0, 1, 4, 5, 7, 8, 10, 13, 15),
+}
+local CLASS_SHIELD = Set("WARRIOR", "PALADIN", "SHAMAN")
+
 -- Any equipment that exists for any class: weapons and armor with a real slot. No materials or vendor goods.
 local function IsGear(link)
     if not (C_Item and C_Item.GetItemInfoInstant and link) then return false end
@@ -339,6 +366,16 @@ local function UseWarning(link)
         local best = class and CLASS_ARMOR[class]
         if best and sub and sub >= 1 and sub <= 4 and sub > best and equipLoc ~= "INVTYPE_CLOAK" then
             return "|cffff5555" .. L.WARN_ARMOR .. "|r"
+        end
+        if class and sub == 6 and not CLASS_SHIELD[class] then
+            return "|cffff5555" .. L.WARN_ARMOR .. "|r"
+        end
+    elseif classID == 2 and C_Item and C_Item.GetItemInfoInstant then
+        local _, _, _, _, _, _, sub = C_Item.GetItemInfoInstant(link)
+        local _, class = UnitClass("player")
+        local allowed = class and CLASS_WEAPONS[class]
+        if allowed and sub and sub ~= 14 and sub ~= 20 and not allowed[sub] then
+            return "|cffff5555" .. L.WARN_WEAPON .. "|r"
         end
     end
     if bindType == 2 then return "|cffffd100" .. L.WARN_BOE .. "|r" end
