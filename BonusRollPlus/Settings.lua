@@ -483,6 +483,19 @@ local function BuildSettings(tab)
     check(L.WARN_USE, "warnUse", function(v) ns.SetValue("warnUse", v) end, 38)
     check(L.WARN_TRADE, "warnTrade", function(v) ns.SetValue("warnTrade", v) end, 38)
     check(L.WIN_NOTICE, "winNotice", function(v) ns.SetValue("winNotice", v) end, 38)
+    local sounds = {}
+    for _, entry in ipairs(ns.WIN_SOUNDS) do sounds[#sounds + 1] = { key = entry.key, label = L[entry.label] } end
+    local soundRow = CreateFrame("Frame", nil, child)
+    soundRow:SetSize(560, 28)
+    local soundPick = MakeCycle(soundRow, 300, 26, sounds, function() return db().winSound or "epic" end, function(v)
+        ns.SetValue("winSound", v)
+        ns.PlayWinSound(v)
+    end, L.WIN_SOUND_FMT)
+    soundPick:SetPoint("LEFT", soundRow, "LEFT", 0, 0)
+    local soundTest = MakeButton(soundRow, L.WIN_SOUND_TEST, 110, 26, function() ns.PlayWinSound() end)
+    soundTest:SetPoint("LEFT", soundPick, "RIGHT", 8, 0)
+    function soundRow:Refresh() soundPick:Refresh() end
+    Add(soundRow, 36)
     local lock = check(L.LOCK, "locked", function(v) ns.SetLocked(v) end, 30)
 
     Section(L.SEC_ALERTS)

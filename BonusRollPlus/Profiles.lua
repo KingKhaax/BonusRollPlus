@@ -1,9 +1,9 @@
 local ADDON, ns = ...
 local L = ns.L
 
-local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "closeDelay", "countdown", "stackDir", "stackGap", "fontScale", "ultra", "autoPass", "autoPassMin", "autoGreed", "autoGreedGold", "useBlizzard", "autoRecipe", "hideWon", "tipIlvl", "tipDelta", "tipValue", "chatIlvl", "warnUse", "warnTrade", "winNotice", "x", "y" }
+local ORDER = { "theme", "scale", "alpha", "maxVisible", "showRolls", "showUpgrade", "compact", "locked", "showValue", "sound", "flash", "closeDelay", "countdown", "stackDir", "stackGap", "fontScale", "ultra", "autoPass", "autoPassMin", "autoGreed", "autoGreedGold", "useBlizzard", "autoRecipe", "hideWon", "tipIlvl", "tipDelta", "tipValue", "chatIlvl", "warnUse", "warnTrade", "winNotice", "winSound", "x", "y" }
 local KIND = {
-    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", showValue = "b", sound = "b", flash = "b", closeDelay = "n", countdown = "b", stackDir = "s", stackGap = "n", fontScale = "n", ultra = "b", autoPass = "b", autoPassMin = "n", autoGreed = "b", autoGreedGold = "n", useBlizzard = "b", autoRecipe = "b", hideWon = "b", tipIlvl = "b", tipDelta = "b", tipValue = "b", chatIlvl = "b", warnUse = "b", warnTrade = "b", winNotice = "b", x = "n", y = "n",
+    theme = "s", scale = "n", alpha = "n", maxVisible = "n", showRolls = "b", showUpgrade = "b", compact = "b", locked = "b", showValue = "b", sound = "b", flash = "b", closeDelay = "n", countdown = "b", stackDir = "s", stackGap = "n", fontScale = "n", ultra = "b", autoPass = "b", autoPassMin = "n", autoGreed = "b", autoGreedGold = "n", useBlizzard = "b", autoRecipe = "b", hideWon = "b", tipIlvl = "b", tipDelta = "b", tipValue = "b", chatIlvl = "b", warnUse = "b", warnTrade = "b", winNotice = "b", winSound = "s", x = "n", y = "n",
 }
 local PREFIX = "BRP1;"
 
@@ -86,6 +86,7 @@ function P.Apply(snapshot)
     ns.SetCloseDelay(d.closeDelay)
     ns.SetOption("showValue", d.showValue)
     ns.SetValue("stackDir", d.stackDir)
+    ns.SetValue("winSound", d.winSound)
     ns.SetValue("stackGap", d.stackGap)
     ns.SetValue("fontScale", d.fontScale)
     ns.SetValue("ultra", d.ultra)

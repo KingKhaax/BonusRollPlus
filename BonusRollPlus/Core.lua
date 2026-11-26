@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false, hideWon = false, tipIlvl = true, tipDelta = true, tipValue = true, chatIlvl = true, warnUse = true, warnTrade = true, winNotice = true }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false, hideWon = false, tipIlvl = true, tipDelta = true, tipValue = true, chatIlvl = true, warnUse = true, warnTrade = true, winNotice = true, winSound = "epic" }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -1401,7 +1401,7 @@ local function MarkWon(f, name, link)
     local me = ShortName(UnitName("player"))
     if name == me then
         if db.winNotice then
-            pcall(PlaySound, (SOUNDKIT and SOUNDKIT.UI_EPICLOOT_TOAST) or 44292)
+            ns.PlayWinSound()
             print("|cffffd100BonusRoll Plus|r: " .. string.format(L.WIN_MSG, link or "?"))
         end
         if db.warnTrade and f.bopItem and not f.fake then
@@ -1760,6 +1760,27 @@ function ns.GetHistoryLines(n)
     local lines = {}
     for _, entry in ipairs(ns.GetHistoryEntries(n or 30)) do lines[#lines + 1] = entry.text end
     return lines
+end
+
+ns.WIN_SOUNDS = {
+    { key = "epic", id = 44292, label = "SOUND_EPIC" },
+    { key = "legendary", id = 63971, label = "SOUND_LEGENDARY" },
+    { key = "levelup", id = 888, label = "SOUND_LEVELUP" },
+    { key = "quest", id = 878, label = "SOUND_QUEST" },
+    { key = "raidwarning", id = 8959, label = "SOUND_RAIDWARNING" },
+    { key = "ready", id = 8960, label = "SOUND_READY" },
+    { key = "alarm", id = 12867, label = "SOUND_ALARM" },
+    { key = "ping", id = 3175, label = "SOUND_PING" },
+}
+
+function ns.PlayWinSound(key)
+    key = key or (db and db.winSound) or "epic"
+    for _, entry in ipairs(ns.WIN_SOUNDS) do
+        if entry.key == key then
+            pcall(PlaySound, entry.id, "Master")
+            return
+        end
+    end
 end
 
 local function TooltipLevel(tip, data)
