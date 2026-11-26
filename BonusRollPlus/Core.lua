@@ -192,10 +192,10 @@ local function QualityColor(q)
     return 1, 1, 1
 end
 
-local function LevelTag(ilvl, r, g, b)
+local function LevelTag(ilvl, r, g, b, gap)
     if not ilvl then return "" end
     local function c(v) return math.floor((tonumber(v) or 1) * 255 + 0.5) end
-    return string.format("  |cff%02x%02x%02x(%d)|r", c(r), c(g), c(b), ilvl)
+    return string.format("%s|cff%02x%02x%02x(%d)|r", gap or "  ", c(r), c(g), c(b), ilvl)
 end
 
 local function ItemMeta(link)
@@ -1693,7 +1693,7 @@ local function TooltipLevel(tip, data)
     local text = line:GetText()
     if type(text) ~= "string" or text == "" or line.brpTagged == text then return end
     local r, g, b = QualityColor(quality)
-    local out = text .. LevelTag(ilvl, r, g, b)
+    local out = text .. LevelTag(ilvl, r, g, b, " ")
     line:SetText(out)
     line.brpTagged = line:GetText()
 end
