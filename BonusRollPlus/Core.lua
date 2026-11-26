@@ -192,11 +192,57 @@ local function QualityColor(q)
     return 1, 1, 1
 end
 
+local CLASS_ARMOR = {
+    PRIEST = 1, MAGE = 1, WARLOCK = 1,
+    DRUID = 2, ROGUE = 2, MONK = 2, DEMONHUNTER = 2,
+    HUNTER = 3, SHAMAN = 3, EVOKER = 3,
+    WARRIOR = 4, PALADIN = 4, DEATHKNIGHT = 4,
+}
+
+local function Set(...)
+    local t = {}
+    for _, v in ipairs({ ... }) do t[v] = true end
+    return t
+end
+
+-- Weapon subclasses each class can use (0 axe, 1 2h axe, 2 bow, 3 gun, 4 mace, 5 2h mace, 6 polearm,
+-- 7 sword, 8 2h sword, 9 warglaive, 10 staff, 13 fist, 15 dagger, 18 crossbow, 19 wand).
+local CLASS_WEAPONS = {
+    WARRIOR = Set(0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 15, 18),
+    PALADIN = Set(0, 1, 4, 5, 6, 7, 8),
+    HUNTER = Set(0, 1, 2, 3, 6, 7, 8, 10, 13, 15, 18),
+    ROGUE = Set(0, 4, 7, 13, 15),
+    PRIEST = Set(4, 10, 15, 19),
+    SHAMAN = Set(0, 1, 4, 5, 10, 13, 15),
+    MAGE = Set(7, 10, 15, 19),
+    WARLOCK = Set(7, 10, 15, 19),
+    MONK = Set(0, 4, 6, 7, 10, 13),
+    DRUID = Set(4, 5, 6, 10, 13, 15),
+    DEMONHUNTER = Set(0, 7, 9, 13),
+    DEATHKNIGHT = Set(0, 1, 4, 5, 6, 7, 8),
+    EVOKER = Set(0, 1, 4, 5, 7, 8, 10, 13, 15),
+}
+local CLASS_SHIELD = Set("WARRIOR", "PALADIN", "SHAMAN")
+
+-- Equipment the player's own class can wear or wield: no materials, no vendor goods, no gear for
+-- another armor type or weapon skill.
 local function IsGear(link)
     if not (C_Item and C_Item.GetItemInfoInstant and link) then return false end
-    local ok, _, _, _, equipLoc, _, classID = pcall(C_Item.GetItemInfoInstant, link)
+    local ok, _, _, _, equipLoc, _, classID, subID = pcall(C_Item.GetItemInfoInstant, link)
     if not ok or (classID ~= 2 and classID ~= 4) then return false end
-    return type(equipLoc) == "string" and equipLoc ~= "" and not equipLoc:find("NON_EQUIP")
+    if type(equipLoc) ~= "string" or equipLoc == "" or equipLoc:find("NON_EQUIP") then return false end
+    local _, class = UnitClass("player")
+    if not class then return true end
+    if classID == 4 then
+        if equipLoc == "INVTYPE_CLOAK" then return true end
+        if subID == 6 then return CLASS_SHIELD[class] == true end
+        local best = CLASS_ARMOR[class]
+        if best and subID and subID >= 1 and subID <= 4 then return subID <= best end
+        return true
+    end
+    local allowed = CLASS_WEAPONS[class]
+    if allowed and subID and subID ~= 14 and subID ~= 20 then return allowed[subID] == true end
+    return true
 end
 
 local function LevelTag(ilvl, r, g, b, gap)
@@ -319,13 +365,6 @@ local function ItemSell(link)
     local ok, _, _, _, _, _, _, _, _, _, _, sell = pcall(get, link)
     return ok and type(sell) == "number" and sell or nil
 end
-
-local CLASS_ARMOR = {
-    PRIEST = 1, MAGE = 1, WARLOCK = 1,
-    DRUID = 2, ROGUE = 2, MONK = 2, DEMONHUNTER = 2,
-    HUNTER = 3, SHAMAN = 3, EVOKER = 3,
-    WARRIOR = 4, PALADIN = 4, DEATHKNIGHT = 4,
-}
 
 local function UseWarning(link)
     if not (db.warnUse and link) then return nil end
