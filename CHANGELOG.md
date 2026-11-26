@@ -8,7 +8,7 @@
 - Al ganar un objeto: sonido y mensaje, aviso de que puedes intercambiarlo con el grupo durante 2 horas y, si pierdes por 3 puntos o menos, un mensaje de "por poco".
 - Historial: nuevo filtro para ver solo tus victorias. El filtro por calidad y la exportación a texto ya existían.
 - Nuevo ajuste: el nivel del objeto, entre paréntesis y con el color del objeto, también sale a la izquierda del nombre en los tooltips del juego de cualquier objeto equipable (activado por defecto; se apaga en ajustes).
-- El nivel del objeto, entre paréntesis, solo sale en equipo que tu clase puede llevar (no en materiales ni objetos de vender, ni en armaduras o armas de otra clase), a la izquierda del nombre y con el color de la calidad del objeto (antes salía en crema) y con la misma fuente que el nombre.
+- El nivel del objeto, entre paréntesis, solo sale en piezas de equipo (armas, armaduras, anillos, abalorios, de cualquier clase; no en materiales ni objetos de vender), a la izquierda del nombre y con el color de la calidad del objeto (antes salía en crema) y con la misma fuente que el nombre.
 
 ## 0.9.2
 
