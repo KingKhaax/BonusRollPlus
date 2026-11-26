@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false, hideWon = false }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false, hideWon = false, tipIlvl = true }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -1679,6 +1679,35 @@ function ns.GetHistoryLines(n)
     return lines
 end
 
+local function TooltipLevel(tip, data)
+    if not (db and db.tipIlvl) or not tip or not tip.GetName then return end
+    local line = tip.TextLeft1 or _G[(tip:GetName() or "") .. "TextLeft1"]
+    if not (line and line.GetText and line.SetText) then return end
+    local link = type(data) == "table" and (data.hyperlink or (data.id and ("item:" .. data.id)))
+    if not link then return end
+    local equipLoc = C_Item and C_Item.GetItemInfoInstant and select(4, C_Item.GetItemInfoInstant(link))
+    if not equipLoc or equipLoc == "" then return end
+    local ilvl = ItemMeta(link)
+    if not ilvl then return end
+    local quality = C_Item and C_Item.GetItemInfo and select(3, C_Item.GetItemInfo(link))
+    local text = line:GetText()
+    if type(text) ~= "string" or text == "" or line.brpTagged == text then return end
+    local r, g, b = QualityColor(quality)
+    local out = text .. LevelTag(ilvl, r, g, b)
+    line:SetText(out)
+    line.brpTagged = line:GetText()
+end
+
+local function HookTooltips()
+    if ns.tipHooked then return end
+    if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and Enum and Enum.TooltipDataType then
+        ns.tipHooked = true
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tip, data)
+            pcall(TooltipLevel, tip, data)
+        end)
+    end
+end
+
 function ns.SetCloseDelay(v)
     db.closeDelay = v
 end
@@ -1990,6 +2019,7 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
     elseif event == "PLAYER_LOGIN" then
         HideBlizzard()
         ApplyWonToast()
+        HookTooltips()
         db.sessionStart = time()
         if ns.Profiles then ns.Profiles.AutoLoad() end
     elseif event == "START_LOOT_ROLL" then

@@ -2,6 +2,7 @@ local ADDON, ns = ...
 
 local NEW = {
     enUS = {
+        TIP_ILVL = "Show the item level in brackets, in the item's colour, next to the name in item tooltips",
         USE_BLIZZARD = "Use the game's own loot window and keep only the rolls list next to it",
         HIDE_WON = "Hide the game's \"You received\" item popup when I win an item",
         AUTO_RECIPE = "Auto-Need recipes of my professions that I have not learned",
@@ -9,6 +10,7 @@ local NEW = {
         AUTO_NOTE = "Automatic rules are off by default. They always tell you in the chat what they did. Only the recipe rule ever rolls Need.",
     },
     esES = {
+        TIP_ILVL = "Mostrar el nivel del objeto entre paréntesis, con el color del objeto, junto al nombre en los tooltips",
         USE_BLIZZARD = "Usar la ventana de tirada del propio juego y dejar solo la lista de tiradas a su lado",
         HIDE_WON = "Ocultar el aviso del juego «Has recibido» al ganar un objeto",
         AUTO_RECIPE = "Necesidad automática en recetas de mis profesiones que no he aprendido",
@@ -16,6 +18,7 @@ local NEW = {
         AUTO_NOTE = "Las reglas automáticas vienen apagadas. Siempre te dicen en el chat lo que han hecho. Solo la regla de recetas pide Necesidad.",
     },
     deDE = {
+        TIP_ILVL = "Gegenstandsstufe in Klammern und in der Farbe des Gegenstands neben dem Namen in Tooltips anzeigen",
         USE_BLIZZARD = "Das Beutefenster des Spiels verwenden und nur die Liste der Würfe daneben behalten",
         HIDE_WON = "Das Spiel-Popup „Du hast erhalten“ ausblenden, wenn ich einen Gegenstand gewinne",
         AUTO_RECIPE = "Automatisch Bedarf auf Rezepte meiner Berufe, die ich noch nicht gelernt habe",
@@ -23,6 +26,7 @@ local NEW = {
         AUTO_NOTE = "Automatische Regeln sind standardmäßig aus. Sie melden im Chat immer, was sie getan haben. Nur die Rezeptregel würfelt Bedarf.",
     },
     frFR = {
+        TIP_ILVL = "Afficher le niveau d'objet entre parenthèses, de la couleur de l'objet, à côté du nom dans les infobulles",
         USE_BLIZZARD = "Utiliser la fenêtre de butin du jeu et ne garder que la liste des jets à côté",
         HIDE_WON = "Masquer l'alerte du jeu « Vous avez reçu » quand je gagne un objet",
         AUTO_RECIPE = "Besoin automatique pour les recettes de mes métiers que je n'ai pas apprises",
@@ -30,6 +34,7 @@ local NEW = {
         AUTO_NOTE = "Les règles automatiques sont désactivées par défaut. Elles disent toujours dans le chat ce qu'elles ont fait. Seule la règle des recettes choisit Besoin.",
     },
     itIT = {
+        TIP_ILVL = "Mostra il livello dell'oggetto tra parentesi, nel colore dell'oggetto, accanto al nome nei tooltip",
         USE_BLIZZARD = "Usa la finestra del bottino del gioco e mantieni solo l'elenco dei tiri accanto",
         HIDE_WON = "Nascondi l'avviso del gioco «Hai ricevuto» quando vinco un oggetto",
         AUTO_RECIPE = "Necessità automatica per le ricette delle mie professioni che non ho imparato",
@@ -37,6 +42,7 @@ local NEW = {
         AUTO_NOTE = "Le regole automatiche sono disattivate di default. Dicono sempre in chat cosa hanno fatto. Solo la regola delle ricette tira Necessità.",
     },
     ptBR = {
+        TIP_ILVL = "Mostrar o nível do item entre parênteses, na cor do item, ao lado do nome nas dicas",
         USE_BLIZZARD = "Usar a janela de saque do próprio jogo e manter apenas a lista de rolagens ao lado",
         HIDE_WON = "Ocultar o aviso do jogo «Você recebeu» ao ganhar um item",
         AUTO_RECIPE = "Necessidade automática em receitas das minhas profissões que não aprendi",
@@ -44,6 +50,7 @@ local NEW = {
         AUTO_NOTE = "As regras automáticas vêm desligadas. Elas sempre dizem no chat o que fizeram. Só a regra de receitas rola Necessidade.",
     },
     ruRU = {
+        TIP_ILVL = "Показывать уровень предмета в скобках цветом предмета рядом с названием во всплывающих подсказках",
         USE_BLIZZARD = "Использовать окно добычи самой игры и оставить рядом только список бросков",
         HIDE_WON = "Скрывать всплывающее окно игры «Вы получили» при выигрыше предмета",
         AUTO_RECIPE = "Автоматически выбирать «Мне нужно» для рецептов моих профессий, которые я не изучил",
@@ -51,6 +58,7 @@ local NEW = {
         AUTO_NOTE = "Автоматические правила по умолчанию выключены. Они всегда сообщают в чате, что сделали. «Мне нужно» выбирает только правило рецептов.",
     },
     koKR = {
+        TIP_ILVL = "툴팁의 아이템 이름 옆에 아이템 색상으로 아이템 레벨을 괄호 안에 표시",
         USE_BLIZZARD = "게임 기본 전리품 창을 사용하고 옆에 굴림 목록만 유지",
         HIDE_WON = "아이템을 획득했을 때 게임의 '획득' 알림 숨기기",
         AUTO_RECIPE = "아직 배우지 않은 내 전문 기술 제작법에 자동으로 필요 선택",
@@ -58,6 +66,7 @@ local NEW = {
         AUTO_NOTE = "자동 규칙은 기본적으로 꺼져 있습니다. 무엇을 했는지 항상 채팅으로 알려 줍니다. 필요를 선택하는 것은 제작법 규칙뿐입니다.",
     },
     zhCN = {
+        TIP_ILVL = "在物品提示中，于名称旁用物品颜色以括号显示物品等级",
         USE_BLIZZARD = "使用游戏自带的拾取窗口，仅在旁边保留掷骰列表",
         HIDE_WON = "赢得物品时隐藏游戏自带的“你获得了”弹窗",
         AUTO_RECIPE = "对我尚未学会的专业配方自动选择需求",
@@ -65,6 +74,7 @@ local NEW = {
         AUTO_NOTE = "自动规则默认关闭。它们每次都会在聊天中告诉你做了什么。只有配方规则会选择需求。",
     },
     zhTW = {
+        TIP_ILVL = "在物品提示中，於名稱旁以物品顏色用括號顯示物品等級",
         USE_BLIZZARD = "使用遊戲內建的拾取視窗，只在旁邊保留擲骰清單",
         HIDE_WON = "贏得物品時隱藏遊戲內建的「你獲得了」彈窗",
         AUTO_RECIPE = "對我尚未學會的專業配方自動選擇需求",

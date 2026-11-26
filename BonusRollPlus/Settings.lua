@@ -476,6 +476,7 @@ local function BuildSettings(tab)
     check(L.SHOW_VALUE, "showValue", option("showValue"))
     check(L.COUNTDOWN, "countdown", option("countdown"))
     check(L.HIDE_WON, "hideWon", function(v) ns.SetValue("hideWon", v) end, 30)
+    check(L.TIP_ILVL, "tipIlvl", function(v) ns.SetValue("tipIlvl", v) end, 30)
     local lock = check(L.LOCK, "locked", function(v) ns.SetLocked(v) end, 30)
 
     Section(L.SEC_ALERTS)
