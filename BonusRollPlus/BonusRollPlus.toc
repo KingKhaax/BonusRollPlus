@@ -23,6 +23,7 @@ LocalesExtra.lua
 LocalesV07.lua
 LocalesNotes07.lua
 LocalesV08.lua
+LocalesV09.lua
 LocalesNotes09.lua
 Themes.lua
 Core.lua

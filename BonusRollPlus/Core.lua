@@ -1,6 +1,6 @@
 local ADDON, ns = ...
 
-local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false, hideWon = false, tipIlvl = true }
+local DEFAULTS = { scale = 1, showRolls = true, locked = false, v = 3, theme = "glass", maxVisible = 3, alpha = 1, showUpgrade = true, compact = true, showValue = true, sound = false, flash = true, closeDelay = 2, countdown = true, stackDir = "up", stackGap = 12, fontScale = 1, ultra = false, autoPass = false, autoPassMin = 10, autoGreed = false, autoGreedGold = 5, useBlizzard = false, autoRecipe = false, hideWon = false, tipIlvl = true, tipDelta = true, tipValue = true, chatIlvl = true, warnUse = true, warnTrade = true, winNotice = true }
 local db
 
 local F_FRIZ = "Fonts\\FRIZQT__.TTF"
@@ -311,6 +311,30 @@ local function ItemSell(link)
     local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
     local ok, _, _, _, _, _, _, _, _, _, _, sell = pcall(get, link)
     return ok and type(sell) == "number" and sell or nil
+end
+
+local CLASS_ARMOR = {
+    PRIEST = 1, MAGE = 1, WARLOCK = 1,
+    DRUID = 2, ROGUE = 2, MONK = 2, DEMONHUNTER = 2,
+    HUNTER = 3, SHAMAN = 3, EVOKER = 3,
+    WARRIOR = 4, PALADIN = 4, DEATHKNIGHT = 4,
+}
+
+local function UseWarning(link)
+    if not (db.warnUse and link) then return nil end
+    local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+    local ok, _, _, _, _, _, _, _, _, _, _, _, classID, _, bindType = pcall(get, link)
+    if not ok then return nil end
+    if classID == 4 and C_Item and C_Item.GetItemInfoInstant then
+        local _, _, _, equipLoc, _, _, sub = C_Item.GetItemInfoInstant(link)
+        local _, class = UnitClass("player")
+        local best = class and CLASS_ARMOR[class]
+        if best and sub and sub >= 1 and sub <= 4 and sub > best and equipLoc ~= "INVTYPE_CLOAK" then
+            return "|cffff5555" .. L.WARN_ARMOR .. "|r"
+        end
+    end
+    if bindType == 2 then return "|cffffd100" .. L.WARN_BOE .. "|r" end
+    return nil
 end
 
 local function ValueInfo(link, f)
@@ -1243,13 +1267,14 @@ local function Setup(f, data)
     f.refreshTexts = Texts
     Texts()
     f.hasWarn = data.canNeed == false
+    f.bopItem = data.bop and true or nil
     if f.bind then
         if f.hasWarn then
             f.bind:SetWidth(T.bind.w)
             f.bind:SetText("|cffff5555" .. L.CANT_USE .. "|r")
         else
             f.bind:SetWidth(T.bind.w)
-            f.bind:SetText(data.bop and (ITEM_BIND_ON_PICKUP or "") or "")
+            f.bind:SetText(UseWarning(data.link) or (data.bop and (ITEM_BIND_ON_PICKUP or "")) or "")
         end
     end
     UpdateValue(f)
@@ -1327,6 +1352,19 @@ local function MarkWon(f, name, link)
             me = name == ShortName(UnitName("player")),
         })
         while #db.history > 100 do table.remove(db.history, 1) end
+    end
+    local me = ShortName(UnitName("player"))
+    if name == me then
+        if db.winNotice then
+            pcall(PlaySound, (SOUNDKIT and SOUNDKIT.UI_EPICLOOT_TOAST) or 44292)
+            print("|cffffd100BonusRoll Plus|r: " .. string.format(L.WIN_MSG, link or "?"))
+        end
+        if db.warnTrade and f.bopItem and not f.fake then
+            print("|cffffd100BonusRoll Plus|r: " .. string.format(L.TRADE_MSG, link or "?"))
+        end
+    elseif db.winNotice and f.entries and f.entries[me] and f.entries[me].value and e.value
+        and f.entries[me].value < e.value and e.value - f.entries[me].value <= 3 then
+        print("|cffffd100BonusRoll Plus|r: " .. string.format(L.NEAR_MSG, f.entries[me].value, link or "?", e.value))
     end
     local token = f.token
     f.closingSoon = true
@@ -1680,22 +1718,66 @@ function ns.GetHistoryLines(n)
 end
 
 local function TooltipLevel(tip, data)
-    if not (db and db.tipIlvl) or not tip or not tip.GetName then return end
+    if not db or not tip or not tip.GetName then return end
     local line = tip.TextLeft1 or _G[(tip:GetName() or "") .. "TextLeft1"]
     if not (line and line.GetText and line.SetText) then return end
     local link = type(data) == "table" and (data.hyperlink or (data.id and ("item:" .. data.id)))
-    if not link then return end
+    if not link or tip.brpData == data then return end
+    tip.brpData = data
     local equipLoc = C_Item and C_Item.GetItemInfoInstant and select(4, C_Item.GetItemInfoInstant(link))
     if not equipLoc or equipLoc == "" then return end
     local ilvl = ItemMeta(link)
     if not ilvl then return end
     local quality = C_Item and C_Item.GetItemInfo and select(3, C_Item.GetItemInfo(link))
-    local text = line:GetText()
-    if type(text) ~= "string" or text == "" or line.brpTagged == text then return end
-    local r, g, b = QualityColor(quality)
-    local out = LevelTag(ilvl, r, g, b, "") .. " " .. text
-    line:SetText(out)
-    line.brpTagged = line:GetText()
+    if db.tipIlvl then
+        local text = line:GetText()
+        if type(text) == "string" and text ~= "" then
+            local r, g, b = QualityColor(quality)
+            line:SetText(LevelTag(ilvl, r, g, b, "") .. " " .. text)
+        end
+    end
+    local added
+    if db.tipDelta then
+        local delta = UpgradeDelta(link, ilvl)
+        if delta then
+            tip:AddLine(string.format(L.TIP_DELTA_LINE, DeltaText(delta)))
+            added = true
+        end
+    end
+    if db.tipValue then
+        local id = ItemID(link)
+        local auction, destroy = TsmValue("DBMarket", id), TsmValue("Destroy", id)
+        local parts = {}
+        if auction then parts[#parts + 1] = Tag("Interface\\MINIMAP\\TRACKING\\Auctioneer", 12, -1) .. " " .. FormatMoney(auction) end
+        if destroy then parts[#parts + 1] = Tag("Interface\\Buttons\\UI-GroupLoot-DE-Up", 12, -1) .. " " .. FormatMoney(destroy) end
+        if #parts > 0 then
+            tip:AddLine(L.TIP_VALUE_LINE .. ": " .. table.concat(parts, "   "), 1, 1, 1)
+            added = true
+        end
+    end
+    if added and tip.Show then tip:Show() end
+end
+
+local CHAT_EVENTS = { "CHAT_MSG_LOOT", "CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER", "CHAT_MSG_RAID", "CHAT_MSG_RAID_LEADER", "CHAT_MSG_SAY", "CHAT_MSG_GUILD" }
+
+local function ChatLevel(_, _, msg, ...)
+    if not (db and db.chatIlvl) or type(msg) ~= "string" then return false end
+    local ok, out = pcall(string.gsub, msg, "|H(item:[^|]*)|h%[(.-)%]|h", function(l, name)
+        if name:find("^%(%d+%)") then return nil end
+        local equipLoc = C_Item and C_Item.GetItemInfoInstant and select(4, C_Item.GetItemInfoInstant(l))
+        if not equipLoc or equipLoc == "" then return nil end
+        local ilvl = ItemMeta(l)
+        if not ilvl then return nil end
+        return "|H" .. l .. "|h[(" .. ilvl .. ") " .. name .. "]|h"
+    end)
+    if not ok then return false end
+    return false, out, ...
+end
+
+local function HookChat()
+    if ns.chatHooked or not ChatFrame_AddMessageEventFilter then return end
+    ns.chatHooked = true
+    for _, ev in ipairs(CHAT_EVENTS) do ChatFrame_AddMessageEventFilter(ev, ChatLevel) end
 end
 
 local function HookTooltips()
@@ -1782,12 +1864,12 @@ local function HistoryItem(h)
     return link, ilvl
 end
 
-function ns.GetHistoryEntries(n, minQuality)
+function ns.GetHistoryEntries(n, minQuality, mineOnly)
     local out, list = {}, db.history or {}
     for i = #list, 1, -1 do
         if #out >= (n or 30) then break end
         local h = list[i]
-        if not minQuality or minQuality <= 0 or (h.q or 0) >= minQuality then
+        if (not minQuality or minQuality <= 0 or (h.q or 0) >= minQuality) and (not mineOnly or h.me) then
             local link, ilvl = HistoryItem(h)
             local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
             local level = LevelTag(ilvl, QualityColor(h.q))
@@ -1801,9 +1883,9 @@ function ns.GetHistoryEntries(n, minQuality)
     return out
 end
 
-function ns.GetHistoryPlain(minQuality)
+function ns.GetHistoryPlain(minQuality, mineOnly)
     local lines = {}
-    for _, entry in ipairs(ns.GetHistoryEntries(100, minQuality)) do
+    for _, entry in ipairs(ns.GetHistoryEntries(100, minQuality, mineOnly)) do
         local text = entry.text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|T.-|t", ""):gsub("|H.-|h(.-)|h", "%1")
         lines[#lines + 1] = text
     end
@@ -2020,6 +2102,7 @@ ev:SetScript("OnEvent", function(self, event, a, b, c, d)
         HideBlizzard()
         ApplyWonToast()
         HookTooltips()
+        HookChat()
         db.sessionStart = time()
         if ns.Profiles then ns.Profiles.AutoLoad() end
     elseif event == "START_LOOT_ROLL" then

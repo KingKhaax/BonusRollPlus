@@ -477,6 +477,12 @@ local function BuildSettings(tab)
     check(L.COUNTDOWN, "countdown", option("countdown"))
     check(L.HIDE_WON, "hideWon", function(v) ns.SetValue("hideWon", v) end, 30)
     check(L.TIP_ILVL, "tipIlvl", function(v) ns.SetValue("tipIlvl", v) end, 30)
+    check(L.TIP_DELTA, "tipDelta", function(v) ns.SetValue("tipDelta", v) end, 38)
+    check(L.TIP_VALUE, "tipValue", function(v) ns.SetValue("tipValue", v) end, 38)
+    check(L.CHAT_ILVL, "chatIlvl", function(v) ns.SetValue("chatIlvl", v) end, 38)
+    check(L.WARN_USE, "warnUse", function(v) ns.SetValue("warnUse", v) end, 38)
+    check(L.WARN_TRADE, "warnTrade", function(v) ns.SetValue("warnTrade", v) end, 38)
+    check(L.WIN_NOTICE, "winNotice", function(v) ns.SetValue("winNotice", v) end, 38)
     local lock = check(L.LOCK, "locked", function(v) ns.SetLocked(v) end, 30)
 
     Section(L.SEC_ALERTS)
@@ -817,11 +823,18 @@ local function BuildHistory(tab)
         { key = 3, label = L.FILTER_BLUE }, { key = 4, label = L.FILTER_EPIC },
     }
     tab.minQ = 0
+    tab.mine = false
     local filter = MakeCycle(tab, 210, 26, qualities, function() return tab.minQ end, function(v)
         tab.minQ = v
         tab.Refresh()
     end, L.HISTORY_FILTER)
     filter:SetPoint("TOPRIGHT", -2, -4)
+    local winners = MakeCycle(tab, 210, 26, { { key = false, label = L.WINNERS_ALL }, { key = true, label = L.WINNERS_MINE } },
+        function() return tab.mine end, function(v)
+            tab.mine = v
+            tab.Refresh()
+        end, L.WINNERS_FILTER)
+    winners:SetPoint("TOPRIGHT", filter, "BOTTOMRIGHT", 0, -4)
     local sf, child = MakeScroll(tab, 584, 262)
     sf:SetPoint("TOPLEFT", 0, -126)
     local rows = {}
@@ -856,7 +869,7 @@ local function BuildHistory(tab)
     local show = MakeButton(tab, L.HISTORY_BTN, 200, 26, function() ns.PrintHistory(10) end)
     show:SetPoint("BOTTOMLEFT", 8, 4)
     local export = MakeButton(tab, L.HISTORY_EXPORT_BTN, 190, 26, function()
-        ShowTextBox(L.EXPORT_HELP, ns.GetHistoryPlain(tab.minQ))
+        ShowTextBox(L.EXPORT_HELP, ns.GetHistoryPlain(tab.minQ, tab.mine))
     end)
     export:SetPoint("LEFT", show, "RIGHT", 8, 0)
     local clear = MakeButton(tab, L.HISTORY_CLEAR_BTN, 150, 26, function()
@@ -866,6 +879,7 @@ local function BuildHistory(tab)
     clear:SetPoint("LEFT", export, "RIGHT", 8, 0)
     tab.Refresh = function()
         filter:Refresh()
+        winners:Refresh()
         local rolled, won, needWon, greedWon, week = ns.GetStats()
         local pct = rolled > 0 and math.floor(won / rolled * 100 + 0.5) or 0
         local count, total = ns.GetSession()
@@ -874,7 +888,7 @@ local function BuildHistory(tab)
         lines[3]:SetText(string.format(L.STATS_KINDS, needWon, greedWon))
         lines[4]:SetText(string.format(L.STATS_WEEK, week))
         lines[5]:SetText(string.format(L.STATS_SESSION, count, ns.FormatMoney(total)))
-        local entries = ns.GetHistoryEntries(HISTORY_ROWS, tab.minQ)
+        local entries = ns.GetHistoryEntries(HISTORY_ROWS, tab.minQ, tab.mine)
         for i, row in ipairs(rows) do
             local entry = entries[i]
             if entry then

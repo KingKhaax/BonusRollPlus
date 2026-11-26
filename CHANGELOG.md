@@ -2,6 +2,11 @@
 
 ## Pendiente (sin publicar)
 
+- Tooltips: nuevas líneas, cada una con su ajuste: comparación con lo que llevas puesto (+12 / -3) y valor en subasta y al desencantar (con TSM).
+- Chat: el nivel del objeto aparece dentro de los enlaces de objetos (botín, grupo, banda, hermandad y decir).
+- Ventana de tirada: avisa de objetos que se ligan al equiparlos y de armadura más pesada de la que puedes llevar.
+- Al ganar un objeto: sonido y mensaje, aviso de que puedes intercambiarlo con el grupo durante 2 horas y, si pierdes por 3 puntos o menos, un mensaje de "por poco".
+- Historial: nuevo filtro para ver solo tus victorias. El filtro por calidad y la exportación a texto ya existían.
 - Nuevo ajuste: el nivel del objeto, entre paréntesis y con el color del objeto, también sale a la izquierda del nombre en los tooltips del juego de cualquier objeto equipable (activado por defecto; se apaga en ajustes).
 - El nivel del objeto, entre paréntesis, sale ahora a la izquierda del nombre y con el color de la calidad del objeto (antes salía en crema) y con la misma fuente que el nombre.
 
