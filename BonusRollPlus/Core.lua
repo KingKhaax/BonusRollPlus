@@ -192,6 +192,12 @@ local function QualityColor(q)
     return 1, 1, 1
 end
 
+local function LevelTag(ilvl, r, g, b)
+    if not ilvl then return "" end
+    local function c(v) return math.floor((tonumber(v) or 1) * 255 + 0.5) end
+    return string.format("  |cff%02x%02x%02x(%d)|r", c(r), c(g), c(b), ilvl)
+end
+
 local function ItemMeta(link)
     if not link then return nil, nil end
     local get = (C_Item and C_Item.GetItemInfo) or GetItemInfo
@@ -1168,7 +1174,7 @@ function MiniRefresh(f)
     m.ring:SetColorTexture(r, g, b, 1)
     m.name:SetTextColor(r, g, b)
     local ilvl = ItemMeta(f.link)
-    m.name:SetText((f.itemName or "?") .. (ilvl and ("  |cffefdcb0(" .. ilvl .. ")|r") or ""))
+    m.name:SetText((f.itemName or "?") .. LevelTag(ilvl, r, g, b))
     ns.MiniMark(f)
 end
 
@@ -1217,7 +1223,7 @@ local function Setup(f, data)
         local spec = T.name or {}
         if spec.upper then nm = nm:upper() end
         local suffix = ""
-        if ilvl and not spec.noIlvl then suffix = "  |cffefdcb0(" .. ilvl .. ")|r" end
+        if ilvl and not spec.noIlvl then suffix = LevelTag(ilvl, f.qr, f.qg, f.qb) end
         f.name:SetText(nm .. suffix)
         local pieceText = piece or ""
         if db.showUpgrade then
@@ -1755,7 +1761,7 @@ function ns.GetHistoryEntries(n, minQuality)
         if not minQuality or minQuality <= 0 or (h.q or 0) >= minQuality then
             local link, ilvl = HistoryItem(h)
             local who = h.me and ("|cff40ff40" .. tostring(h.winner) .. "|r") or tostring(h.winner)
-            local level = ilvl and ("  |cffefdcb0(" .. ilvl .. ")|r") or ""
+            local level = LevelTag(ilvl, QualityColor(h.q))
             local roll = h.value and (" (" .. h.value .. ")") or ""
             out[#out + 1] = {
                 link = link,
@@ -1833,7 +1839,7 @@ function ns.BuildPreview(T, parent)
     f.icon:SetTexture(tex or "Interface\\Icons\\INV_Misc_QuestionMark")
     local slot = INVTYPE_CHEST or "Chest"
     local sub = C_Item and C_Item.GetItemSubClassInfo and C_Item.GetItemSubClassInfo(4, 3)
-    f.name:SetText(L.SAMPLE_ITEM .. "  |cffefdcb0(27)|r")
+    f.name:SetText(L.SAMPLE_ITEM .. LevelTag(27, r, g, b))
     f.piece:SetText(sub and (slot .. " · " .. sub) or slot)
     if f.bind then f.bind:SetText(ITEM_BIND_ON_PICKUP or "") end
     for _, btn in ipairs(f.buttons) do

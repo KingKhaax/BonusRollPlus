@@ -1,5 +1,9 @@
 # Cambios
 
+## Pendiente (sin publicar)
+
+- El nivel del objeto junto al nombre, entre paréntesis, sale ahora con el color de la calidad del objeto (antes salía en crema) y con la misma fuente que el nombre.
+
 ## 0.9.2
 
 - Arreglo: el chat de botín llega sin enlace y con el prefijo [Botín]; ahora se lee igual (nombre del objeto, jugador y tirada se identifican por su forma, no por su orden), así que las tiradas vuelven a aparecer y las ventanas ya no se quedan colgadas.
